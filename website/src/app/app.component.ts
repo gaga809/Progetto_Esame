@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ScrollComponent } from './scroll/scroll.component';
+import { ScrollComponent } from './components/scroll/scroll.component';
 
 @Component({
   selector: 'app-root',

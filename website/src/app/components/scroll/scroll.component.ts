@@ -27,7 +27,7 @@ export class ScrollComponent implements AfterViewInit {
         start: 'top top',
         end: 'bottom top',
         pin: true, 
-        scrub: 1,
+        scrub: 2,
         snap: 1,
         toggleActions: 'play none none reverse', 
       },
