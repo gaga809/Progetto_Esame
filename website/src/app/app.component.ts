@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { ScrollComponent } from './scroll/scroll.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [ScrollComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
