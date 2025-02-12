@@ -24,10 +24,11 @@ export class ScrollComponent implements AfterViewInit {
     gsap.to(section.nativeElement, {
       scrollTrigger: {
         trigger: section.nativeElement,
-        start: 'top top', 
-        end: 'bottom top',  
-        pin: true,         
-        scrub: true,
+        start: 'top top',
+        end: 'bottom top',
+        pin: true, 
+        scrub: 1,
+        snap: 1,
         toggleActions: 'play none none reverse', 
       },
     });
