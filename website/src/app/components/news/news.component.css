@@ -24,6 +24,10 @@ h1 {
 }
 
 @media (max-width: 768px) {
+    main {
+        padding-top: 10dvh;
+    }
+
     h1 {
         margin-bottom: 7dvh;
     }

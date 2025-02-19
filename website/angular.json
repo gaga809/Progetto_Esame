@@ -82,7 +82,8 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              }
+              },
+              "src/assets/fonts"
             ],
             "styles": [
               "src/styles.css"
