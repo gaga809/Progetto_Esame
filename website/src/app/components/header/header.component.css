@@ -1,7 +1,16 @@
 .container { 
     height: 100dvh;
-    padding: 2dvh 2dvw;
+    padding: 2dvh 5dvw;
     transition: padding 0.2s ease-in-out; 
+}
+
+h1, p {
+    text-align: center;
+    margin: 0;
+}
+
+p {
+    max-width: 50dvw;
 }
 
 header { 
@@ -44,6 +53,7 @@ main div {
 
 .main-slogan {
     height: 55dvh;
+    flex-direction: column;
 }
 
 .main-button {
