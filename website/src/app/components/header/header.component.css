@@ -68,4 +68,8 @@ main div {
     .links-container {
         display:none;
     }
+
+    main {
+        margin-top: 0;
+    }
 }
