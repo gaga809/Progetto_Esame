@@ -1,0 +1,36 @@
+main {
+    background-color: brown;
+    height: 100%;
+    padding: 20dvh 5dvw;
+    transition: padding 0.5s ease-in-out; 
+}
+
+.main-video {
+    background-color: chartreuse;
+    height: 70dvh;
+    width: 60dvw;
+    margin: 0 auto;
+}
+
+.small-video {
+    background-color: aqua;
+    width: 40dvw;
+    height: 40dvh;
+}
+
+.small-container {
+    padding-top: 5dvw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+@media (max-width: 768px) {
+    main {
+        padding: 2.5dvw 0;
+    }
+
+    .main-video {
+        width: 100%;
+     }
+}
