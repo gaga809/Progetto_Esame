@@ -3,7 +3,7 @@ main {
     height: 100%;
     padding: 7dvh 5dvw;
     padding-bottom: 20dvh;
-    transition: padding 0.5s ease-in-out; 
+    transition: padding 0.5s ease-in-out;
 }
 
 h1 {
@@ -31,16 +31,27 @@ h1 {
 
 .small-video {
     background-color: aqua;
-    width: 30dvw;
+    width: 32dvw;
     height: 40dvh;
 }
 
 @media (max-width: 768px) {
     main {
-        padding: 2.5dvw 0;
+        padding: 5dvh 0;
+        padding-bottom: 30dvh;
     }
 
     .main-video {
         width: 100%;
-     }
+    }
+
+    .small-container {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .small-video {
+        width: 100%;
+        margin: 2dvh 0 0 0;
+    }
 }

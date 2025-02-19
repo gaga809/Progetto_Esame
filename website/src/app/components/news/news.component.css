@@ -1,0 +1,40 @@
+main {
+    background-color: brown;
+    margin-top: 20dvh;
+    height: 100%;
+}
+
+h1 {
+    text-align: center;
+}
+
+.news-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 70dvh;
+    width: 70dvw;
+    margin: 0 auto;
+}
+
+.small-news {
+    background-color: aqua;
+    width: 32dvw;
+    height: 40dvh;
+}
+
+@media (max-width: 768px) {
+    h1 {
+        margin-bottom: 7dvh;
+    }
+
+    .news-container {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .small-news {
+        width: 100%;
+        margin: 2dvh 0 0 0;
+    }
+}
