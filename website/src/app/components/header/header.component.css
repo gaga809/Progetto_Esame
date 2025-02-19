@@ -1,0 +1,71 @@
+.container { 
+    background-color: aqua;
+    height: 100dvh;
+    padding: 2dvh 2dvw;
+    transition: padding 0.5s ease-in-out; 
+}
+
+header { 
+    background-color: transparent;
+    height: 10dvh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 2;
+    position: relative;
+}
+
+.header-container { 
+    height: 100%;
+    background-color: aquamarine;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 10dvw;
+}
+
+main { 
+    height: 100%;
+    background-color: blue;
+    display: flex;
+    align-items: center; 
+    flex-direction: column;
+    margin-top: -5dvh;
+    position: relative;
+}
+
+main div {
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    width: 100%;
+}
+
+.main-logo {
+    height: 10dvh;
+    background-color: bisque;
+}
+
+.main-slogan {
+    height: 55dvh;
+    background-color: pink;
+}
+
+.main-button {
+    height: 10dvh;
+    background-color: rebeccapurple;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 2.5dvw 0;
+    }
+
+    .logo-container {
+        width: 30dvw;
+    }
+
+    .links-container {
+        display:none;
+    }
+}
