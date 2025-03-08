@@ -1,8 +1,0 @@
-{
-  "dependencies": {
-    "gsap": "^3.12.7"
-  },
-  "scripts": {
-    "site" : "cd website && ng serve"
-  }
-}
