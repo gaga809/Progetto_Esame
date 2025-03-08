@@ -1,27 +1,4 @@
-@font-face {
-    font-family: 'MyFont';
-    src: url('assets/fonts/MyFont.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
 body {
     margin: 0;
     padding: 0;
 }
-
-h1 {
-    font-family: 'MyFont', sans-serif;
-    font-size: 70px; 
-    color: white; 
-    text-shadow: 
-        -3px -3px 0 black,  
-        3px -3px 0 black,  
-        -3px 3px 0 black,  
-        3px 3px 0 black,  
-        -3px 0px 0 black,  
-        3px 0px 0 black,  
-        0px -3px 0 black,  
-        0px 3px 0 black;
-}
-
