@@ -38,7 +38,6 @@ public class PlayerModel : MonoBehaviour
     {
         playerControls.actions.Enable();
 
-        // Subscribe to the events
         playerControls.actions["Move"].performed += ctx => playerController.OnMove(ctx.ReadValue<Vector2>());
         playerControls.actions["Move"].canceled += ctx => playerController.OnFinishMove();
 
