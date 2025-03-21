@@ -837,8 +837,8 @@ PlayerSettings:
   editorAssembliesCompatibilityLevel: 1
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: unity_proj
-  metroPackageVersion: 
+  metroPackageName: unityproj
+  metroPackageVersion: 1.0.0.0
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
@@ -846,7 +846,7 @@ PlayerSettings:
   metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: unity_proj
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: unity_proj
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0
