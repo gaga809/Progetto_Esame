@@ -12,7 +12,7 @@ public class CameraController : MonoBehaviour
         _angleRadius = angleRadius;
         _camera = camera;
 
-        _camera.transform.position = new Vector3(0, _distanceFromPlayer * Mathf.Tan(_angleRadius * Mathf.Deg2Rad), -_distanceFromPlayer);
+        _camera.transform.localPosition = new Vector3(0, _distanceFromPlayer * Mathf.Tan(_angleRadius * Mathf.Deg2Rad), -_distanceFromPlayer);
         _camera.transform.rotation = Quaternion.Euler(_angleRadius, 0, 0);
     }
 

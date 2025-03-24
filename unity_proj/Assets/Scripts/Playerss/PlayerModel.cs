@@ -9,6 +9,7 @@ public class PlayerModel : MonoBehaviour
     public float minSpeed = 0.1f;
     public float jumpForce = 5f;
     public PlayerInput playerControls;
+    public Transform model;
 
     [Header("Camera Settings")]
     public Camera currentCamera;
@@ -20,7 +21,7 @@ public class PlayerModel : MonoBehaviour
 
     private void Start()
     {
-        playerController = new PlayerController(speed, deceleration, minSpeed, jumpForce, gameObject.transform, gameObject.GetComponent<Rigidbody>());
+        playerController = new PlayerController(speed, deceleration, minSpeed, jumpForce, gameObject.transform, gameObject.GetComponent<Rigidbody>(), model);
         cameraController = new CameraController(distanceFromPlayer, angleRadius, currentCamera);
     }
 

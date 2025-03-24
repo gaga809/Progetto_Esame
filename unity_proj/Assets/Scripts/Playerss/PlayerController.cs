@@ -7,8 +7,9 @@ public class PlayerController : MonoBehaviour
     private float _speed, _deceleration, _minSpeed, _jumpForce;
     private Transform _trs;
     private Rigidbody _rb;
+    private Transform _trsModel;
 
-    public PlayerController(float speed, float decel, float minS, float jumpF, Transform trs, Rigidbody rb)
+    public PlayerController(float speed, float decel, float minS, float jumpF, Transform trs, Rigidbody rb, Transform trsModel)
     {
         _speed = speed;
         _deceleration = decel;
@@ -16,6 +17,7 @@ public class PlayerController : MonoBehaviour
         _jumpForce = jumpF;
         _trs = trs;
         _rb = rb;
+        _trsModel = trsModel;
     }
 
     private Vector3 playerMovementDirection = Vector3.zero;
@@ -38,6 +40,7 @@ public class PlayerController : MonoBehaviour
         }
 
         _trs.Translate(currentVelocity * Time.deltaTime, Space.World);
+        _trsModel.LookAt(_trs.position + playerMovementDirection);
         _rb.linearVelocity = new Vector3(0, _rb.linearVelocity.y, 0);
     }
 
