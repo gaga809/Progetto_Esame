@@ -40,8 +40,15 @@ public class PlayerController : MonoBehaviour
         }
 
         _trs.Translate(currentVelocity * Time.deltaTime, Space.World);
-        _trsModel.LookAt(_trs.position + playerMovementDirection);
         _rb.linearVelocity = new Vector3(0, _rb.linearVelocity.y, 0);
+        if (playerMovementDirection != Vector3.zero)
+        {
+            _trsModel.rotation = Quaternion.Slerp(
+                _trsModel.rotation,
+                Quaternion.LookRotation(playerMovementDirection),
+                Time.deltaTime * 10f 
+            );
+        }
     }
 
     public void OnMove(Vector2 direction)
