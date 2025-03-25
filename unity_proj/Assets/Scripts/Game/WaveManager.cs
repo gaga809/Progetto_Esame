@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.IO;
@@ -44,6 +44,7 @@ public class WaveManager : MonoBehaviour
         try
         {
             WaveData waveData = JsonUtility.FromJson<WaveData>(jsonText);
+            Debug.Log(waveData.waves);
 
             if (waveData != null && waveData.waves != null)
             {
@@ -52,7 +53,7 @@ public class WaveManager : MonoBehaviour
             }
             else
             {
-                Debug.LogError("Formato JSON non valido o waves � vuoto!");
+                Debug.LogError("Formato JSON non valido o waves è vuoto!");
                 waves = new Wave[0];
             }
         }
@@ -93,7 +94,7 @@ public class WaveManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        waveCounter.text = "Wave: " + (currentWave + 1);
+        waveCounter.text = "WAVE: " + (currentWave + 1);
 
         if (!isSpawning)
         {
@@ -117,7 +118,7 @@ public class WaveManager : MonoBehaviour
 
         for (int i = 0; i < wave.MobsCount; i++)
         {
-            // Get spanw positon
+            // Get spawn positon
             Vector3 SpawnPosition = GetValidSpawnPoint();
 
             // Get spawn direction
@@ -152,22 +153,15 @@ public class WaveManager : MonoBehaviour
         GameObject[] allPrefabs = Resources.LoadAll<GameObject>(enemyPrefabPath);
         string[] prefabs = new string[0];
 
-        if (waves == null || waves.Length == 0)
-        {
-            newWave = new Wave("Ondata Predefinita", prefabs, 10, 1f, 1f, 1f);
-        }
-        else
-        {
-            newWave = new Wave
-            (
-                "Ondata " + (waveIndex + 1),
-                prefabs,
-                waves[waves.Length - 1].MobsCount + (waveIndex * 3),
-                Mathf.Max(0.5f, waves[0].SpawnRate - 0.05f * waveIndex),
-                1f + (waveIndex * 0.1f),
-                1f + (waveIndex * 0.05f)
-            );
-        }
+        newWave = new Wave
+        (
+            "Ondata " + (waveIndex + 1),
+            prefabs,
+            waves[waves.Length - 1].MobsCount + (waveIndex * 3),
+            Mathf.Max(0.5f, waves[0].SpawnRate - 0.05f * waveIndex),
+            1f + (waveIndex * 0.1f),
+            1f + (waveIndex * 0.05f)
+        );
 
         Debug.Log("Ondata dinamica creata: " + newWave.WaveName);
         return newWave;
@@ -202,33 +196,28 @@ public class WaveManager : MonoBehaviour
     }
 }
 
+[System.Serializable]
 public class Wave
 {
-    private string _waveName;
-    private string[] _mobsPrefab;
-    private int _mobsCount;
-    private float _spawnRate;
-    private float _spawnRateMultiplier = 1f;
-    private float _healthMultiplier = 1f;
+    public string WaveName;
+    public string[] MobsPrefab;
+    public int MobsCount;
+    public float SpawnRate;
+    public float SpawnRateMultiplier;
+    public float HealthMultiplier;
 
-    public Wave(string waveName, string[] mobsPrefab, int mobsCount, float spawnRate, float spawnRateMultiplier, float healtMultiplier)
+    public Wave(string waveName, string[] mobsPrefab, int mobsCount, float spawnRate, float spawnRateMultiplier, float healthMultiplier)
     {
-        _waveName = waveName;
-        _mobsPrefab = mobsPrefab;
-        _mobsCount = mobsCount;
-        _spawnRate = spawnRate;
-        _spawnRateMultiplier = spawnRateMultiplier;
-        _healthMultiplier = healtMultiplier;
+        WaveName = waveName;
+        MobsPrefab = mobsPrefab;
+        MobsCount = mobsCount;
+        SpawnRate = spawnRate;
+        SpawnRateMultiplier = spawnRateMultiplier;
+        HealthMultiplier = healthMultiplier;
     }
-
-    public string WaveName { get => _waveName; set => _waveName = value; }
-    public string[] MobsPrefab { get => _mobsPrefab; set => _mobsPrefab = value; }
-    public int MobsCount { get => _mobsCount; set => _mobsCount = value; }
-    public float SpawnRate { get => _spawnRate; set => _spawnRate = value; }
-    public float SpawnRateMultiplier { get => _spawnRateMultiplier; set => _spawnRateMultiplier = value; }
-    public float HealthMultiplier { get => _healthMultiplier; set => _healthMultiplier = value; }
 }
 
+[System.Serializable]
 public class WaveData
 {
     public Wave[] waves;
