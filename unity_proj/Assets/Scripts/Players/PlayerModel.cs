@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 public class PlayerModel : MonoBehaviour
 {
@@ -10,8 +11,12 @@ public class PlayerModel : MonoBehaviour
     public float deceleration = 5f;
     public float minSpeed = 0.1f;
     public float jumpForce = 5f;
+    public int attackDamage = 5;
+    public float attackRate = 1f;
+    public float rangeRadius = 10f;
     public PlayerInput playerControls;
     public Transform model;
+    public GameObject projectilePrefab;
 
     [Header("Camera Settings")]
     public Camera currentCamera;
@@ -20,6 +25,7 @@ public class PlayerModel : MonoBehaviour
 
     private PlayerController playerController;
     private CameraController cameraController;
+    private bool canAttack = true;
 
     private void Start()
     {
@@ -35,6 +41,24 @@ public class PlayerModel : MonoBehaviour
         playerController.JumpForce = jumpForce;
 
         playerController.ResolveMovements();
+
+    }
+
+    private void Update()
+    {
+        if (canAttack)
+        {
+            Vector3 pos = FindClosestMob();
+
+            if (pos != Vector3.zero)
+            {
+                StartCoroutine(AttackCooldown());
+                Vector3 startingPos = transform.position;
+                if(startingPos.y > 1)
+                    startingPos.y = 1;
+                playerController.OnAttack(attackDamage, projectilePrefab, pos, startingPos);
+            }
+        }
     }
 
     private void OnEnable()
@@ -45,7 +69,6 @@ public class PlayerModel : MonoBehaviour
         playerControls.actions["Move"].canceled += ctx => playerController.OnFinishMove();
 
         playerControls.actions["Jump"].performed += ctx => playerController.OnJump();
-        playerControls.actions["Attack"].performed += ctx => playerController.OnAttack();
         playerControls.actions["Interact"].performed += ctx => playerController.OnInteract();
     }
 
@@ -54,7 +77,6 @@ public class PlayerModel : MonoBehaviour
         playerControls.actions["Move"].performed -= ctx => playerController.OnMove(ctx.ReadValue<Vector2>());
         playerControls.actions["Move"].canceled -= ctx => playerController.OnFinishMove();
         playerControls.actions["Jump"].performed -= ctx => playerController.OnJump();
-        playerControls.actions["Attack"].performed -= ctx => playerController.OnAttack();
         playerControls.actions["Interact"].performed -= ctx => playerController.OnInteract();
     }
 
@@ -83,5 +105,34 @@ public class PlayerModel : MonoBehaviour
     public void Die()
     {
         Debug.Log("Il Giocatore è schiattato. Porcacci");
+    }
+
+    IEnumerator AttackCooldown()
+    {
+        canAttack = false;
+        yield return new WaitForSeconds(attackRate);
+        canAttack = true;
+    }
+
+    public Vector3 FindClosestMob()
+    {
+        GameObject[] mobs = GameObject.FindGameObjectsWithTag("Mob");
+        GameObject closestMob = null;
+        float closestDistance = Mathf.Infinity;
+        foreach (GameObject mob in mobs)
+        {
+            float distance = Vector3.Distance(transform.position, mob.transform.position);
+            if (distance < closestDistance && distance < rangeRadius)
+            {
+                closestDistance = distance;
+                closestMob = mob;
+            }
+        }
+
+        if (closestMob == null)
+        {
+            return Vector3.zero;
+        }
+        return closestMob.transform.position;
     }
 }

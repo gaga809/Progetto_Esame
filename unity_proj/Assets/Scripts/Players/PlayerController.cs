@@ -53,8 +53,6 @@ public class PlayerController : MonoBehaviour
 
     public void OnMove(Vector2 direction)
     {
-        Debug.Log("Move: " + direction);
-
         playerMovementDirection = new Vector3(direction.x, 0, direction.y);
     }
 
@@ -65,17 +63,23 @@ public class PlayerController : MonoBehaviour
 
     public void OnJump()
     {
-        Debug.Log("Jump");
-
         if (IsGrounded())
         {
             _rb.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
         }
     }
 
-    public void OnAttack()
+    public void OnAttack(int damage, GameObject prefab, Vector3 closestMobPos, Vector3 startingPoint)
     {
-        Debug.Log("Attack");
+        Vector3 dir = closestMobPos - startingPoint;
+        dir.y = 1;
+        Quaternion quaternion = Quaternion.LookRotation(dir);
+        quaternion.x = 0;
+        quaternion.z = 0;
+
+        GameObject proj = Instantiate(prefab, startingPoint, quaternion);
+        proj.GetComponent<ProjectileModel>().damage = damage;
+
     }
 
     public void OnInteract()
