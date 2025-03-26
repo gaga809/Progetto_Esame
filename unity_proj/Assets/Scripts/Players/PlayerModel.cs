@@ -17,6 +17,7 @@ public class PlayerModel : MonoBehaviour
     public PlayerInput playerControls;
     public Transform model;
     public GameObject projectilePrefab;
+    public GameObject particlesPrefab;
 
     [Header("Camera Settings")]
     public Camera currentCamera;
@@ -56,7 +57,7 @@ public class PlayerModel : MonoBehaviour
                 Vector3 startingPos = transform.position;
                 if(startingPos.y > 1)
                     startingPos.y = 1;
-                playerController.OnAttack(attackDamage, projectilePrefab, pos, startingPos);
+                playerController.OnAttack(attackDamage, projectilePrefab, pos, startingPos, particlesPrefab);
             }
         }
     }

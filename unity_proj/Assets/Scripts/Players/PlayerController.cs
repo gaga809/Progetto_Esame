@@ -69,7 +69,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void OnAttack(int damage, GameObject prefab, Vector3 closestMobPos, Vector3 startingPoint)
+    public void OnAttack(int damage, GameObject prefab, Vector3 closestMobPos, Vector3 startingPoint, GameObject particlesPrefab)
     {
         Vector3 dir = closestMobPos - startingPoint;
         dir.y = 1;
@@ -77,6 +77,8 @@ public class PlayerController : MonoBehaviour
         quaternion.x = 0;
         quaternion.z = 0;
 
+        GameObject effect = Instantiate(particlesPrefab, startingPoint, quaternion);
+        Destroy(effect, 2f);
         GameObject proj = Instantiate(prefab, startingPoint, quaternion);
         proj.GetComponent<ProjectileModel>().damage = damage;
 
