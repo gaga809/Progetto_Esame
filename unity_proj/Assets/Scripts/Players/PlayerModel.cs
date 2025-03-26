@@ -27,6 +27,7 @@ public class PlayerModel : MonoBehaviour
     private PlayerController playerController;
     private CameraController cameraController;
     private bool canAttack = true;
+    private bool died = false;
 
     private void Start()
     {
@@ -47,7 +48,7 @@ public class PlayerModel : MonoBehaviour
 
     private void Update()
     {
-        if (canAttack)
+        if (canAttack && !died)
         {
             Vector3 pos = FindClosestMob();
 
@@ -107,6 +108,7 @@ public class PlayerModel : MonoBehaviour
     {
         Debug.Log("Il Giocatore è schiattato. Porcacci");
         playerControls.actions.Disable();
+        died = true;
     }
 
     IEnumerator AttackCooldown()

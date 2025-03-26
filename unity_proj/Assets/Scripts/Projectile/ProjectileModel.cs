@@ -31,12 +31,7 @@ public class ProjectileModel : MonoBehaviour
         if (mob != null)
         {
             mob.Hurt(damage);
-            Debug.Log("Hittato Mob: " + other.gameObject.name);
             Destroy(gameObject);
-        }
-        else
-        {
-            Debug.LogWarning("L'oggetto colpito NON è un Mob: " + other.gameObject.name);
         }
     }
 
