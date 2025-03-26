@@ -4,7 +4,7 @@
     "WaveName": "Ondata 1",
     "MobsPrefab": ["Slime"],
     "MobsCount": 5,
-    "SpawnRate": 2.0,
+    "SpawnRate": 1.0,
     "SpawnRateMultiplier": 1.0,
     "HealthMultiplier": 1.0
   },
@@ -12,7 +12,7 @@
     "WaveName": "Ondata 2",
     "MobsPrefab": ["Slime"],
     "MobsCount": 10,
-    "SpawnRate": 2.0,
+    "SpawnRate": 0.5,
     "SpawnRateMultiplier": 1.0,
     "HealthMultiplier": 1.0
   },
@@ -20,7 +20,7 @@
     "WaveName": "Ondata 3",
     "MobsPrefab": ["Slime"],
     "MobsCount": 100,
-    "SpawnRate": 2.0,
+    "SpawnRate": 0.5,
     "SpawnRateMultiplier": 1.0,
     "HealthMultiplier": 1.0
   },
@@ -28,7 +28,7 @@
     "WaveName": "Ondata 4",
     "MobsPrefab": ["Slime"],
     "MobsCount": 200,
-    "SpawnRate": 2.0,
+    "SpawnRate": 0.5,
     "SpawnRateMultiplier": 1.0,
     "HealthMultiplier": 1.0
   }

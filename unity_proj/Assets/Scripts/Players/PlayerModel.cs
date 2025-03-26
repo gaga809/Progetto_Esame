@@ -106,6 +106,7 @@ public class PlayerModel : MonoBehaviour
     public void Die()
     {
         Debug.Log("Il Giocatore è schiattato. Porcacci");
+        playerControls.actions.Disable();
     }
 
     IEnumerator AttackCooldown()
