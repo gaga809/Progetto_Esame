@@ -1,8 +1,9 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
+using Mirror;
 
-public class PlayerModel : MonoBehaviour
+public class PlayerModel : NetworkBehaviour
 {
     [Header("Player Settings")]
     public int health = 10;
@@ -14,29 +15,28 @@ public class PlayerModel : MonoBehaviour
     public int attackDamage = 5;
     public float attackRate = 1f;
     public float rangeRadius = 10f;
+    public InputActionAsset playerActions;
     public PlayerInput playerControls;
     public Transform model;
     public GameObject projectilePrefab;
     public GameObject particlesPrefab;
 
-    [Header("Camera Settings")]
-    public Camera currentCamera;
-    public float distanceFromPlayer = 10f;
-    public int angleRadius = 35;
-
     private PlayerController playerController;
-    private CameraController cameraController;
     private bool canAttack = true;
     private bool died = false;
 
     private void Start()
     {
+        if(isLocalPlayer)
+            Camera.main.GetComponent<CameraController>().playerT = transform;
+
         playerController = new PlayerController(speed, deceleration, minSpeed, jumpForce, gameObject.transform, gameObject.GetComponent<Rigidbody>(), model);
-        cameraController = new CameraController(distanceFromPlayer, angleRadius, currentCamera);
     }
 
     private void FixedUpdate()
     {
+        if (!isLocalPlayer) { return; }
+
         playerController.Speed = speed;
         playerController.Deceleration = deceleration;
         playerController.MinSpeed = minSpeed;
@@ -48,6 +48,8 @@ public class PlayerModel : MonoBehaviour
 
     private void Update()
     {
+        if (!isLocalPlayer) { return; }
+
         if (canAttack && !died)
         {
             Vector3 pos = FindClosestMob();
@@ -65,6 +67,8 @@ public class PlayerModel : MonoBehaviour
 
     private void OnEnable()
     {
+        playerControls = gameObject.AddComponent<PlayerInput>();
+        playerControls.actions = playerActions;
         playerControls.actions.Enable();
 
         playerControls.actions["Move"].performed += ctx => playerController.OnMove(ctx.ReadValue<Vector2>());
