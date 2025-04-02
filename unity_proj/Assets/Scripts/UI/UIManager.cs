@@ -11,7 +11,7 @@ public class UINavigator : MonoBehaviour
 
     public void BackOne()
     {
-        if(heirachyList.Count > 0)
+        if(heirachyList.Count > 1)
         {
             GameObject gObj = heirachyList.Pop();
             gObj.SetActive(false);

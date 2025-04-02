@@ -163,20 +163,20 @@ MonoBehaviour:
   syncInterval: 0
   target: {fileID: 8624378342554193002}
   syncPosition: 1
-  syncRotation: 1
-  syncScale: 0
+  syncRotation: 0
+  syncScale: 1
   onlySyncOnChange: 1
-  compressRotation: 1
+  compressRotation: 0
   interpolatePosition: 1
-  interpolateRotation: 1
+  interpolateRotation: 0
   interpolateScale: 1
   coordinateSpace: 0
   timelineOffset: 1
   showGizmos: 0
   showOverlay: 0
   overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
-  onlySyncOnChangeCorrectionMultiplier: 0.1
-  useFixedUpdate: 0
+  onlySyncOnChangeCorrectionMultiplier: 0.01
+  useFixedUpdate: 1
   rotationSensitivity: 0.01
   positionPrecision: 0.01
   scalePrecision: 0.01
@@ -809,6 +809,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4444997563281812298}
+  - component: {fileID: 4119350221392343097}
   m_Layer: 0
   m_Name: Model
   m_TagString: Untagged
@@ -832,3 +833,37 @@ Transform:
   - {fileID: 4763338498792953167}
   m_Father: {fileID: 8624378342554193002}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4119350221392343097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8922095535011376067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a553cb17010b2403e8523b558bffbc14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 1
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 4444997563281812298}
+  syncPosition: 0
+  syncRotation: 1
+  syncScale: 0
+  onlySyncOnChange: 1
+  compressRotation: 1
+  interpolatePosition: 0
+  interpolateRotation: 1
+  interpolateScale: 0
+  coordinateSpace: 0
+  timelineOffset: 1
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  bufferResetMultiplier: 3
+  useFixedUpdate: 0
+  positionSensitivity: 0.01
+  rotationSensitivity: 0.01
+  scaleSensitivity: 0.01
