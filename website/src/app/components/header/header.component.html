@@ -3,18 +3,25 @@
         <div class="header-container logo-container">
             <img src="" alt="Logo Immagine">
         </div>
-        <div class="header-container links-container">LINKS</div>
+        <div class="header-container links-container">
+            <select (change)="onLanguageChange($event)">
+                <option value="en">En</option>
+                <option value="it">It</option>
+                <option value="fr">Fr</option>
+                <option value="ci">Ci</option>
+              </select>              
+        </div>
     </header>
     <main>
         <div class="main-logo">
             <img src="" alt="Logo2 Immagine">
         </div>
         <div class="main-slogan">
-            <h1>Catturali tutti!</h1>
+            <h1>{{'hello' | translate}}</h1>
             <p>«Lorem ipsum dolor sit amet.»</p>
         </div>
         <div class="main-button">
-            <button>GIOCA ORA</button>  
+            <button>GIOCA ORA</button>
         </div>
     </main>
 </div>
