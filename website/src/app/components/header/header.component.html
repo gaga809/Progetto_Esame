@@ -1,27 +1,52 @@
 <div class="container">
-    <header>
-        <div class="header-container logo-container">
-            <img src="" alt="Logo Immagine">
-        </div>
+  <header>
+    <div class="header-container logo-container">
+      <img src="" alt="Logo Immagine">
+    </div>
+    <div class="header-container links-container">
+      <div class="header-container links-container">
         <div class="header-container links-container">
-            <select (change)="onLanguageChange($event)">
-                <option value="en">En</option>
-                <option value="it">It</option>
-                <option value="fr">Fr</option>
-                <option value="ci">Ci</option>
-              </select>              
-        </div>
-    </header>
-    <main>
-        <div class="main-logo">
-            <img src="" alt="Logo2 Immagine">
-        </div>
-        <div class="main-slogan">
-            <h1>{{'hello' | translate}}</h1>
-            <p>«Lorem ipsum dolor sit amet.»</p>
-        </div>
-        <div class="main-button">
-            <button>GIOCA ORA</button>
-        </div>
-    </main>
+          <div class="custom-dropdown">
+            <button class="dropdown-btn" (click)="toggleDropdown()">
+              <img [src]="selectedLanguageFlag" alt="{{ selectedLanguage }}" class="flag-icon" />
+              {{ selectedLanguage | uppercase }}
+            </button>
+            <div class="dropdown-content" [class.show]="dropdownVisible">
+              <div class="dropdown-item" (click)="onLanguageChange('en', 'https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg', 'English')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg" alt="English" class="flag-icon" /> 
+                English
+              </div>
+              <div class="dropdown-item" (click)="onLanguageChange('it', 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Flag_of_Italy.svg/2560px-Flag_of_Italy.svg.png', 'Italiano')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Flag_of_Italy.svg/2560px-Flag_of_Italy.svg.png" alt="Italian" class="flag-icon" /> 
+                Italiano
+              </div>
+              <div class="dropdown-item" (click)="onLanguageChange('fr', 'https://upload.wikimedia.org/wikipedia/commons/c/c3/Flag_of_France.svg', 'Français')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Flag_of_France.svg" alt="French" class="flag-icon" /> 
+                Français
+              </div>
+              <div class="dropdown-item" (click)="onLanguageChange('ch', 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_the_People%27s_Republic_of_China.svg/2560px-Flag_of_the_People%27s_Republic_of_China.svg.png', '中國人')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_the_People%27s_Republic_of_China.svg/2560px-Flag_of_the_People%27s_Republic_of_China.svg.png" alt="Civitanese" class="flag-icon" /> 
+                中國人
+              </div>
+            </div>
+          </div>
+        </div>  
+      </div>
+    </div>
+  </header>
+  <main>
+    <div class="main-logo">
+      <img src="" alt="Logo2 Immagine">
+    </div>
+    <div class="main-slogan">
+      <h1 class="ultra-regular">{{'hello' | translate | uppercase}}</h1>
+      <p>«Lorem ipsum dolor sit amet.»</p>
+    </div>
+    <div class="main-button">
+      <button>GIOCA ORA</button>
+    </div>
+
+    <div class="bottom-left">Left Content</div>
+    <div class="bottom-right">Right Content</div>
+  </main>
 </div>

@@ -1,4 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Ultra&display=swap');
+
 body {
     margin: 0;
     padding: 0;
+}
+
+.ultra-regular {
+    font-family: "Ultra", serif;
+    font-weight: 400;
+    font-style: normal;
+    color: white; 
+    -webkit-text-stroke: 1.5px black; 
 }

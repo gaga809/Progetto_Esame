@@ -1,8 +1,13 @@
 main {
     height: 100%;
     padding: 3dvh 5dvw;
+    padding-top: 10dvh;
     padding-bottom: 20dvh;
     transition: padding 0.2s ease-in-out; 
+    /* 
+    background: url('') no-repeat center center;
+    background-size: cover;
+    */
 }
 
 h1 {
