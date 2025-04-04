@@ -2,7 +2,7 @@
     height: 100dvh;
     padding: 4dvh 5dvw;
     transition: padding 0.2s ease-in-out;
-    /* 
+    /*
     background: url('https://images.pexels.com/photos/842711/pexels-photo-842711.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2') no-repeat center center;
     background-size: cover;
     */
@@ -19,6 +19,10 @@ p {
     text-align: center;
     margin: 0;
     transform: rotate(-5deg);
+}
+
+#logo-company { 
+    width: 250px;
 }
 
 p {
@@ -169,7 +173,7 @@ button {
 
 @media (max-width: 768px) {
     .container {
-        padding: 2.5dvw 0;
+        padding: 2.5dvw 5dvw;
     }
 
     .logo-container {
@@ -195,6 +199,10 @@ button {
 
     p {
         font-size: 2dvh;
+    }
+
+    #logo-company { 
+        width: 150px;
     }
 }
 

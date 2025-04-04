@@ -51,24 +51,29 @@ video {
 @media (max-width: 768px) {
     main {
         padding: 2dvh 0;
-        padding-bottom: 30dvh;
     }
 
     h1 {
         padding-bottom: 3dvh;
+        font-size: 12dvw;
+        text-align: center;
     }
 
     .main-video {
         width: 100%;
+        margin: 5dvh 0 0 0;
+        height: 60dvh;
     }
 
     .small-container {
         flex-direction: column;
         width: 100%;
+        margin: 5dvh 0 0 0;
     }
 
     .small-video {
+        margin: 5dvh 0 0 0;
         width: 100%;
-        margin: 2dvh 0 0 0;
+        margin: 10dvh 0 0 0;
     }
 }
