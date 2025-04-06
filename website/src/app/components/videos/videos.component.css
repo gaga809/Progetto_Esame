@@ -8,13 +8,14 @@ main {
     background: url('') no-repeat center center;
     background-size: cover;
     */
+    background-color: rebeccapurple;
 }
 
 h1 {
     text-align: center;
     margin-bottom: 7dvh;
     text-align: center;
-    font-size: 3dvw;
+    font-size: 5dvw;
 }
 
 .main-video {

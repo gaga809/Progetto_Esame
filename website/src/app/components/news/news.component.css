@@ -1,12 +1,12 @@
 main {
     padding-top: 8dvh;
     height: 100%;
+    background-color: red;
 }
 
 h1 {
     text-align: center;
-    font-size: 3dvw;
-    padding-bottom: 5dvh;
+    font-size: 5dvw;
 }
 
 .news-container {
@@ -73,6 +73,7 @@ p {
     h1 {
         margin-bottom: 7dvh;
         font-size: 12dvw;
+        padding-top: 5dvh;
     }
     
     .news-container {
