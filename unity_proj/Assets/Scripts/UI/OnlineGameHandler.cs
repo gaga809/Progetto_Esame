@@ -1,35 +1,38 @@
 using Mirror;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 
-public class OnlineGameHandler : NetworkManager
+public class GameManager : NetworkBehaviour
 {
-    [Header("HUD")]
-    public GameObject lobbyPanel;
-    public GameObject lobbyPlayerPrefab;
-    public TMP_InputField ipInput;
-    public TextMeshProUGUI clientDebug;
-
     [Header("Lobby Settings")]
     public int maxPlayers = 4;
 
-    [Header("User Info")]
-    public string playerNamePref;
+    public TextMeshProUGUI playersNumLabel;
 
-    [Header("UI MANAGER")]
+    private SyncList<PlayerData> gamePlayers = new SyncList<PlayerData>();
+    private List<GameObject> playerCards = new List<GameObject>();
+
+    public GameObject lobbyPlayerPrefab;
+    public Transform lobbyView;
+    public TMP_InputField ipInput;
     public UIManager uiManager;
 
-    // GAME VARIABLES
-    private List<GamePlayer> gamePlayers;
-
-    public override void Start()
+    private void Start()
     {
-        base.Start();
+        if (isServer)
+        {
+            gamePlayers.Callback += OnGamePlayersChanged;
+        }
+
         ipInput.onValueChanged.AddListener(OnIpChanged);
     }
+
+    private void OnGamePlayersChanged(SyncList<PlayerData>.Operation operation, int arg2, PlayerData data1, PlayerData data2)
+    {
+        RpcUpdateLobby();
+    }
+
     private void OnIpChanged(string ip)
     {
         NetworkManager.singleton.networkAddress = ip;
@@ -37,56 +40,62 @@ public class OnlineGameHandler : NetworkManager
 
     /* CLIENT */
 
-    public override void OnClientConnect()
+    [ClientRpc]
+    private void RpcUpdateLobby()
     {
-        base.OnClientConnect();
-        uiManager.GoTo(lobbyPanel);
-        UpdateLobbyGraphic();
+        if (playersNumLabel != null)
+        {
+            playersNumLabel.text = $"{gamePlayers.Count}/{maxPlayers}";
+        }
+
+        for (int i = 0; i < playerCards.Count; i++)
+        {
+            Destroy(playerCards[i]);
+        }
+
+        playerCards.Clear();
+
+        foreach (var player in gamePlayers)
+        {
+            GameObject playerCard = Instantiate(lobbyPlayerPrefab, lobbyView);
+            playerCard.GetComponentInChildren<TextMeshProUGUI>().text = player.playerName;
+            playerCards.Add(playerCard);
+        }
     }
-
-
-
-    public void ConnectClient()
-    {
-        NetworkManager.singleton.StartClient();
-    }
-
 
     /* SERVER */
-
-    public void StartHosting()
+    public void AddPlayer(PlayerData playerData)
     {
-        NetworkManager.singleton.StartHost();
-        gamePlayers = new List<GamePlayer>();
-        gamePlayers.Add(new GamePlayer(
-            PlayerPrefs.GetString(playerNamePref),
-            null,
-            null));
+        if (isServer)
+        {
+            gamePlayers.Add(playerData);
+        }
     }
 
-    /* LOBBY */
-
-    public void UpdateLobbyGraphic()
+    public void RemovePlayer(PlayerData playerData)
     {
-
+        if (isServer)
+        {
+            gamePlayers.Remove(playerData);
+        }
     }
 
-}
-
-public class GamePlayer
-{
-    private string _name;
-    private NetworkConnection _conn;
-    private GameObject _lobbyGObj;
-
-    public GamePlayer(string name, NetworkConnection conn, GameObject lobbyGObj)
+    [System.Serializable]
+    public class PlayerData
     {
-        _name = name;
-        _conn = conn;
-        _lobbyGObj = lobbyGObj;
-    }
+        public string playerName;
+        public int conn;
 
-    public string Name { get => _name; set => _name = value; }
-    public NetworkConnection Conn { get => _conn; set => _conn = value; }
-    public GameObject LobbyGObj { get => _lobbyGObj; set => _lobbyGObj = value; }
+        public PlayerData()
+        {
+            playerName = string.Empty;
+            conn = 0;
+        }
+
+        public PlayerData(string playerName, int connectionId)
+        {
+            this.playerName = playerName;
+            this.conn = connectionId;
+        }
+    }
 }
