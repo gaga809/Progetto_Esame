@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit, Renderer2 } from '@angular/core';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 
@@ -14,10 +14,13 @@ export class ScrollComponent implements AfterViewInit {
   @ViewChild('section2') section2!: ElementRef;
   @ViewChild('section3') section3!: ElementRef;
 
+  constructor(private renderer: Renderer2) {}
+
   ngAfterViewInit() {
-    this.addScrollTrigger(this.section1);
-    this.addScrollTrigger(this.section2);
-    this.addScrollTrigger(this.section3);
+    [this.section1, this.section2, this.section3].forEach((section) => {
+      this.addScrollTrigger(section);
+      this.addRandomSquares(section); 
+    });
   }
 
   addScrollTrigger(section: ElementRef) {
@@ -32,5 +35,56 @@ export class ScrollComponent implements AfterViewInit {
         toggleActions: 'play none none reverse', 
       },
     });
+  }
+
+  addRandomSquares(section: ElementRef) {
+    const container = section.nativeElement.querySelector('.random-boxes');
+    if (!container) return;
+  
+    const numSquares = 2;
+    const minDistance = 20;
+  
+    const positions: { x: number; y: number }[] = [];
+  
+    const pickEdge = () => {
+      const low = 20 + Math.random() * 5;
+      const high = 75 + Math.random() * 5;
+      return Math.random() < 0.5 ? low : high;
+    };
+  
+    const isTooClose = (x: number, y: number) => {
+      return positions.some((pos) => {
+        const dx = Math.abs(pos.x - x);
+        const dy = Math.abs(pos.y - y);
+        return dx < minDistance && dy < minDistance;
+      });
+    };
+  
+    for (let i = 0; i < numSquares; i++) {
+      let attempts = 0;
+      let x = 0;
+      let y = 0;
+  
+      do {
+        x = pickEdge();
+        y = pickEdge();
+        attempts++;
+      } while (isTooClose(x, y) && attempts < 10);
+  
+      positions.push({ x, y });
+  
+      const square = this.renderer.createElement('div');
+      const colors = ['red', 'green', 'blue'];
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+  
+      this.renderer.addClass(square, 'square');
+      this.renderer.addClass(square, randomColor);
+  
+      square.style.left = `${x}%`;
+      square.style.top = `${y}%`;
+      square.style.transform = 'translate(-50%, -50%)';
+  
+      this.renderer.appendChild(container, square);
+    }
   }
 }

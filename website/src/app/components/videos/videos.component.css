@@ -2,13 +2,8 @@ main {
     height: 100%;
     padding: 3dvh 5dvw;
     padding-top: 10dvh;
-    padding-bottom: 10dvh;
+    padding-bottom: 0;
     transition: padding 0.2s ease-in-out;
-    /* 
-    background: url('') no-repeat center center;
-    background-size: cover;
-    */
-    background-color: rebeccapurple;
 }
 
 h1 {
@@ -46,7 +41,6 @@ video {
     border-radius: 0.5rem;
     border: 2px solid black;
     box-shadow: 0 0 0 14px white, 0 0 0 16px black;
-
 }
 
 @media (max-width: 768px) {

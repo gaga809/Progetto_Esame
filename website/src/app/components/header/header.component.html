@@ -12,39 +12,20 @@
 
       <div class="custom-dropdown">
         <button class="dropdown-btn" (click)="toggleDropdown()">
-          <img [src]="selectedLanguageFlag" alt="{{ selectedLanguage }}" class="flag-icon" />
-          {{ selectedLanguage | uppercase }}
+          <img class="flag-icon" [src]="'assets/flags/' + selectedLang + '.svg'" alt="flag" />
+          {{ selectedLanguageLabel | uppercase }}
         </button>
-        <div class="dropdown-content" [class.show]="dropdownVisible">
-          <div class="dropdown-item"
-            (click)="onLanguageChange('en', 'https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg', 'English')">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg" alt="English"
-              class="flag-icon" />
-            English
-          </div>
-          <div class="dropdown-item"
-            (click)="onLanguageChange('it', 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Flag_of_Italy.svg/2560px-Flag_of_Italy.svg.png', 'Italiano')">
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Flag_of_Italy.svg/2560px-Flag_of_Italy.svg.png"
-              alt="Italian" class="flag-icon" />
-            Italiano
-          </div>
-          <div class="dropdown-item"
-            (click)="onLanguageChange('fr', 'https://upload.wikimedia.org/wikipedia/commons/c/c3/Flag_of_France.svg', 'Français')">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Flag_of_France.svg" alt="French"
-              class="flag-icon" />
-            Français
-          </div>
-          <div class="dropdown-item"
-            (click)="onLanguageChange('ch', 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_the_People%27s_Republic_of_China.svg/2560px-Flag_of_the_People%27s_Republic_of_China.svg.png', '中國人')">
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_the_People%27s_Republic_of_China.svg/2560px-Flag_of_the_People%27s_Republic_of_China.svg.png"
-              alt="Civitanese" class="flag-icon" />
-            中國人
-          </div>
+      
+        <div class="dropdown-content" [class.show]="showDropdown">
+          @for (lang of languages; track lang.code) {
+            <div class="dropdown-item" (click)="selectLanguage(lang.code)">
+              <img class="flag-icon" [src]="'assets/flags/' + lang.code + '.svg'" alt="flag" />
+              {{ lang.label }}
+            </div>
+          }
         </div>
-      </div>
-    </div>
+      </div>      
+   </div>
   </header>
   <main>
     <div class="main-logo">

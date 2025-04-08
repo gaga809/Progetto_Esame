@@ -1,7 +1,6 @@
 main {
-    padding-top: 8dvh;
     height: 100%;
-    background-color: red;
+    padding-bottom: 10dvh;
 }
 
 h1 {
@@ -13,14 +12,13 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 60dvh;
-    width: 65dvw;
+    width: 55dvw;
     margin: 0 auto;
 }
 
 .small-news {
-    width: 30dvw;
-    height: 50dvh;
+    width: 25dvw;
+    height: 100%;
     border-radius: 0.5rem;
     border: 2px solid black;
     box-shadow: 0 0 0 10px white, 0 0 0 12px black;
@@ -28,6 +26,7 @@ h1 {
     flex-direction: column;
     justify-content: space-between;
     transition: transform 0.5s ease; 
+    background-color: white;
 }
 
 .small-news:hover {
@@ -44,7 +43,7 @@ img {
     width: 100%;
     height: 30dvh; 
     object-fit: cover;
-    border-radius: 0.5rem 0.5rem 0 0;
+    border-radius: 0.3rem 0.3rem 0 0;
     margin-bottom: 0;
 }
 
@@ -63,11 +62,14 @@ p {
     text-overflow: ellipsis; 
 }
 
+.data {
+    margin: 0;
+
+}
 
 @media (max-width: 768px) {
     main {
         padding-top: 5dvh;
-        padding-bottom: 50dvh;
     }
 
     h1 {

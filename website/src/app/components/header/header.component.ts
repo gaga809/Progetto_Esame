@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { Component, OnInit } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { UpperCasePipe } from '@angular/common';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'custom-header',
@@ -9,22 +10,36 @@ import { UpperCasePipe } from '@angular/common';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent {
-  selectedLanguage: string = 'English'; 
-  selectedLanguageFlag: string = 'https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg'; 
-  constructor(private translateService: TranslateService) {}
-  dropdownVisible: boolean = false; 
+export class HeaderComponent implements OnInit {
+  selectedLang: string = 'en';
+  showDropdown = false;
 
-  toggleDropdown() {
-    this.dropdownVisible = !this.dropdownVisible;
+  languages = [
+    { code: 'en', label: 'English' },
+    { code: 'it', label: 'Italiano' },
+    { code: 'ch', label: '中国人' },
+    { code: 'fr', label: 'Français' },
+  ];
+
+  constructor(private languageService: LanguageService) {}
+
+  ngOnInit(): void {
+    this.languageService.language$.subscribe((lang) => {
+      this.selectedLang = lang;
+    });
   }
 
-  onLanguageChange(language: string, flagUrl: string, nationality: string) {
-    this.selectedLanguage = nationality;
-    this.selectedLanguageFlag = flagUrl;
+  get selectedLanguageLabel(): string {
+    const language = this.languages.find(l => l.code === this.selectedLang);
+    return language ? language.label : '';
+  }
 
-    this.dropdownVisible = false;
+  toggleDropdown() {
+    this.showDropdown = !this.showDropdown;
+  }
 
-    this.translateService.use(language);
+  selectLanguage(lang: string) {
+    this.languageService.setLanguage(lang);
+    this.showDropdown = false;
   }
 }

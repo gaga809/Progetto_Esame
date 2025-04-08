@@ -1,0 +1,78 @@
+.footer {
+  background-color: rebeccapurple;
+  color: white;
+  padding: 2rem 1.5rem;
+  font-family: Arial, sans-serif;
+}
+
+.footer a {
+  color: white;
+  text-decoration: none;
+  margin-right: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.footer-top,
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.store-buttons img {
+  height: 40px;
+  margin-left: 0.5rem;
+}
+
+.divider {
+  border: 0;
+  height: 1px;
+  background: #444;
+  margin: 1.5rem 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.logo {
+  width: 150px;
+  height: 50px;
+  object-fit: cover;
+}
+
+.logo-svlime {
+  width: 150px;
+  height: 60px;
+  object-fit: cover;
+}
+
+.social-icons {
+  display: flex;
+  gap: 1rem;
+  font-size: 1.4rem;
+}
+
+@media (max-width: 768px) {
+  .footer-top,
+  .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .store-buttons {
+    margin-top: 1rem;
+  }
+}
