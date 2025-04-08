@@ -41,6 +41,7 @@ video {
     border-radius: 0.5rem;
     border: 2px solid black;
     box-shadow: 0 0 0 14px white, 0 0 0 16px black;
+    background-color: white;
 }
 
 @media (max-width: 768px) {

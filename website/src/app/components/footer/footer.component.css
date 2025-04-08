@@ -1,8 +1,12 @@
 .footer {
-  background-color: rebeccapurple;
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-position: center bottom; 
+  background-color: #000;
   color: white;
   padding: 2rem 1.5rem;
-  font-family: Arial, sans-serif;
+  position: relative;
+  overflow: hidden;
 }
 
 .footer a {
@@ -35,7 +39,7 @@
 .divider {
   border: 0;
   height: 1px;
-  background: #444;
+  background: #000;
   margin: 1.5rem 0;
 }
 
@@ -54,7 +58,7 @@
 
 .logo-svlime {
   width: 150px;
-  height: 60px;
+  height: 55px;
   object-fit: cover;
 }
 
@@ -74,5 +78,11 @@
 
   .store-buttons {
     margin-top: 1rem;
+  }
+  
+  a {
+    width: 100%;
+    text-align: center;
+    font-size: 10px;
   }
 }

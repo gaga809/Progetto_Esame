@@ -41,14 +41,14 @@ export class ScrollComponent implements AfterViewInit {
     const container = section.nativeElement.querySelector('.random-boxes');
     if (!container) return;
   
-    const numSquares = 2;
-    const minDistance = 20;
+    const numSquares = Math.floor(Math.random() * 3) + 1;
+    const minDistance = 1;
   
     const positions: { x: number; y: number }[] = [];
   
     const pickEdge = () => {
-      const low = 20 + Math.random() * 5;
-      const high = 75 + Math.random() * 5;
+      const low = 10 + Math.random() * 5;
+      const high = 60 + Math.random() * 5;
       return Math.random() < 0.5 ? low : high;
     };
   

@@ -1,11 +1,13 @@
 .scroll-container {
-  height: 300vh; /* Altezza maggiore per permettere lo scroll */
+  height: 300vh;
+  /* Altezza maggiore per permettere lo scroll */
   display: flex;
   flex-direction: column;
 }
 
 .section {
-  height: 100vh; /* Ogni sezione copre l'intera altezza della viewport */
+  height: 100vh;
+  /* Ogni sezione copre l'intera altezza della viewport */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -20,32 +22,41 @@
 }
 
 h2 {
-  font-size: 3rem;
+  text-align: center;
+  font-size: 5.5dvw;
+  text-transform: uppercase;
+  margin: auto;
+  width: 50dvw;
+  word-wrap: break-word; 
+  overflow-wrap: break-word; 
+  white-space: normal; 
+  line-height: 1.1; 
 }
 
 p {
-  font-size: 1.2rem;
-  max-width: 600px;
-  margin: 0 auto;
+  font-size: 25px;
+  word-wrap: break-word; 
+  overflow-wrap: break-word; 
+  white-space: normal; 
+  line-height: 1.1; 
+  width: 50dvw;
   color: white;
 }
 
-  .random-boxes {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    z-index: 1;
-  }
+.random-boxes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+}
 
 .square {
   position: absolute;
   width: 150px;
   height: 150px;
-  background-color: red;
-  opacity: 0.6;
   border-radius: 8px;
   transition: transform 0.3s ease;
   animation: bounce 1.5s ease-in-out infinite;
@@ -53,40 +64,58 @@ p {
 }
 
 .square.red {
-  background-color: #e74c3c;
+  background-image: url('/assets/img/angel.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
+
+
 .square.green {
-  background-color: #2ecc71;
-}
+  background-image: url('/assets/img/glasses.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;}
+
 .square.blue {
-  background-color: #3498db;
+  background-image: url('/assets/img/blue.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 @media (max-width: 768px) {
   .random-boxes {
     display: none;
   }
-}
 
+  h2 {
+    font-size: 10dvw;
+  }
+
+  p {
+    font-size: 20px;
+  }
+}
 
 @keyframes bounce {
   0% {
-      transform: translateY(0);
+    transform: translateY(0);
   }
 
   25% {
-      transform: translateY(-15px);
+    transform: translateY(-15px);
   }
 
   50% {
-      transform: translateY(0);
+    transform: translateY(0);
   }
 
   75% {
-      transform: translateY(-5px);
+    transform: translateY(-5px);
   }
 
   100% {
-      transform: translateY(0);
+    transform: translateY(0);
   }
 }

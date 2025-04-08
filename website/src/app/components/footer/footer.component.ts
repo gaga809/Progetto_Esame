@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { UpperCasePipe } from '@angular/common';
 
 @Component({
   selector: 'custom-footer',
-  imports: [TranslateModule, UpperCasePipe],
+  imports: [TranslateModule],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.css'
 })
