@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
     public GameObject titleScreenPanel;
     public GameObject loginPanel;
     public GameObject mainMenuStartingPanel;
+    public TMP_InputField hostIpInput;
 
     [Header("Account Info")]
     //public TMP_InputField nameInput;
@@ -83,6 +84,21 @@ public class UIManager : MonoBehaviour
         heirachyList.Pop().SetActive(false);
         heirachyList.Push(panel);
         panel.SetActive(true);
+    }
+
+    public void JoinRoom()
+    {
+        var manager = CustomNetworkRoomManager.singleton;
+
+        manager.networkAddress = hostIpInput.text;
+        manager.StartClient();
+    }
+
+    public void CreateRoom()
+    {
+        var manager = CustomNetworkRoomManager.singleton;
+
+        manager.StartHost();
     }
 
 
