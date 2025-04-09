@@ -3,13 +3,11 @@
 }
 
 .bg {
-    /*
-    background: url('https://images.pexels.com/photos/842711/pexels-photo-842711.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2') no-repeat center center;
-    background-size: cover;
+    background: url('/assets/img/main-bg.jpg');
+    background-size: contain;
     width: 100%;
-    */
-    background-color: red;
 }
+
 
 
 @media (max-width: 1024px) {

@@ -1,6 +1,14 @@
 {
-    "escapeNow": "Escape Now",
-    "dontGetCaught": "Don't let the slimes catch you!",
-      "playNow": "Play Now"
-  }
-  
+  "escapeNow": "Escape Now",
+  "dontGetCaught": "Don't let the slimes catch you!",
+  "playNow": "Play Now",
+  "watchNow": "Watch Now!",
+  "updates": "Updates",
+  "rankingTitle": "Top or Nothing!",
+  "rankingDescription": "The ranking rewards those with quick reflexes, a cool head, and a lot of courage. And you, where are you on the list?",
+  "ranking": "Ranking",
+  "escapeTitle": "Run… while you can.",
+  "escapeDescription": "The slimes are coming. No shelter is safe. Get ready to escape—or become one of them.",
+  "updateTitle": "The evolution has begun!",
+  "updateDescription": "The new version is here: more challenges, more slimes, more chaos. Discover what’s new and prepare to survive again."
+}

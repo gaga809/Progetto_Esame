@@ -1,47 +1,112 @@
 main {
     height: 100%;
     padding: 3dvh 5dvw;
-    padding-top: 10dvh;
     padding-bottom: 0;
     transition: padding 0.2s ease-in-out;
 }
 
 h1 {
+    font-size: 7.5dvw;
+    line-height: 1.1;
     text-align: center;
-    margin-bottom: 7dvh;
-    text-align: center;
-    font-size: 5dvw;
+    margin: auto;
+    max-width: 50dvw;
+    word-wrap: break-word;
+    padding: 70px 0;
 }
 
 .main-video {
-    height: 70dvh;
     width: 70dvw;
     margin: 0 auto;
-    padding: 0;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 60px;
+}
+
+.video-content {
+    width: 100%;
+    border: 2px solid black;
+    border-radius: 0.5rem;
+    padding: 1dvh;
+    box-shadow: 0 0 0 14px white, 0 0 0 16px black;
+    background-color: #3ca502;
+    text-align: center;
+}
+
+.yt-logo {
+    font-size: 3dvw;
+}
+
+@media (max-width: 768px) {
+    .yt-logo {
+        font-size: 8dvw;
+    }
+}
+
+
+video {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    background-color: #000;
+}
+
+.video-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5dvh;
+    padding: 0 1dvw;
+}
+
+.video-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.video-title {
+    font-size: 2dvw;
+    font-weight: bold;
+    margin: 0;
+    -webkit-text-stroke: 0;
+}
+
+.video-date {
+    font-size: 1.5dvw;
+    margin: 0.5dvh 0 0;
+    padding-bottom: 15px;
+}
+
+.yt-logo {
+    width: 4dvw;
+    height: auto;
+    color: white;
+    cursor: pointer;
+}
+
+.yt-logo:hover {
+    color: #ff0000;
+    transform: scale(1.05);
+    transition: 0.2s ease;
 }
 
 .small-container {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
-    height: 70dvh;
     width: 70dvw;
     margin: 0 auto;
+    margin-top: 5dvh;
 }
 
 .small-video {
     width: 32dvw;
-    height: 40dvh;
-}
-
-video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 0.5rem;
-    border: 2px solid black;
-    box-shadow: 0 0 0 14px white, 0 0 0 16px black;
-    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 @media (max-width: 768px) {
@@ -50,26 +115,43 @@ video {
     }
 
     h1 {
-        padding-bottom: 3dvh;
-        font-size: 12dvw;
-        text-align: center;
+        font-size: 16dvw;
+        width: 100dvw;
+        padding: 0;
     }
 
     .main-video {
         width: 100%;
-        margin: 5dvh 0 0 0;
-        height: 60dvh;
+        margin-top: 5dvh;
     }
 
     .small-container {
         flex-direction: column;
         width: 100%;
-        margin: 5dvh 0 0 0;
+        margin-top: 5dvh;
     }
 
     .small-video {
-        margin: 5dvh 0 0 0;
         width: 100%;
-        margin: 10dvh 0 0 0;
+        margin-bottom: 4dvh;
+        margin-top: 3dvh;
+    }
+
+    .video-title {
+        font-size: 5dvw;
+    }
+
+    .video-date {
+        font-size: 4dvw;
+    }
+
+    .yt-logo {
+        width: 10dvw;
+    }
+
+    .video-info {
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 2dvw;
     }
 }

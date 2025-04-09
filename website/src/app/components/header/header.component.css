@@ -1,6 +1,6 @@
 .container {
     height: 100dvh;
-    padding: 6dvh 5dvw;
+    padding: 5vh 7dvw;
     transition: padding 0.2s ease-in-out;
     /*
     background: url('https://images.pexels.com/photos/842711/pexels-photo-842711.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2') no-repeat center center;
@@ -11,7 +11,7 @@
 
 h1 {
     -webkit-text-stroke: 2px black;
-    font-size: 8.5vw;
+    font-size: 9vw;
     display: inline-block;
     text-align: center;
 }
@@ -30,14 +30,14 @@ p {
 }
 
 p {
-    -webkit-text-stroke: 1px black;
-    font-size: 6.5dvh;
+    -webkit-text-stroke: 1.5px black;
+    font-size: 7.5dvh;
     margin-top: -20px;
 }
 
 header {
     background-color: transparent;
-    height: 10dvh;
+    height: 13dvh;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -187,8 +187,8 @@ button {
 
 .bottom-left,
 .bottom-right {
-    height: 30dvh;
-    max-width: 15dvw;
+    height: 25dvh;
+    max-width: 10dvw;
     box-sizing: border-box;
     position: absolute;
     bottom: 13dvh;
@@ -197,11 +197,11 @@ button {
 }
 
 .bottom-left {
-    left: 5dvw;
+    left: 2dvw;
 }
 
 .bottom-right {
-    right: 3dvw;
+    right: 0dvw;
     bottom: 20dvh;
 
 }
@@ -212,7 +212,6 @@ button {
     height: 100%;
     object-fit: contain;
 }
-
 
 .slime-button {
     margin-top: 20px;
@@ -247,12 +246,8 @@ button {
         width: 300px; 
     }
 
-    .container {
-        padding: 2.5dvw 5dvw;
-    }
-
     .logo-container {
-        width: 30dvw;
+        width: 20dvw;
     }
 
     .links-container {
@@ -266,6 +261,7 @@ button {
     h1 {
         font-size: 15dvw;
         margin: 0;
+        -webkit-text-stroke: 1px black;
     }
 
     .bottom-left,
@@ -274,13 +270,18 @@ button {
     }
 
     p {
-        font-size: 7dvh;
+        font-size: 5dvh;
         -webkit-text-stroke: 1px black;
         margin: 0;
     }
 
     #logo-company {
         width: 150px;
+    }
+
+    header {
+        padding-left: 6dvw;
+        margin: 0;
     }
 }
 
@@ -290,7 +291,7 @@ button {
     }
 
     25% {
-        transform: translateY(-30px);
+        transform: translateY(-20px);
     }
 
     50% {

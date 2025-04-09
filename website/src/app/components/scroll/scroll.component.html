@@ -1,25 +1,27 @@
 <div class="scroll-container">
-  <div class="section" #section1 style="background-color: red;">
+  <div class="section" #section1  style="background-color: rebeccapurple;" >
     <div class="random-boxes"></div>
     <div class="content">
-      <h2 class="title ultra-regular">Lotta per kumar</h2>
-      <p class="description">asdlksmdslskdalkmklalsmkdslksamlksamkadamkalmsamdkdsamkdsamdsalkdsamlksldaldsalkdsam</p>
+      <h2 class="title ultra-regular">{{ 'escapeTitle' | translate | uppercase }}</h2>
+      <p class="description">{{ 'escapeDescription' | translate | uppercase }}</p>
     </div>
+    
   </div>
 
-  <div class="section" #section2 style="background-color: rebeccapurple;">
+  <div class="section" #section2 style="background: url('assets/img/blur svlime blue.jpg');">
     <div class="random-boxes"></div>
     <div class="content">
-      <h2 class="title ultra-regular">Lotta per kumar</h2>
-      <p class="description">asdlksmdslskdalkmklalsmkdslksamlksamkadamkalmsamdkdsamkdsamdsalkdsamlksldaldsalkdsam</p>
+      <h2 class="title ultra-regular">{{'rankingTitle'|translate| uppercase }}</h2>
+      <p class="description">{{'rankingDescription'|translate| uppercase }}</p>
+      <button class="slime-button">{{'ranking'|translate |uppercase}}</button>
     </div>
   </div>
 
   <div class="section" #section3 style="background-color: green;">
     <div class="random-boxes"></div>
     <div class="content">
-      <h2 class="title ultra-regular">Lotta per kumar</h2>
-      <p class="description">asdlksmdslskdalkmklalsmkdslksamlksamkadamkalmsamdkdsamkdsamdsalkdsamlksldaldsalkdsam</p>
-    </div>
+      <h2 class="title ultra-regular">{{ 'updateTitle' | translate | uppercase }}</h2>
+      <p class="description">{{ 'updateDescription' | translate | uppercase }}</p>
+    </div>    
   </div>
 </div>

@@ -1,6 +1,14 @@
 {
-    "escapeNow": "Fuis",
-    "dontGetCaught": "Évite les slimes !",
-    "playNow": "Jouer"
-  }
-  
+  "escapeNow": "Fuis",
+  "dontGetCaught": "Évite les slimes !",
+  "playNow": "Jouer",
+  "watchNow": "Regarde!",
+  "updates": "Renouveler",
+  "rankingTitle": "Au sommet ou rien !",
+  "rankingDescription": "Le classement récompense ceux qui ont des réflexes rapides, un esprit calme et beaucoup de courage. Et toi, où es-tu sur la liste ?",
+  "ranking": "Classement",
+  "escapeTitle": "Cours… tant que tu peux.",
+  "escapeDescription": "Les slimes arrivent. Aucun abri n'est sûr. Prépare-toi à fuir ou deviens l’un d’eux.",
+  "updateTitle": "L’évolution a commencé!",
+  "updateDescription": "La nouvelle version est là : plus de défis, plus de slimes, plus de chaos. Découvre les nouveautés et prépare-toi à survivre encore une fois."
+}

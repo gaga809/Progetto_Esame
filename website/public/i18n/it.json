@@ -1,6 +1,14 @@
 {
-    "escapeNow": "Scappa ora",
-    "dontGetCaught": "Non farti prendere dagli slime!",
-    "playNow": "Gioca Ora"
-  }
-  
+  "escapeNow": "Scappa ora",
+  "dontGetCaught": "Non farti prendere dagli slime!",
+  "playNow": "Gioca Ora",
+  "watchNow": "Guarda Ora!",
+  "updates": "Aggiornamenti",
+  "rankingTitle": "In cima o niente!",
+  "rankingDescription": "La classifica premia chi ha riflessi pronti, mente fredda e tanto coraggio. E tu, dove sei nella lista?",
+  "ranking": "Classifica",
+  "escapeTitle": "Corri… finché puoi.",
+  "escapeDescription": "Gli slime stanno arrivando. Nessun rifugio è sicuro. Preparati a scappare, o diventa uno di loro.",
+  "updateTitle": "L’evoluzione è iniziata!",
+  "updateDescription": "La nuova versione è qui: più sfide, più slime, più caos. Scopri cosa c’è di nuovo e preparati a sopravvivere ancora una volta."
+}

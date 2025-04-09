@@ -1,16 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Ultra&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
-html, body {
+html,
+body {
     overscroll-behavior: none;
-    touch-action: pan-x pan-y; 
+    touch-action: pan-x pan-y;
 }
 
 body {
     margin: 0;
     padding: 0;
     user-select: none;
-    font-family: "Roboto", sans-serif;
+    font-family: "Atkinson Hyperlegible", sans-serif;
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
@@ -20,7 +21,7 @@ body {
 }
 
 .ultra-regular {
-    font-family: "Ultra", serif;
+    font-family: "Luckiest Guy", cursive;
     font-weight: 400;
     font-style: normal;
     color: white;

@@ -1,6 +1,15 @@
 {
-    "escapeNow": "现在逃跑",
-    "dontGetCaught": "不要让史莱姆抓到你！",
-    "playNow": "玩"
-  }
-  
+  "escapeNow": "现在逃跑",
+  "dontGetCaught": "不要让史莱姆抓到你！",
+  "playNow": "玩",
+  "watchNow": "现在观看",
+  "updates": "更新",
+  "rankingTitle": "巅峰还是一无所有！",
+  "rankingDescription": "排行榜奖励那些反应快、冷静、勇敢的人。你在榜单上排在什么位置？",
+  "ranking": "排名",
+    "escapeTitle": "快跑……趁还有时间！",
+  "escapeDescription": "史莱姆正在逼近。没有安全的地方。准备逃命，否则就会变成其中之一。",
+   "updateTitle": "进化已经开始",
+  "updateDescription": "新版本上线：更多挑战、更多史莱姆、更多混乱。看看有什么新内容，准备再次生存吧！"
+}
+
