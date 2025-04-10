@@ -8,6 +8,7 @@ public class CustomNetworkRoomManager : NetworkRoomManager
 {
     [Header("Game Settings")]
     public int maxPlayers = 4;
+    public int currentPlayersNum;
 
     [Header("Room Settings")]
     public Vector3[] playerRoomPositions;
@@ -17,6 +18,8 @@ public class CustomNetworkRoomManager : NetworkRoomManager
     public override void Start()
     {
         base.Start();
+        minPlayers = 0;
+
         connections = new NetworkConnectionToClient[maxPlayers];
         for (int i = 0; i < maxPlayers; i++)
             connections[i] = null;
@@ -35,6 +38,8 @@ public class CustomNetworkRoomManager : NetworkRoomManager
 
         connections[playerIndex] = conn;
 
+        minPlayers++;
+        currentPlayersNum++;
         return roomPlayer;
     }
 
@@ -42,6 +47,8 @@ public class CustomNetworkRoomManager : NetworkRoomManager
     {
         base.OnRoomServerDisconnect(conn);
         RemoveConnection(conn);
+        minPlayers--;
+        currentPlayersNum--;
     }
 
     private int FindNextIndex()
@@ -58,6 +65,11 @@ public class CustomNetworkRoomManager : NetworkRoomManager
         while (connections[i] != conn) i++;
 
         connections[i] = null;
+    }
+
+    public override void OnRoomServerPlayersReady() {
+        base.OnRoomServerPlayersReady();
+        ServerChangeScene(GameplayScene);
     }
 
     /* END ROOM METHODS*/

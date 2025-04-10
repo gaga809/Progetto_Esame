@@ -1,11 +1,14 @@
+using Mirror;
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class MobModel : MonoBehaviour
+public class MobModel : NetworkBehaviour
 {
     [Header("Player Settings")]
-    public GameObject player;
+    [SyncVar(hook = nameof(OnClosestPlayerChanged))]
+    private GameObject player;
 
     [Header("Mob Settings")]
     public int health = 5;
@@ -40,8 +43,10 @@ public class MobModel : MonoBehaviour
 
     void Update()
     {
+        FindClosestPlayer();
         if (player != null)
         {
+
             float distance = Vector3.Distance(transform.position, trsPly.position);
 
             if (distance > stoppingDistance)
@@ -87,5 +92,32 @@ public class MobModel : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    private void FindClosestPlayer()
+    {
+        if (!isServer) return;  // Solo il server lo fa
+
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        GameObject closest = null;
+        float closestDistance = Mathf.Infinity;
+
+        foreach (GameObject player in players)
+        {
+            float distance = Vector3.Distance(transform.position, player.transform.position);
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                closest = player;
+            }
+        }
+
+        player = closest;
+    }
+
+    private void OnClosestPlayerChanged(GameObject oldPlayer, GameObject newPlayer)
+    {
+        player = newPlayer; // Aggiorna il riferimento al giocatore
+        trsPly = player?.transform;
     }
 }

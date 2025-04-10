@@ -3,8 +3,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
+
     private float _speed, _deceleration, _minSpeed, _jumpForce;
     private Transform _trs;
     private Rigidbody _rb;
@@ -80,9 +81,19 @@ public class PlayerController : MonoBehaviour
         quaternion.x = 0;
         quaternion.z = 0;
 
+
+
         GameObject effect = Instantiate(particlesPrefab, startingPoint, quaternion);
         Destroy(effect, 2f);
         GameObject proj = Instantiate(prefab, startingPoint, quaternion);
+
+        if (isServer)
+        {
+            NetworkServer.Spawn(proj);
+            NetworkServer.Spawn(effect);
+            NetworkServer.Destroy(effect);
+        }
+
         proj.GetComponent<ProjectileModel>().damage = damage;
 
     }

@@ -75,11 +75,6 @@ public class SvlimeRoomPlayerBehaviour : NetworkRoomPlayer
         return -1;
     }
 
-    private void OnReadyStateChanged(bool oldReadyState, bool newReadyState)
-    {
-        ShowReadyStatusOnClients(newReadyState);
-    }
-
     private void ShowReadyStatusOnClients(bool newReadyState)
     {
         if (readyStatusImg != null)

@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections;
+using Mirror;
 
-public class ProjectileModel : MonoBehaviour
+public class ProjectileModel : NetworkBehaviour
 {
     [Header("Projectile Settings")]
     public int damage = 1;
@@ -21,7 +22,15 @@ public class ProjectileModel : MonoBehaviour
     private IEnumerator DestroyProjectile()
     {
         yield return new WaitForSeconds(lifeTime);
+        SyncDestroy();
+    }
+
+    [Command]
+    private void SyncDestroy()
+    {
         Destroy(gameObject);
+        if(isServer)
+            NetworkServer.Destroy(gameObject);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -31,7 +40,7 @@ public class ProjectileModel : MonoBehaviour
         if (mob != null)
         {
             mob.Hurt(damage);
-            Destroy(gameObject);
+            SyncDestroy();
         }
     }
 

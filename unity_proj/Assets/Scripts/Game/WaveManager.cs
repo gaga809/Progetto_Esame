@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Mirror;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.IO;
@@ -6,7 +7,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 
-public class WaveManager : MonoBehaviour
+public class WaveManager : NetworkBehaviour
 {
     [Header("Waves")]
     public string waveJSONPath = "Waves.json";
@@ -23,16 +24,21 @@ public class WaveManager : MonoBehaviour
     public float playerCircleRadius = 5f;
     public LayerMask platformLayer;
 
+    [SyncVar(hook = nameof(OnNextWave))]
     private int currentWave = 0;
     private bool isSpawning = false;
-    private Transform player;
+    private List<Transform> players;
 
     private Dictionary<string, GameObject> enemyPrefabs = new Dictionary<string, GameObject>();
     public Wave[] waves;
 
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        players = new List<Transform>();
+        foreach(GameObject obj in GameObject.FindGameObjectsWithTag("Player"))
+        {
+            players.Add(obj.transform);
+        }
         LoadWaveData();
         LoadAllPrefabs();
     }
@@ -94,7 +100,7 @@ public class WaveManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        waveCounter.text = "WAVE: " + (currentWave + 1);
+        if (!isServer) return;
 
         if (!isSpawning)
         {
@@ -118,11 +124,14 @@ public class WaveManager : MonoBehaviour
 
         for (int i = 0; i < wave.MobsCount; i++)
         {
+            Transform player = players[Random.Range(0, players.Count)];
+
             // Get spawn positon
-            Vector3 SpawnPosition = GetValidSpawnPoint();
+            Vector3 SpawnPosition = GetValidSpawnPoint(player);
 
             // Get spawn direction
             GameObject enemyPrefab;
+
 
             if (wave.MobsPrefab.Length == 0)
             {
@@ -137,7 +146,7 @@ public class WaveManager : MonoBehaviour
             direction.z = 0;
 
             GameObject enemy = Instantiate(enemyPrefab, SpawnPosition, Quaternion.LookRotation(direction));
-
+            NetworkServer.Spawn(enemy);
 
             // Apply wave difficulty multiplier (TODO)
             yield return new WaitForSeconds(wave.SpawnRate);
@@ -167,7 +176,7 @@ public class WaveManager : MonoBehaviour
         return newWave;
     }
 
-    Vector3 GetValidSpawnPoint()
+    Vector3 GetValidSpawnPoint(Transform player)
     {
         const int maxAttempts = 20; // Number of tentativies to try and spawn the enemy
 
@@ -193,6 +202,11 @@ public class WaveManager : MonoBehaviour
 
         Debug.LogWarning("Nessun punto di spawn valido trovato!");
         return Vector3.zero; // No valid Point found
+    }
+
+    private void OnNextWave(int oldValue, int newValue)
+    {
+        waveCounter.text = "WAVE: " + (newValue + 1);
     }
 }
 

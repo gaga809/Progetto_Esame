@@ -813,7 +813,12 @@ MonoBehaviour:
   playerPrefab: {fileID: 1763809645236527263, guid: 4412416f46a5f7b43a27e5a119db4460, type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 1
-  spawnPrefabs: []
+  spawnPrefabs:
+  - {fileID: 7896081044039917533, guid: 73438f2627667784490ac6dddfc387e6, type: 3}
+  - {fileID: 7535173522289497491, guid: ef57df5c2aa7be744960cdbaad232e8e, type: 3}
+  - {fileID: 1762748786206545366, guid: 26b9d8dacb028ff429b05749dddeeeee, type: 3}
+  - {fileID: 2644111357298385652, guid: 568fe86bb7211694f804134ff1941436, type: 3}
+  - {fileID: 3697001666772565700, guid: b82f925f3a951b241a1ee51792e6c352, type: 3}
   exceptionsDisconnect: 1
   snapshotSettings:
     bufferTimeMultiplier: 2
@@ -836,6 +841,8 @@ MonoBehaviour:
   GameplayScene: Assets/Scenes/TestScene.unity
   _allPlayersReady: 0
   clientIndex: 0
+  maxPlayers: 4
+  currentPlayersNum: 0
   playerRoomPositions:
   - {x: -4.93, y: -2.89, z: 0.4799995}
   - {x: -1.37, y: -2.64, z: 1.18}

@@ -2,11 +2,23 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
 using Mirror;
+using TMPro;
 
 public class PlayerModel : NetworkBehaviour
 {
+    [Header("User Info")]
+    [SyncVar(hook = nameof(OnNameChanged))]
+    public string playerName;
+    [SerializeField] private TextMeshProUGUI nameText;
+
+    [Header("Player Statuses")]
+    [SyncVar(hook = nameof(OnPlayerDied))]
+    public bool died = false;
+
     [Header("Player Settings")]
+    [SyncVar]
     public int health = 10;
+    [SyncVar]
     public int maxHealth = 10;
     public float speed = 5f;
     public float deceleration = 5f;
@@ -20,17 +32,44 @@ public class PlayerModel : NetworkBehaviour
     public Transform model;
     public GameObject projectilePrefab;
     public GameObject particlesPrefab;
+    public string deadTag;
+    public string playerTag;
 
     private PlayerController playerController;
     private bool canAttack = true;
-    private bool died = false;
+
+    void OnNameChanged(string _, string newName)
+    {
+        UpdateNameDisplay(newName);
+    }
+
+    [Command]
+    public void CmdSetPlayerName(string name)
+    {
+        playerName = name;
+    }
+
+    public int GetPlayerIndex()
+    {
+        if (NetworkManager.singleton is NetworkRoomManager roomManager)
+        {
+            return roomManager.roomSlots.Count;
+        }
+        return -1;
+    }
 
     private void Start()
     {
-        if(isLocalPlayer)
+        if (isLocalPlayer)
+        {
             Camera.main.GetComponent<CameraController>().playerT = transform;
+            string localPlayerName = "Player " + GetPlayerIndex().ToString();
+            CmdSetPlayerName(localPlayerName);
+            
+        }
 
         playerController = new PlayerController(speed, deceleration, minSpeed, jumpForce, gameObject.transform, gameObject.GetComponent<Rigidbody>(), model);
+        
     }
 
     private void FixedUpdate()
@@ -52,16 +91,23 @@ public class PlayerModel : NetworkBehaviour
 
         if (canAttack && !died)
         {
-            Vector3 pos = FindClosestMob();
+            CmdAttack();
+        }
+    }
 
-            if (pos != Vector3.zero)
-            {
-                StartCoroutine(AttackCooldown());
-                Vector3 startingPos = transform.position;
-                if(startingPos.y > 1)
-                    startingPos.y = 1;
-                playerController.OnAttack(attackDamage, projectilePrefab, pos, startingPos, particlesPrefab);
-            }
+    [Command]
+    public void CmdAttack()
+    {
+        Vector3 pos = FindClosestMob();
+
+        if (pos != Vector3.zero)
+        {
+            StartCoroutine(AttackCooldown());
+            Vector3 startingPos = transform.position;
+            if (startingPos.y > 1)
+                startingPos.y = 1;
+
+            playerController.OnAttack(attackDamage, projectilePrefab, pos, startingPos, particlesPrefab);
         }
     }
 
@@ -110,9 +156,11 @@ public class PlayerModel : NetworkBehaviour
 
     public void Die()
     {
-        Debug.Log("Il Giocatore è schiattato. Porcacci");
+        Debug.Log("Il Giocatore è schiattato.");
         playerControls.actions.Disable();
         died = true;
+
+        // Spectate someone else
     }
 
     IEnumerator AttackCooldown()
@@ -142,5 +190,19 @@ public class PlayerModel : NetworkBehaviour
             return Vector3.zero;
         }
         return closestMob.transform.position;
+    }
+
+    public void UpdateNameDisplay(string name)
+    {
+        if (nameText != null)
+            nameText.text = name;
+    }
+
+    void OnPlayerDied(bool oldValue, bool newValue)
+    {
+        Die();
+        model.gameObject.SetActive(!newValue);
+        gameObject.tag = newValue ? deadTag : playerTag;
+        nameText.enabled = !newValue;
     }
 }
