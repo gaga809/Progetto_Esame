@@ -11,9 +11,10 @@ public class PlayerModel : NetworkBehaviour
     [SyncVar(hook = nameof(OnNameChanged))]
     public string playerName;
     [SerializeField] private TextMeshProUGUI nameText;
+    public GameObject UI;
 
     [Header("Player Statuses")]
-    [SyncVar(hook = nameof(OnPlayerDied))]
+    [SyncVar(hook = nameof(OnDeathStatusChanged))]
     public bool died = false;
 
     [Header("Player Settings")]
@@ -44,37 +45,35 @@ public class PlayerModel : NetworkBehaviour
         UpdateNameDisplay(newName);
     }
 
+    void OnDeathStatusChanged(bool oldValue, bool newValue)
+    {
+        if (newValue && !oldValue)
+        {
+            Die();
+        }
+    }
+
     [Command]
     public void CmdSetPlayerName(string name)
     {
         playerName = name;
     }
 
-    public int GetPlayerIndex()
-    {
-        if (NetworkManager.singleton is NetworkRoomManager roomManager)
-        {
-            return roomManager.roomSlots.Count;
-        }
-        return -1;
-    }
-
     private void Start()
     {
-        StartCoroutine(AutoAttackLoop());
-
         if (isLocalPlayer)
         {
+            StartCoroutine(AutoAttackLoop());
             Camera.main.GetComponent<CameraController>().playerT = transform;
         }
 
-        playerController = new PlayerController(speed, deceleration, minSpeed, jumpForce, gameObject.transform, gameObject.GetComponent<Rigidbody>(), model);
-
+        playerController = new PlayerController(speed, deceleration, minSpeed, jumpForce,
+                            gameObject.transform, gameObject.GetComponent<Rigidbody>(), model);
     }
 
     private void FixedUpdate()
     {
-        if (!isLocalPlayer) { return; }
+        if (!isLocalPlayer) return;
 
         playerController.Speed = speed;
         playerController.Deceleration = deceleration;
@@ -82,7 +81,6 @@ public class PlayerModel : NetworkBehaviour
         playerController.JumpForce = jumpForce;
 
         playerController.ResolveMovements();
-
     }
 
     IEnumerator AutoAttackLoop()
@@ -90,16 +88,13 @@ public class PlayerModel : NetworkBehaviour
         while (!died)
         {
             yield return new WaitForSeconds(attackRate);
-
             Vector3 mobPosition = FindClosestMob();
-
             if (mobPosition != Vector3.zero)
             {
                 CmdAttack(mobPosition);
             }
         }
     }
-
 
     [Command]
     public void CmdAttack(Vector3 mobPosition)
@@ -111,7 +106,110 @@ public class PlayerModel : NetworkBehaviour
             startingPos.y = 1;
 
         playerController.OnAttack(attackDamage, projectilePrefab, mobPosition, startingPos, particlesPrefab);
+    }
 
+    public void Hurt(int damage)
+    {
+        if (!isServer) return;
+
+        health -= damage;
+        Debug.Log("\"" + playerName + "\" took " + damage + " damage. Current health: " + health);
+
+        if (health <= 0)
+        {
+            died = true;
+            RpcDie();
+            CheckIfAllPlayersDead();
+        }
+    }
+
+    [ClientRpc]
+    void RpcDie()
+    {
+        died = true;
+        Debug.Log("\"" + playerName + "\" has died.");
+
+        model.gameObject.SetActive(false);
+        gameObject.tag = deadTag;
+        gameObject.GetComponent<BoxCollider>().enabled = false;
+        gameObject.GetComponent<Rigidbody>().isKinematic = false;
+        gameObject.GetComponent<Rigidbody>().useGravity = false;
+        UI.SetActive(false);
+
+        if (isLocalPlayer)
+        {
+            playerControls.actions.Disable();
+            SetupSpectatorMode();
+        }
+    }
+
+    public void Heal(int amount)
+    {
+        if (!isServer) return;
+
+        health += amount;
+        if (health > maxHealth)
+        {
+            health = maxHealth;
+        }
+        Debug.Log("\"" + playerName + "\" recovered " + amount + " health points. Current health: " + health);
+    }
+
+    void Die()
+    {
+        // Funzione vuota mantenuta per compatibilità
+    }
+
+    void CheckIfAllPlayersDead()
+    {
+        if (!isServer) return;
+
+        GameObject[] players = GameObject.FindGameObjectsWithTag(playerTag);
+        if (players.Length == 0)
+        {
+            Debug.Log("No players left - Changing scene");
+            StartCoroutine(ChangeSceneWithDelay());
+        }
+    }
+
+    IEnumerator ChangeSceneWithDelay()
+    {
+        yield return new WaitForSeconds(1f);
+        NetworkManager.singleton.ServerChangeScene("GameRoom");
+    }
+
+    void SetupSpectatorMode()
+    {
+        GameObject[] players = GameObject.FindGameObjectsWithTag(playerTag);
+        if (players.Length > 0)
+        {
+            GameObject randomPlayer = players[Random.Range(0, players.Length)];
+            Camera.main.GetComponent<CameraController>().playerT = randomPlayer.transform;
+        }
+    }
+
+    Vector3 FindClosestMob()
+    {
+        GameObject[] mobs = GameObject.FindGameObjectsWithTag("Mob");
+        GameObject closestMob = null;
+        float closestDistance = Mathf.Infinity;
+
+        foreach (GameObject mob in mobs)
+        {
+            float distance = Vector3.Distance(transform.position, mob.transform.position);
+            if (distance < closestDistance && distance < rangeRadius)
+            {
+                closestDistance = distance;
+                closestMob = mob;
+            }
+        }
+        return closestMob?.transform.position ?? Vector3.zero;
+    }
+
+    void UpdateNameDisplay(string name)
+    {
+        if (nameText != null)
+            nameText.text = name;
     }
 
     private void OnEnable()
@@ -122,7 +220,6 @@ public class PlayerModel : NetworkBehaviour
 
         playerControls.actions["Move"].performed += ctx => playerController.OnMove(ctx.ReadValue<Vector2>());
         playerControls.actions["Move"].canceled += ctx => playerController.OnFinishMove();
-
         playerControls.actions["Jump"].performed += ctx => playerController.OnJump();
         playerControls.actions["Interact"].performed += ctx => playerController.OnInteract();
     }
@@ -133,79 +230,5 @@ public class PlayerModel : NetworkBehaviour
         playerControls.actions["Move"].canceled -= ctx => playerController.OnFinishMove();
         playerControls.actions["Jump"].performed -= ctx => playerController.OnJump();
         playerControls.actions["Interact"].performed -= ctx => playerController.OnInteract();
-    }
-
-    public void Hurt(int damage)
-    {
-        health -= damage;
-        if (health <= 0)
-        {
-            Die();
-        }
-
-        Debug.Log("Il Giocatore ha subito " + damage + " danni. Saldo: " + health);
-    }
-
-    public void Heal(int amount)
-    {
-        health += amount;
-        if (health > maxHealth)
-        {
-            health = maxHealth;
-        }
-
-        Debug.Log("Il Giocatore ha recuperato " + amount + " punti vita. Saldo: " + health);
-    }
-
-    public void Die()
-    {
-        Debug.Log("Il Giocatore è schiattato.");
-        playerControls.actions.Disable();
-        died = true;
-
-        // Spectate someone else
-    }
-
-    IEnumerator AttackCooldown()
-    {
-        canAttack = false;
-        yield return new WaitForSeconds(attackRate);
-        canAttack = true;
-    }
-
-    public Vector3 FindClosestMob()
-    {
-        GameObject[] mobs = GameObject.FindGameObjectsWithTag("Mob");
-        GameObject closestMob = null;
-        float closestDistance = Mathf.Infinity;
-        foreach (GameObject mob in mobs)
-        {
-            float distance = Vector3.Distance(transform.position, mob.transform.position);
-            if (distance < closestDistance && distance < rangeRadius)
-            {
-                closestDistance = distance;
-                closestMob = mob;
-            }
-        }
-
-        if (closestMob == null)
-        {
-            return Vector3.zero;
-        }
-        return closestMob.transform.position;
-    }
-
-    public void UpdateNameDisplay(string name)
-    {
-        if (nameText != null)
-            nameText.text = name;
-    }
-
-    void OnPlayerDied(bool oldValue, bool newValue)
-    {
-        Die();
-        model.gameObject.SetActive(!newValue);
-        gameObject.tag = newValue ? deadTag : playerTag;
-        nameText.enabled = !newValue;
     }
 }

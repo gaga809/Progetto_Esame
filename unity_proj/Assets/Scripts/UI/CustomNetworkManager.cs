@@ -97,5 +97,12 @@ public class CustomNetworkRoomManager : NetworkRoomManager
         return true;
     }
 
+    public override void OnRoomServerSceneChanged(string sceneName)
+    {
+        Debug.Log($"Scene changed to: {sceneName}");
+
+        base.OnRoomServerSceneChanged(sceneName);
+    }
+
     /* END GAME METHODS*/
 }

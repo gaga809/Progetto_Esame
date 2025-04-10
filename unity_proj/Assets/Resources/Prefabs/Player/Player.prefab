@@ -187,8 +187,10 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  playerNamePref: playerName
   playerName: 
   nameText: {fileID: 462860410514498547}
+  UI: {fileID: 5279064599987790407}
   died: 0
   health: 10
   maxHealth: 10

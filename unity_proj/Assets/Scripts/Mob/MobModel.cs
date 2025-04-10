@@ -71,7 +71,6 @@ public class MobModel : NetworkBehaviour
         PlayerModel playerModel = player.GetComponent<PlayerModel>();
         if (playerModel != null)
         {
-            Debug.Log("Attacco eseguito! Danno: " + attackDamage);
             playerModel.Hurt(attackDamage);
         }
         else
@@ -85,7 +84,6 @@ public class MobModel : NetworkBehaviour
 
     public void Hurt(int damage)
     {
-        Debug.Log("Il nemico ha subito " + damage + " danni.");
         health -= damage;
 
         if (health <= 0)
@@ -96,7 +94,7 @@ public class MobModel : NetworkBehaviour
 
     private void FindClosestPlayer()
     {
-        if (!isServer) return;  // Solo il server lo fa
+        if (!isServer) return;
 
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         GameObject closest = null;
@@ -117,7 +115,7 @@ public class MobModel : NetworkBehaviour
 
     private void OnClosestPlayerChanged(GameObject oldPlayer, GameObject newPlayer)
     {
-        player = newPlayer; // Aggiorna il riferimento al giocatore
+        player = newPlayer;
         trsPly = player?.transform;
     }
 }
