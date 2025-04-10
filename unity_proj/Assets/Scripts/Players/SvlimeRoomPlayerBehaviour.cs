@@ -4,6 +4,7 @@ using TMPro;
 
 public class SvlimeRoomPlayerBehaviour : NetworkRoomPlayer
 {
+    public string playerNamePref = "playerName";
     [SyncVar(hook = nameof(OnNameChanged))]
     public string playerName;
 
@@ -54,11 +55,13 @@ public class SvlimeRoomPlayerBehaviour : NetworkRoomPlayer
 
         if (isLocalPlayer)
         {
+            // TODO: Get Name from PlayerPrefs
             string localPlayerName = "Player " + GetPlayerIndex().ToString();
+            PlayerPrefs.SetString(playerNamePref, localPlayerName);
             CmdSetPlayerName(localPlayerName);
+            roomUI.btnReady.onClick.AddListener(HandlerReady);
         }
 
-        roomUI.btnReady.onClick.AddListener(HandlerReady);
     }
 
     public void HandlerReady()

@@ -31,6 +31,12 @@ public class CustomNetworkRoomManager : NetworkRoomManager
     {
         int playerIndex = FindNextIndex();
 
+        if (playerIndex >= maxPlayers)
+        {
+            Debug.LogWarning("Tutti gli slot sono pieni! Connessione rifiutata.");
+            return null;
+        }
+
         Vector3 spawnPos = playerRoomPositions != null ? playerRoomPositions[playerIndex] : Vector3.zero;
         Quaternion spawnRot = playerRoomRotations != null ? playerRoomRotations[playerIndex] : Quaternion.identity;
 
@@ -40,6 +46,7 @@ public class CustomNetworkRoomManager : NetworkRoomManager
 
         minPlayers++;
         currentPlayersNum++;
+        Debug.Log($"Room player creato per connessione {conn.connectionId} allo slot {playerIndex}");
         return roomPlayer;
     }
 
@@ -68,9 +75,27 @@ public class CustomNetworkRoomManager : NetworkRoomManager
     }
 
     public override void OnRoomServerPlayersReady() {
-        base.OnRoomServerPlayersReady();
-        ServerChangeScene(GameplayScene);
+        if (NetworkServer.active)
+        {
+            //base.OnRoomServerPlayersReady();
+            ServerChangeScene(GameplayScene);
+        }
     }
 
     /* END ROOM METHODS*/
+    /* GAME METHODS */
+
+    public override bool OnRoomServerSceneLoadedForPlayer(NetworkConnectionToClient conn, GameObject roomPlayer, GameObject gamePlayer)
+    {
+        base.OnRoomServerSceneLoadedForPlayer(conn, roomPlayer, gamePlayer);
+
+        var room = roomPlayer.GetComponent<SvlimeRoomPlayerBehaviour>();
+        var game = gamePlayer.GetComponent<PlayerModel>();
+
+        game.playerName = room.playerName;
+
+        return true;
+    }
+
+    /* END GAME METHODS*/
 }

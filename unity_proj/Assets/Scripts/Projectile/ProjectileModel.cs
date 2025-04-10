@@ -16,31 +16,29 @@ public class ProjectileModel : NetworkBehaviour
 
     private void Start()
     {
+        if (isServer)
+        {
+            StartCoroutine(DestroyProjectile());
+        }
         StartCoroutine(DestroyProjectile());
     }
 
     private IEnumerator DestroyProjectile()
     {
         yield return new WaitForSeconds(lifeTime);
-        SyncDestroy();
-    }
-
-    [Command]
-    private void SyncDestroy()
-    {
-        Destroy(gameObject);
-        if(isServer)
-            NetworkServer.Destroy(gameObject);
+        NetworkServer.Destroy(gameObject);
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!isServer) return;
+
         MobModel mob = other.gameObject.GetComponent<MobModel>();
 
         if (mob != null)
         {
             mob.Hurt(damage);
-            SyncDestroy();
+            NetworkServer.Destroy(gameObject);
         }
     }
 

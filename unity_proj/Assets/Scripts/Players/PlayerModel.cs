@@ -7,6 +7,7 @@ using TMPro;
 public class PlayerModel : NetworkBehaviour
 {
     [Header("User Info")]
+    public string playerNamePref = "playerName";
     [SyncVar(hook = nameof(OnNameChanged))]
     public string playerName;
     [SerializeField] private TextMeshProUGUI nameText;
@@ -60,16 +61,15 @@ public class PlayerModel : NetworkBehaviour
 
     private void Start()
     {
+        StartCoroutine(AutoAttackLoop());
+
         if (isLocalPlayer)
         {
             Camera.main.GetComponent<CameraController>().playerT = transform;
-            string localPlayerName = "Player " + GetPlayerIndex().ToString();
-            CmdSetPlayerName(localPlayerName);
-            
         }
 
         playerController = new PlayerController(speed, deceleration, minSpeed, jumpForce, gameObject.transform, gameObject.GetComponent<Rigidbody>(), model);
-        
+
     }
 
     private void FixedUpdate()
@@ -85,30 +85,33 @@ public class PlayerModel : NetworkBehaviour
 
     }
 
-    private void Update()
+    IEnumerator AutoAttackLoop()
     {
-        if (!isLocalPlayer) { return; }
-
-        if (canAttack && !died)
+        while (!died)
         {
-            CmdAttack();
+            yield return new WaitForSeconds(attackRate);
+
+            Vector3 mobPosition = FindClosestMob();
+
+            if (mobPosition != Vector3.zero)
+            {
+                CmdAttack(mobPosition);
+            }
         }
     }
 
+
     [Command]
-    public void CmdAttack()
+    public void CmdAttack(Vector3 mobPosition)
     {
-        Vector3 pos = FindClosestMob();
+        if (died) return;
 
-        if (pos != Vector3.zero)
-        {
-            StartCoroutine(AttackCooldown());
-            Vector3 startingPos = transform.position;
-            if (startingPos.y > 1)
-                startingPos.y = 1;
+        Vector3 startingPos = transform.position;
+        if (startingPos.y > 1)
+            startingPos.y = 1;
 
-            playerController.OnAttack(attackDamage, projectilePrefab, pos, startingPos, particlesPrefab);
-        }
+        playerController.OnAttack(attackDamage, projectilePrefab, mobPosition, startingPos, particlesPrefab);
+
     }
 
     private void OnEnable()

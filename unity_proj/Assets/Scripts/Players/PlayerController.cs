@@ -75,6 +75,12 @@ public class PlayerController : NetworkBehaviour
 
     public void OnAttack(int damage, GameObject prefab, Vector3 closestMobPos, Vector3 startingPoint, GameObject particlesPrefab)
     {
+        if (prefab == null || particlesPrefab == null)
+        {
+            Debug.LogError("Attack prefabs are null!");
+            return;
+        }
+
         Vector3 dir = closestMobPos - startingPoint;
         dir.y = 1;
         Quaternion quaternion = Quaternion.LookRotation(dir);
@@ -83,15 +89,15 @@ public class PlayerController : NetworkBehaviour
 
 
 
-        GameObject effect = Instantiate(particlesPrefab, startingPoint, quaternion);
-        Destroy(effect, 2f);
+        //GameObject effect = Instantiate(particlesPrefab, startingPoint, quaternion);
+        //Destroy(effect, 2f);
         GameObject proj = Instantiate(prefab, startingPoint, quaternion);
 
-        if (isServer)
+        if (NetworkServer.active)
         {
             NetworkServer.Spawn(proj);
-            NetworkServer.Spawn(effect);
-            NetworkServer.Destroy(effect);
+            //NetworkServer.Spawn(effect);
+            //NetworkServer.UnSpawn(effect);
         }
 
         proj.GetComponent<ProjectileModel>().damage = damage;
