@@ -1,12 +1,17 @@
 using Mirror;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RoomUI : MonoBehaviour
 {
     [Header("Settings")]
     public GameObject lastWarningPanel;
     public TextMeshProUGUI warnText;
+
+    [Header("HUD")]
+    public GameObject[] readyStatuses;
+    public Button btnReady;
     
     public void ShowLastWarning()
     {

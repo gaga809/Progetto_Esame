@@ -7,6 +7,9 @@ public class SvlimeRoomPlayerBehaviour : NetworkRoomPlayer
     [SyncVar(hook = nameof(OnNameChanged))]
     public string playerName;
 
+    public RoomUI roomUI;
+    public GameObject readyStatusImg;
+
     [SerializeField] private TextMeshProUGUI nameText;
 
     void OnNameChanged(string _, string newName)
@@ -20,24 +23,47 @@ public class SvlimeRoomPlayerBehaviour : NetworkRoomPlayer
             nameText.text = name;
     }
 
-    // Metodo chiamato dal client per inviare il nome al server
     [Command]
     public void CmdSetPlayerName(string name)
     {
         playerName = name;
     }
 
+    public override void ReadyStateChanged(bool oldReadyState, bool newReadyState)
+    {
+        base.ReadyStateChanged(oldReadyState, newReadyState);
+
+        if (isLocalPlayer)
+        {
+            if (newReadyState)
+            {
+                roomUI.btnReady.GetComponentInChildren<TextMeshProUGUI>().text = "Annulla";
+            }
+            else
+                roomUI.btnReady.GetComponentInChildren<TextMeshProUGUI>().text = "Pronto!";
+
+
+        }
+        ShowReadyStatusOnClients(newReadyState);
+    }
+
     public override void Start()
     {
         base.Start();
+        roomUI = GameObject.Find("UILobby").GetComponent<RoomUI>();
+
         if (isLocalPlayer)
         {
-            // Da mettere quando implementiamo il login
-            //string localPlayerName = PlayerPrefs.GetString("playerName");
-
             string localPlayerName = "Player " + GetPlayerIndex().ToString();
             CmdSetPlayerName(localPlayerName);
         }
+
+        roomUI.btnReady.onClick.AddListener(HandlerReady);
+    }
+
+    public void HandlerReady()
+    {
+        CmdChangeReadyState(!readyToBegin);
     }
 
     public int GetPlayerIndex()
@@ -46,6 +72,19 @@ public class SvlimeRoomPlayerBehaviour : NetworkRoomPlayer
         {
             return roomManager.roomSlots.Count;
         }
-        return -1; // errore
+        return -1;
+    }
+
+    private void OnReadyStateChanged(bool oldReadyState, bool newReadyState)
+    {
+        ShowReadyStatusOnClients(newReadyState);
+    }
+
+    private void ShowReadyStatusOnClients(bool newReadyState)
+    {
+        if (readyStatusImg != null)
+        {
+            readyStatusImg.SetActive(newReadyState);
+        }
     }
 }
