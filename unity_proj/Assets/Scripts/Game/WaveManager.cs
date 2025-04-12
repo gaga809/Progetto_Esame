@@ -32,13 +32,9 @@ public class WaveManager : NetworkBehaviour
     private Dictionary<string, GameObject> enemyPrefabs = new Dictionary<string, GameObject>();
     public Wave[] waves;
 
-    void Start()
+    void OnEnable()
     {
-        players = new List<Transform>();
-        foreach(GameObject obj in GameObject.FindGameObjectsWithTag("Player"))
-        {
-            players.Add(obj.transform);
-        }
+        
         LoadWaveData();
         LoadAllPrefabs();
     }
@@ -97,7 +93,6 @@ public class WaveManager : NetworkBehaviour
         return null;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!isServer) return;
@@ -137,6 +132,11 @@ public class WaveManager : NetworkBehaviour
 
         for (int i = 0; i < wave.MobsCount; i++)
         {
+            players = new List<Transform>();
+            foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Player"))
+            {
+                players.Add(obj.transform);
+            }
             Transform player = players[Random.Range(0, players.Count)];
 
             // Get spawn positon

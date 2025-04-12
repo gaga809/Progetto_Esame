@@ -1,4 +1,5 @@
 using Mirror;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -40,7 +41,7 @@ public class CustomNetworkRoomManager : NetworkRoomManager
         if (currentPlayersNum >= maxPlayers)
         {
             Debug.LogWarning($"Connection refused: Max players for this session is {maxPlayers}.");
-            conn.Disconnect(); 
+            conn.Disconnect();
             return;
         }
 
@@ -98,7 +99,7 @@ public class CustomNetworkRoomManager : NetworkRoomManager
     public int FindNextIndex()
     {
         int i = 0;
-        while(i<maxPlayers && connections[i] != null) i++;
+        while (i < maxPlayers && connections[i] != null) i++;
 
         return i;
     }
@@ -111,18 +112,21 @@ public class CustomNetworkRoomManager : NetworkRoomManager
         connections[i] = null;
     }
 
-    public override void OnRoomServerPlayersReady() {
+    public override void OnRoomServerPlayersReady()
+    {
         if (NetworkServer.active)
         {
             //base.OnRoomServerPlayersReady()
             anotherLobby = true;
             ServerChangeScene(GameplayScene);
-            
+
         }
     }
 
     /* END ROOM METHODS*/
     /* GAME METHODS */
+
+    private int playerModelsCreated = 0;
 
     public override bool OnRoomServerSceneLoadedForPlayer(NetworkConnectionToClient conn, GameObject roomPlayer, GameObject gamePlayer)
     {
@@ -133,7 +137,23 @@ public class CustomNetworkRoomManager : NetworkRoomManager
 
         game.playerName = room.playerName;
 
+        playerModelsCreated++;
+
+        Debug.Log($"Game player creato per {conn.connectionId}. Totale creati: {playerModelsCreated}/{numPlayers}");
+
+        if (playerModelsCreated >= numPlayers)
+        {
+            Debug.Log("Tutti i PlayerModel sono stati creati!");
+            OnAllPlayerModelsSpawned();
+        }
+
         return true;
+    }
+
+    private void OnAllPlayerModelsSpawned()
+    {
+        GameObject waveManager = GameObject.Find("GameHandler");
+        waveManager.SetActive(true);
     }
 
     public override void OnRoomServerSceneChanged(string sceneName)
@@ -141,12 +161,6 @@ public class CustomNetworkRoomManager : NetworkRoomManager
         Debug.Log($"Scene changed to: {sceneName}");
 
         base.OnRoomServerSceneChanged(sceneName);
-
-        if(sceneName == "TestScene")
-        {
-            GameObject waveManager = GameObject.Find("GameHandler");
-            waveManager.SetActive(true);
-        }
     }
 
     /* END GAME METHODS*/
