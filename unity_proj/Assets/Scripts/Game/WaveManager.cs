@@ -13,6 +13,7 @@ public class WaveManager : NetworkBehaviour
     public string waveJSONPath = "Waves.json";
     public float waveDelay = 5f;
     public float waveDifficultyMultiplier = 1.2f;
+    public float startWaittime = 2f;
 
     [Header("UI")]
     public TextMeshProUGUI waveCounter;
@@ -25,18 +26,26 @@ public class WaveManager : NetworkBehaviour
     public LayerMask platformLayer;
 
     [SyncVar(hook = nameof(OnNextWave))]
-    private int currentWave = 0;
+    private int currentWave = -1;
     private bool isSpawning = false;
     private List<Transform> players;
 
     private Dictionary<string, GameObject> enemyPrefabs = new Dictionary<string, GameObject>();
     public Wave[] waves;
+    public bool startSpawn = false;
+    public int connectedPlayers = 0;
 
     void OnEnable()
     {
-        
+        StartCoroutine(startingWait());
         LoadWaveData();
         LoadAllPrefabs();
+    }
+
+    IEnumerator startingWait()
+    {
+        yield return new WaitForSeconds(startWaittime);
+        startSpawn = true;
     }
 
     void LoadWaveData()
@@ -97,26 +106,32 @@ public class WaveManager : NetworkBehaviour
     {
         if (!isServer) return;
 
-        if (!isSpawning)
+        if (startSpawn)
         {
-            if (currentWave < waves.Length)
+            GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+            if (players.Length == 0)
             {
-                StartCoroutine(SpawnWave(waves[currentWave]));
+                Debug.Log("No players left - Changing scene");
+                StartCoroutine(ChangeSceneWithDelay());
             }
-            else
+            else if (!isSpawning)
             {
-                Debug.Log("Tutte le ondate finite! Looping o aumento infinito...");
-                StartCoroutine(SpawnWave(CreateDynamicWave(currentWave)));
+                currentWave++;
+                if (currentWave < waves.Length)
+                {
+                    StartCoroutine(SpawnWave(waves[currentWave]));
+                }
+                else
+                {
+                    Debug.Log("Tutte le ondate finite! Looping o aumento infinito...");
+                    StartCoroutine(SpawnWave(CreateDynamicWave(currentWave)));
 
+                }
             }
-        }
 
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-        if (players.Length == 0)
-        {
-            Debug.Log("No players left - Changing scene");
-            StartCoroutine(ChangeSceneWithDelay());
+            
         }
+        
     }
 
     IEnumerator ChangeSceneWithDelay()
@@ -166,7 +181,6 @@ public class WaveManager : NetworkBehaviour
         }
 
         isSpawning = false;
-        currentWave++;
     }
 
     Wave CreateDynamicWave(int waveIndex)

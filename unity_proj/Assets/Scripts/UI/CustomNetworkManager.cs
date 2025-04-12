@@ -141,6 +141,7 @@ public class CustomNetworkRoomManager : NetworkRoomManager
 
         Debug.Log($"Game player creato per {conn.connectionId}. Totale creati: {playerModelsCreated}/{numPlayers}");
 
+        // Se tutti i game players sono stati creati
         if (playerModelsCreated >= numPlayers)
         {
             Debug.Log("Tutti i PlayerModel sono stati creati!");

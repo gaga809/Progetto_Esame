@@ -12,6 +12,7 @@ public class PlayerModel : NetworkBehaviour
     public string playerName;
     [SerializeField] private TextMeshProUGUI nameText;
     public GameObject UI;
+    public GameObject deathPanel;
 
     [Header("Player Statuses")]
     [SyncVar(hook = nameof(OnDeathStatusChanged))]
@@ -138,6 +139,9 @@ public class PlayerModel : NetworkBehaviour
 
         if (isLocalPlayer)
         {
+            deathPanel = GameObject.Find("DeathPanel");
+            if(deathPanel != null)
+                deathPanel.SetActive(true);
             playerControls.actions.Disable();
             SetupSpectatorMode();
         }
