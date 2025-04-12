@@ -1,6 +1,10 @@
 import express from "express";
 import dotenv from "dotenv";
 import apiV1Router from "./routes/apiv1/apiv1";
+import logger from "./utils/logger";
+
+// Logger setup
+logger.setLevel("INDEX");
 
 // Load environment variables from .env file
 dotenv.config();
@@ -16,15 +20,16 @@ function setup() {
 
     app.use("/api/v1", apiV1Router);
 
-    app.listen(PORT, () => {
-        console.log("Server avviato su http://localhost:3000");
-    });
-
     app.get("/", (req, res) => {
         res.send("Hello World!");
+    });
+
+    app.listen(PORT, () => {
+        logger.info(`Server is running on http://localhost:${PORT}`);
     });
 }
 
 if (require.main === module) {
+    logger.info("Starting server...");
     setup();
 }
