@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import dayjs from "dayjs";
+import chalk from "chalk";
 
 const LOGDIR = process.env.LOGS_DIR || "../../logs";
 const LOGFILE = process.env.LOGS_FILE_NAME || "web_server.log";
@@ -67,13 +68,16 @@ class Logger {
         fs.appendFileSync(Logger.logFilePath, logMessage + "\n");
 
         // Log to console as well
+        let coloredMessage;
         if (type === "ERROR") {
-            console.error(logMessage);
+            coloredMessage = chalk.red(logMessage);
         } else if (type === "WARN") {
-            console.warn(logMessage);
+            coloredMessage = chalk.yellow(logMessage);
         } else {
-            console.log(logMessage);
+            coloredMessage = chalk.green(logMessage);
         }
+
+        console.log(coloredMessage);
     }
 
     /// <summary>
