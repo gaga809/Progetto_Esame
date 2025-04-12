@@ -23,6 +23,22 @@ const swaggerOptions = {
             description:
                 "The documentation for the Svlime API. Endpoints are listed below.",
         },
+        components: {
+            securitySchemes: {
+                BearerAuth: {
+                    type: "http",
+                    scheme: "bearer",
+                    bearerFormat: "JWT",
+                    description:
+                        "Enter your bearer token in the format **Bearer {token}**",
+                },
+            },
+        },
+        security: [
+            {
+                BearerAuth: [],
+            },
+        ],
     },
     apis: ["./src/routes/apiv1/*.ts"],
 };
