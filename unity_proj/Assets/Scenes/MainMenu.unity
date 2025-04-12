@@ -1367,9 +1367,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: CustomNetworkRoomManager, Assembly-CSharp
-        m_MethodName: Disconnect
+      - m_Target: {fileID: 900055937}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: BackOne
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

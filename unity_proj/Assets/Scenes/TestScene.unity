@@ -1017,7 +1017,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  waveJSONPath: Waves.json
+  waveJSONPath: Waves
   waveDelay: 5
   waveDifficultyMultiplier: 1.2
   startWaittime: 2
@@ -1157,7 +1157,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: dfc08c90188302847afb04f628582097, type: 2}
+  - {fileID: 2100000, guid: 9f74a13152dad544abedc7538eb3182c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

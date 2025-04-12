@@ -10,7 +10,7 @@ using UnityEngine;
 public class WaveManager : NetworkBehaviour
 {
     [Header("Waves")]
-    public string waveJSONPath = "Waves.json";
+    public string waveJSONPath = "Waves";
     public float waveDelay = 5f;
     public float waveDifficultyMultiplier = 1.2f;
     public float startWaittime = 2f;
@@ -50,11 +50,11 @@ public class WaveManager : NetworkBehaviour
 
     void LoadWaveData()
     {
-        string jsonText = File.ReadAllText("Assets/" + waveJSONPath);
+        TextAsset jsonText = Resources.Load<TextAsset>(waveJSONPath);
 
         try
         {
-            WaveData waveData = JsonUtility.FromJson<WaveData>(jsonText);
+            WaveData waveData = JsonUtility.FromJson<WaveData>(jsonText.text);
             Debug.Log(waveData.waves);
 
             if (waveData != null && waveData.waves != null)
