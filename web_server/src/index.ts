@@ -20,7 +20,8 @@ const swaggerOptions = {
         info: {
             title: "API Documentation",
             version: "0.0.1",
-            description: "The API documentation for the project",
+            description:
+                "The documentation for the Svlime API. Endpoints are listed below.",
         },
     },
     apis: ["./src/routes/apiv1/*.ts"],
