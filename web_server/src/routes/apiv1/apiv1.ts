@@ -1,5 +1,6 @@
-// src/routes/apiv1/apiv1.ts
+// src/routes/api/v1
 import { Router } from "express";
+import auth from "./auth";
 
 const router = Router();
 
@@ -26,5 +27,8 @@ const router = Router();
 router.get("/", (req, res) => {
     res.json({ message: "Hello from the Svlime API v1!" });
 });
+
+// Other endpoints
+router.use("/auth", auth);
 
 export default router;
