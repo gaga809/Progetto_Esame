@@ -15,6 +15,8 @@ public class CustomNetworkRoomManager : NetworkRoomManager
     public Quaternion[] playerRoomRotations;
     private NetworkConnectionToClient[] connections;
 
+    private bool anotherLobby = true;
+
     public override void Start()
     {
         base.Start();
@@ -27,20 +29,55 @@ public class CustomNetworkRoomManager : NetworkRoomManager
 
     /* ROOM METHODS*/
 
+    public override void OnRoomStartHost()
+    {
+        maxPlayers = PlayerPrefs.GetInt("numPlayers");
+        base.OnRoomStopHost();
+    }
+
+    public override void OnServerConnect(NetworkConnectionToClient conn)
+    {
+        if (currentPlayersNum >= maxPlayers)
+        {
+            Debug.LogWarning($"Connection refused: Max players for this session is {maxPlayers}.");
+            conn.Disconnect(); 
+            return;
+        }
+
+        base.OnServerConnect(conn);
+    }
+
     public override GameObject OnRoomServerCreateRoomPlayer(NetworkConnectionToClient conn)
     {
+        if (anotherLobby)
+        {
+            foreach (var c in NetworkServer.connections)
+            {
+                if (c.Value.identity != null)
+                {
+                    var rp = c.Value.identity.GetComponent<NetworkRoomPlayer>();
+                    if (rp != null)
+                    {
+                        NetworkServer.Destroy(rp.gameObject);
+                    }
+                }
+            }
+
+            connections = new NetworkConnectionToClient[maxPlayers];
+            currentPlayersNum = 0;
+            minPlayers = 0;
+
+            anotherLobby = false;
+        }
+
         int playerIndex = FindNextIndex();
 
-        if (playerIndex >= maxPlayers)
-        {
-            Debug.LogWarning("Tutti gli slot sono pieni! Connessione rifiutata.");
-            return null;
-        }
 
         Vector3 spawnPos = playerRoomPositions != null ? playerRoomPositions[playerIndex] : Vector3.zero;
         Quaternion spawnRot = playerRoomRotations != null ? playerRoomRotations[playerIndex] : Quaternion.identity;
 
         GameObject roomPlayer = Instantiate(roomPlayerPrefab.gameObject, spawnPos, spawnRot);
+        roomPlayer.GetComponent<SvlimeRoomPlayerBehaviour>().playerName = "Player " + (playerIndex + 1);
 
         connections[playerIndex] = conn;
 
@@ -58,7 +95,7 @@ public class CustomNetworkRoomManager : NetworkRoomManager
         currentPlayersNum--;
     }
 
-    private int FindNextIndex()
+    public int FindNextIndex()
     {
         int i = 0;
         while(i<maxPlayers && connections[i] != null) i++;
@@ -77,8 +114,10 @@ public class CustomNetworkRoomManager : NetworkRoomManager
     public override void OnRoomServerPlayersReady() {
         if (NetworkServer.active)
         {
-            //base.OnRoomServerPlayersReady();
+            //base.OnRoomServerPlayersReady()
+            anotherLobby = true;
             ServerChangeScene(GameplayScene);
+            
         }
     }
 
@@ -102,6 +141,12 @@ public class CustomNetworkRoomManager : NetworkRoomManager
         Debug.Log($"Scene changed to: {sceneName}");
 
         base.OnRoomServerSceneChanged(sceneName);
+
+        if(sceneName == "TestScene")
+        {
+            GameObject waveManager = GameObject.Find("GameHandler");
+            waveManager.SetActive(true);
+        }
     }
 
     /* END GAME METHODS*/

@@ -56,7 +56,7 @@ public class SvlimeRoomPlayerBehaviour : NetworkRoomPlayer
         if (isLocalPlayer)
         {
             // TODO: Get Name from PlayerPrefs
-            string localPlayerName = "Player " + GetPlayerIndex().ToString();
+            string localPlayerName = playerName;
             PlayerPrefs.SetString(playerNamePref, localPlayerName);
             CmdSetPlayerName(localPlayerName);
             roomUI.btnReady.onClick.AddListener(HandlerReady);
@@ -67,15 +67,6 @@ public class SvlimeRoomPlayerBehaviour : NetworkRoomPlayer
     public void HandlerReady()
     {
         CmdChangeReadyState(!readyToBegin);
-    }
-
-    public int GetPlayerIndex()
-    {
-        if (NetworkManager.singleton is NetworkRoomManager roomManager)
-        {
-            return roomManager.roomSlots.Count;
-        }
-        return -1;
     }
 
     private void ShowReadyStatusOnClients(bool newReadyState)

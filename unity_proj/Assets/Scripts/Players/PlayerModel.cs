@@ -22,6 +22,7 @@ public class PlayerModel : NetworkBehaviour
     public int health = 10;
     [SyncVar]
     public int maxHealth = 10;
+    public bool canJump = false;
     public float speed = 5f;
     public float deceleration = 5f;
     public float minSpeed = 0.1f;
@@ -119,7 +120,6 @@ public class PlayerModel : NetworkBehaviour
         {
             died = true;
             RpcDie();
-            CheckIfAllPlayersDead();
         }
     }
 
@@ -160,23 +160,23 @@ public class PlayerModel : NetworkBehaviour
         // Funzione vuota mantenuta per compatibilità
     }
 
-    void CheckIfAllPlayersDead()
-    {
-        if (!isServer) return;
+    //void CheckIfAllPlayersDead()
+    //{
+    //    if (!isServer) return;
+        
+    //    GameObject[] players = GameObject.FindGameObjectsWithTag(playerTag);
+    //    if (players.Length == 0)
+    //    {
+            
+    //    }
+    //}
 
-        GameObject[] players = GameObject.FindGameObjectsWithTag(playerTag);
-        if (players.Length == 0)
-        {
-            Debug.Log("No players left - Changing scene");
-            StartCoroutine(ChangeSceneWithDelay());
-        }
-    }
+    //IEnumerator ChangeSceneWithDelay()
+    //{
+    //    yield return new WaitForSeconds(1f);
+    //    NetworkManager.singleton.ServerChangeScene("GameRoom");
+    //}
 
-    IEnumerator ChangeSceneWithDelay()
-    {
-        yield return new WaitForSeconds(1f);
-        NetworkManager.singleton.ServerChangeScene("GameRoom");
-    }
 
     void SetupSpectatorMode()
     {
@@ -220,7 +220,8 @@ public class PlayerModel : NetworkBehaviour
 
         playerControls.actions["Move"].performed += ctx => playerController.OnMove(ctx.ReadValue<Vector2>());
         playerControls.actions["Move"].canceled += ctx => playerController.OnFinishMove();
-        playerControls.actions["Jump"].performed += ctx => playerController.OnJump();
+        if(canJump)
+            playerControls.actions["Jump"].performed += ctx => playerController.OnJump();
         playerControls.actions["Interact"].performed += ctx => playerController.OnInteract();
     }
 
@@ -228,7 +229,8 @@ public class PlayerModel : NetworkBehaviour
     {
         playerControls.actions["Move"].performed -= ctx => playerController.OnMove(ctx.ReadValue<Vector2>());
         playerControls.actions["Move"].canceled -= ctx => playerController.OnFinishMove();
-        playerControls.actions["Jump"].performed -= ctx => playerController.OnJump();
+        if(canJump)
+            playerControls.actions["Jump"].performed -= ctx => playerController.OnJump();
         playerControls.actions["Interact"].performed -= ctx => playerController.OnInteract();
     }
 }

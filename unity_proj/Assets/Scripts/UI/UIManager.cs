@@ -97,7 +97,14 @@ public class UIManager : MonoBehaviour
     public void CreateRoom()
     {
         var manager = CustomNetworkRoomManager.singleton;
+        PlayerPrefs.SetInt("numPlayers", 4);
+        manager.StartHost();
+    }
 
+    public void CreateSinglePlayerRoom()
+    {
+        var manager = CustomNetworkRoomManager.singleton;
+        PlayerPrefs.SetInt("numPlayers", 1);
         manager.StartHost();
     }
 

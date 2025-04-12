@@ -115,6 +115,19 @@ public class WaveManager : NetworkBehaviour
 
             }
         }
+
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        if (players.Length == 0)
+        {
+            Debug.Log("No players left - Changing scene");
+            StartCoroutine(ChangeSceneWithDelay());
+        }
+    }
+
+    IEnumerator ChangeSceneWithDelay()
+    {
+        yield return new WaitForSeconds(1f);
+        NetworkManager.singleton.ServerChangeScene("GameRoom");
     }
 
     IEnumerator SpawnWave(Wave wave)
