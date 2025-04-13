@@ -25,7 +25,16 @@ body {
     font-weight: 400;
     font-style: normal;
     color: white;
-    -webkit-text-stroke: 2.5px black;
+    -webkit-text-stroke: 3.5px black;
+}
+
+button {
+    font-family: "Atkinson Hyperlegible", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings:
+        "wdth" 100;
 }
 
 @media (max-width: 768px) {
@@ -37,10 +46,10 @@ body {
 
 #mouse-circle {
     position: absolute;
-    width: 50px;
-    height: 50px;
-    background: url('/drop-svlime.png') no-repeat center center;
-    background-size: cover;
+    width: 35px;
+    height: 35px;
+    background: url('/assets/img/blob/pink.svg') no-repeat center center;
+    background-size: contain;
     pointer-events: none;
     z-index: 100000;
     transition: transform 0.1s ease-out;

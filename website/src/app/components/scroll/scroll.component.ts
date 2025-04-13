@@ -33,7 +33,7 @@ export class ScrollComponent implements AfterViewInit {
         start: 'top top',
         end: 'bottom top',
         pin: true, 
-        scrub: 2,
+        scrub: 1,
         snap: 1,
         toggleActions: 'play none none reverse', 
       },
@@ -44,7 +44,7 @@ export class ScrollComponent implements AfterViewInit {
     const container = section.nativeElement.querySelector('.random-boxes');
     if (!container) return;
 
-    const numSquares = Math.floor(Math.random() * 2) + 2; 
+    const numSquares = Math.floor(Math.random() * 2) + 3; 
 
     const positions: { x: number; y: number }[] = [];
 
@@ -58,7 +58,7 @@ export class ScrollComponent implements AfterViewInit {
       return positions.some((pos) => {
         const dx = Math.abs(pos.x - x);
         const dy = Math.abs(pos.y - y);
-        return dx < 15 && dy < 15;
+        return dx < 5 && dy < 5;
       });
     };
 
@@ -88,8 +88,7 @@ export class ScrollComponent implements AfterViewInit {
 
       this.renderer.appendChild(container, square);
 
-      // Animazione GSAP per il movimento casuale
-      const randomDuration = Math.floor(Math.random() * 10) + 5; // Durata tra 5 e 15 secondi
+      const randomDuration = Math.floor(Math.random() * 10) + 3;
 
       gsap.to(square, {
         x: `${Math.random() * 100}%`,

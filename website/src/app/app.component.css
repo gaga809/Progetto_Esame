@@ -3,19 +3,130 @@
 }
 
 .bg {
-    background: url('/assets/img/main-bg.jpg');
-    background-size: contain;
+    background: url('/assets/img/main-bg.jpg') no-repeat center center;
+    background-size: cover;
     width: 100%;
 }
 
+.border-wrapper {
+    position: relative;
+    padding: 0;
+    height: auto;
+}
 
+.border {
+    width: 105%;
+    height: auto;
+    display: block;
+    position: relative;
+    z-index: 3;
+}
+
+.border-div-right,
+.border-div-left {
+    width: 50%;
+    position: absolute;
+    display: block;
+    background-color: #54ADFF;
+    /* Colore originale */
+    bottom: 0;
+    z-index: 2;
+}
+
+.border-div-right {
+    left: 0;
+    height: calc(100% / 1.5);
+}
+
+.border-div-left {
+    right: 0;
+    height: calc(100% / 3);
+}
+
+.border-2 {
+    width: 105%;
+    height: auto;
+    display: block;
+    position: relative;
+    z-index: 3;
+    margin-top: -5px;
+}
+
+.border-div-right-2,
+.border-div-left-2 {
+    width: 50%;
+    position: absolute;
+    display: block;
+    background-color: #ffa82c;
+    top: 0;
+    z-index: 2;
+}
+
+.border-div-right-2 {
+    left: 0;
+    height: calc(100% / 3);
+}
+
+.border-div-left-2 {
+    right: 0;
+    height: calc(100% / 2);
+}
 
 @media (max-width: 1024px) {
-    .news {
+    .border, .border-2 {
+        width: 135%;
+        left: -30px;
+    }
+
+    .news,
+    .videos {
         padding: 2rem;
     }
 
-    .videos {
-        padding: 2rem;
+    .border-div-right {
+        height: 7dvh;
+    }
+
+    .border-div-left {
+        height: 4.5dvh;
+    }
+
+    .border-div-right-2 {
+        height: 3dvh;
+    }
+
+    .border-div-left-2 {
+        height: 5.3dvh;
+    }
+    
+}
+
+@media (max-width: 796px) {
+
+    .border, .border-2 {
+        width: 145%;
+    }
+
+    .border-div-right {
+        height: 5dvh;
+    }
+
+    .border-div-left {
+        height: 3dvh;
+    }
+
+    .border-div-right-2 {
+        height: 2dvh;
+    }
+
+    .border-div-left-2 {
+        height: 3.8dvh;
+    }
+}
+
+
+@media (max-width: 500px) {
+    .border, .border-2 {
+        width: 175%;
     }
 }

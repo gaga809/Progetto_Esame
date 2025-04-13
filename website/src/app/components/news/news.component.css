@@ -7,6 +7,7 @@ h1 {
     text-align: center;
     font-size: 8dvw;
     margin-bottom: 50px;
+    -webkit-text-stroke: 3px black;
 }
 
 .news-container {
@@ -41,7 +42,7 @@ h1 {
     transform: scale(1);
 }
 
-img {
+.img-news {
     height: 30dvh;
     object-fit: cover;
     border-radius: 0.3rem 0.3rem 0 0;

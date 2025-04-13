@@ -13,6 +13,7 @@ h1 {
     max-width: 50dvw;
     word-wrap: break-word;
     padding: 70px 0;
+    -webkit-text-stroke: 3px black;
 }
 
 .main-video {
