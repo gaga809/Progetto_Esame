@@ -21,9 +21,9 @@ public class MobModel : NetworkBehaviour
     public float attackRate = 2f;
 
     [Header("Jump Settings")]
-    public float jumpForce = 8f;               // Forza verso l'alto
-    public float jumpForwardForce = 5f;        // Spinta in avanti
-    public float jumpCooldown = 2f;            // Tempo tra un salto e l'altro
+    public float jumpForce = 8f;
+    public float jumpForwardForce = 5f;
+    public float jumpCooldown = 2f;
 
 
     private NavMeshAgent agent;
@@ -62,6 +62,14 @@ public class MobModel : NetworkBehaviour
 
         float distance = Vector3.Distance(transform.position, trsPly.position);
 
+        Vector3 direction = (trsPly.position - transform.position).normalized;
+        direction.y = 0f; 
+        if (direction != Vector3.zero)
+        {
+            Quaternion toRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, Time.deltaTime * 5f);
+        }
+
         if (distance > stoppingDistance)
         {
             if (agent.enabled && agent.isOnNavMesh)
@@ -83,7 +91,7 @@ public class MobModel : NetworkBehaviour
     void CheckIfGrounded()
     {
         Ray ray = new Ray(transform.position + Vector3.up * 0.1f, Vector3.down);
-        isGrounded = Physics.Raycast(ray, 1.2f); 
+        isGrounded = Physics.Raycast(ray, 1.2f);
     }
 
     IEnumerator JumpLoop()
