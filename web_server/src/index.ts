@@ -6,12 +6,16 @@ import swaggerUi from "swagger-ui-express";
 // Local Imports
 import apiV1Router from "./routes/apiv1/apiv1";
 import logger from "./utils/logger";
+import SvlimeDatabase from "./db/mysql";
 
 // Logger setup
 logger.setLevel("INDEX");
 
 // Load environment variables from .env file
 dotenv.config();
+
+// DB Setup
+const db = SvlimeDatabase.getInstance();
 
 // Swagger setup
 const swaggerOptions = {
@@ -49,26 +53,33 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 const PORT = process.env.PORT || 3000;
 
 // Express Server
-function setup() {
-    const app = express();
+async function setup() {
+    await db.connect();
 
-    app.use(express.json());
+    if(db.getConnection() != null){
+        logger.info("Starting server...");
 
-    // public folder for static files
-    app.use(express.static("public"));
+        const app = express();
 
-    // Swagger UI setup
-    app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-    // Show Main Route
-    app.use("/api/v1", apiV1Router);
-
-    app.listen(PORT, () => {
-        logger.info(`Server is running on http://localhost:${PORT}`);
-    });
+        app.use(express.json());
+    
+        // public folder for static files
+        app.use(express.static("public"));
+    
+        // Swagger UI setup
+        app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+    
+        // Show Main Route
+        app.use("/api/v1", apiV1Router);
+    
+        app.listen(PORT, () => {
+            logger.info(`Server is running on http://localhost:${PORT}`);
+        });
+    }else{
+        return;
+    }    
 }
 
 if (require.main === module) {
-    logger.info("Starting server...");
     setup();
 }

@@ -1,0 +1,59 @@
+import mysql from 'mysql2/promise';
+import logger from '../utils/logger';
+
+// Logger setup
+logger.setLevel('MYSQLDB');
+
+const DBHOST = process.env.DB_HOST || 'localhost';
+const DBPORT  = process.env.DB_PORT != null ? parseInt(process.env.DB_PORT) : 3306;
+const DBUSER = process.env.DB_USER || 'admin';
+const DBPASSWORD = process.env.DB_PASSWORD || 'password';
+const DBNAME = process.env.DB_NAME || 'svlime';
+
+class SvlimeDatabase {
+    private static instance: SvlimeDatabase;
+    private connection: mysql.Connection | null = null;
+
+    private constructor() {}
+
+    public static getInstance(): SvlimeDatabase {
+        if (!SvlimeDatabase.instance) {
+            SvlimeDatabase.instance = new SvlimeDatabase();
+        }
+        return SvlimeDatabase.instance;
+    }
+
+    public async connect(): Promise<mysql.Connection> {
+        if (!this.connection) {
+            try{
+                this.connection = await mysql.createConnection({
+                    host: DBHOST,
+                    port: DBPORT,
+                    user: DBUSER,
+                    password: DBPASSWORD,
+                    database: DBNAME
+                });
+
+                logger.info(`Connected to MySQL database at ${DBHOST}:${DBPORT} as ${DBUSER}`);
+            }catch (error){
+                logger.error(`Couldn't connect to MySQL Database: ${error}`);
+                throw new Error(`Couldn't connect to MySQL Database: ${error}`);
+            }
+            
+        }
+        return this.connection;
+    }
+
+    public getConnection(): mysql.Connection | null {
+        return this.connection;
+    }
+
+    public async close(): Promise<void> {
+        if (this.connection) {
+            await this.connection.end();
+            logger.info('Disconnected from MySQL database');
+        }
+    }    
+}
+
+export default SvlimeDatabase;
