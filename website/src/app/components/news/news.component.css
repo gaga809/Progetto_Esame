@@ -76,6 +76,7 @@ p {
         font-size: 15dvw;
         margin: 0;
         padding: 0;
+        -webkit-text-stroke: 1px black;
     }
     
     

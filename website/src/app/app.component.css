@@ -20,6 +20,7 @@
     display: block;
     position: relative;
     z-index: 3;
+    left: -30px;
 }
 
 .border-div-right,
@@ -50,6 +51,7 @@
     position: relative;
     z-index: 3;
     margin-top: -5px;
+    left: -30px;
 }
 
 .border-div-right-2,
@@ -75,7 +77,6 @@
 @media (max-width: 1024px) {
     .border, .border-2 {
         width: 135%;
-        left: -30px;
     }
 
     .news,
@@ -88,15 +89,15 @@
     }
 
     .border-div-left {
-        height: 4.5dvh;
+        height: 4dvh;
     }
 
     .border-div-right-2 {
-        height: 3dvh;
+        height: 4dvh;
     }
 
     .border-div-left-2 {
-        height: 5.3dvh;
+        height: 7dvh;
     }
     
 }
@@ -104,7 +105,7 @@
 @media (max-width: 796px) {
 
     .border, .border-2 {
-        width: 145%;
+        width: 135%;
     }
 
     .border-div-right {
@@ -116,17 +117,17 @@
     }
 
     .border-div-right-2 {
-        height: 2dvh;
+        height: 3dvh;
     }
 
     .border-div-left-2 {
-        height: 3.8dvh;
+        height: 4.5dvh;
     }
 }
 
 
 @media (max-width: 500px) {
     .border, .border-2 {
-        width: 175%;
+        width: 160%;
     }
 }

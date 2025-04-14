@@ -118,6 +118,7 @@ video {
     h1 {
         font-size: 16dvw;
         width: 100dvw;
+        -webkit-text-stroke: 1px black;
         padding: 0;
     }
 
