@@ -1,13 +1,14 @@
 import mysql from "mysql2/promise";
 import Logger from "../utils/logger";
 
-const logger = Logger.getInstance();
-
 class SvlimeDatabase {
   private static instance: SvlimeDatabase;
   private connection: mysql.Connection | null = null;
+  l: Logger = Logger.getInstance();
 
-  private constructor() {}
+  private constructor() {
+    this.l.setLevel("MYSQLDB");
+  }
 
   public static getInstance(): SvlimeDatabase {
     if (!SvlimeDatabase.instance) {
@@ -25,7 +26,7 @@ class SvlimeDatabase {
         const DBUSER = process.env.DB_USER || "admin";
         const DBPASSWORD = process.env.DB_PASSWORD || "password";
         const DBNAME = process.env.DB_NAME || "svlime";
-        
+
         this.connection = await mysql.createConnection({
           host: DBHOST,
           port: DBPORT,
@@ -34,11 +35,11 @@ class SvlimeDatabase {
           database: DBNAME,
         });
 
-        logger.info(
+        this.l.info(
           `Connected to MySQL database at ${DBHOST}:${DBPORT} as ${DBUSER}`
         );
       } catch (error: any) {
-        logger.error(`Couldn't connect to MySQL Database: ${error.code}`);
+        this.l.error(`Couldn't connect to MySQL Database: ${error.code}`);
         throw new Error(error.code);
       }
     }
@@ -52,7 +53,7 @@ class SvlimeDatabase {
   public async close(): Promise<void> {
     if (this.connection) {
       await this.connection.end();
-      logger.info("Disconnected from MySQL database");
+      this.l.info("Disconnected from MySQL database");
     }
   }
 }
