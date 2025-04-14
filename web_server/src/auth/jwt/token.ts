@@ -18,7 +18,7 @@ if (!JWTSECRET) {
 const JWTEXPIRESIN = process.env.JWT_EXPIRATION as StringValue;
 if (!JWTEXPIRESIN) {
     logger.error("JWT_EXPIRATION is not set in the environment variables.");
-    throw new Error("JWT_EXPIRES_IN is not set in the environment variables.");
+    throw new Error("JWT_EXPIRATION is not set in the environment variables.");
 }
 
 const JWTREFRESHSECRET = process.env.JWT_REFRESH_SECRET;

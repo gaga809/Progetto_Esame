@@ -1,7 +1,6 @@
 import fs from "fs";
 import path from "path";
 import dayjs from "dayjs";
-import chalk from "chalk";
 
 const LOGDIR = process.env.LOGS_DIR || "../../logs";
 const LOGFILE = process.env.LOGS_FILE_NAME || "web_server.log";
@@ -11,6 +10,7 @@ class Logger {
     private static instance: Logger | null = null;
     private static logFilePath: string;
     private level: string;
+
 
     private constructor(level: string = "main") {
         this.level = level;
@@ -62,19 +62,21 @@ class Logger {
     /// This method appends the log message to the log file.
     /// The log message includes a timestamp and the log level.
     /// </remarks>
-    private log(message: string, type: string): void {
+    private async log(message: string, type: string): Promise<void> {
         const timestamp = dayjs().format(LOGDATEFORMAT);
         const logMessage = `${timestamp} - {${this.level.toUpperCase()}} [${type}]: ${message}`;
         fs.appendFileSync(Logger.logFilePath, logMessage + "\n");
 
+        const chalk = await import('chalk');
+
         // Log to console as well
         let coloredMessage;
         if (type === "ERROR") {
-            coloredMessage = chalk.red(logMessage);
+            coloredMessage = chalk?.default.red(logMessage);
         } else if (type === "WARN") {
-            coloredMessage = chalk.yellow(logMessage);
+            coloredMessage = chalk?.default.yellow(logMessage);
         } else {
-            coloredMessage = chalk.green(logMessage);
+            coloredMessage = chalk?.default.green(logMessage);
         }
 
         console.log(coloredMessage);
