@@ -1,9 +1,6 @@
 import mysql from 'mysql2/promise';
 import logger from '../utils/logger';
 
-// Logger setup
-logger.setLevel('MYSQLDB');
-
 const DBHOST = process.env.DB_HOST || 'localhost';
 const DBPORT  = process.env.DB_PORT != null ? parseInt(process.env.DB_PORT) : 3306;
 const DBUSER = process.env.DB_USER || 'admin';
