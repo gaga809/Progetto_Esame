@@ -5,10 +5,11 @@ import swaggerUi from "swagger-ui-express";
 
 // Local Imports
 import apiV1Router from "./routes/apiv1/apiv1";
-import logger from "./utils/logger";
+import Logger from "./utils/logger";
 import SvlimeDatabase from "./db/mysql";
 
 // Logger setup
+const logger = Logger.getInstance();
 logger.setLevel("INDEX");
 
 // Load environment variables from .env file

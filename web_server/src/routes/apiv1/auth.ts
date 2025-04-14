@@ -1,6 +1,6 @@
 // src/routes/api/v1/auth
 import { Router } from "express";
-import { generateAccessToken, verifyAccessToken } from "../../auth/jwt/token";
+import { Login, Register} from "../../controllers/authController"
 
 const router = Router();
 
@@ -48,10 +48,6 @@ router.get("/", (req, res) => {
  *                   type: string
  *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
  */
-router.get("/login", (req, res) => {
-    // Generate a token
-    const token = generateAccessToken({ id: "1234", name: "Svlime" });
-    res.json({ token: token });
-});
+router.get("/login", Login);
 
 export default router;
