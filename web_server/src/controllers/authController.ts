@@ -14,22 +14,31 @@ logger.setLevel("AUTH_CON");
 // DB Setup
 const db = SvlimeDatabase.getInstance().getConnection();
 
-export async function Login(req: Request, res: Response): Promise<void> {
-
-}
+export async function Login(req: Request, res: Response): Promise<void> {}
 
 export async function Register(req: Request, res: Response): Promise<void> {
-    try {
-        const { username, password, email } = req.body;
+  try {
+    const { username, password, email } = req.body;
 
-        if (!username || !password || !email) {
-            res.status(400).json({ message: "Missing required fields" });
-            return;
-        }
+    if (!username || !password || !email) {
+      res.status(400).json({ message: "Missing required fields" });
+      return;
+    }
 
-        const result = await db?.query<RowDataPacket[]>("SELECT * FROM users WHERE email = ?", [email]);
-        console.dir(result);
-        /*
+    const results = db
+      ? await db.query<RowDataPacket[]>("SELECT * FROM users WHERE email = ?", [
+          email,
+        ])
+      : [[]];
+
+    const [rows] = results;
+
+    if(rows.length > 0){
+        res.status(409).json({ message: "User already exists" });
+        return;
+    }
+
+    /*
         if (!result) {
             res.status(500).json({ message: "Database query failed" });
             return;
@@ -51,8 +60,8 @@ export async function Register(req: Request, res: Response): Promise<void> {
         ]);
 
         res.status(201).json({ message: "User registered successfully" });*/
-    } catch (error) {
-        logger.error("Error during registration: " + error);
-        res.status(500).json({ message: "Internal server error" });
-    }
+  } catch (error) {
+    logger.error("Error during registration: " + error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 }
