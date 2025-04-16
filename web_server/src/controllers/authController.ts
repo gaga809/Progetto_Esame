@@ -1,8 +1,14 @@
 import { Request, Response } from "express";
+import ms from "ms";
 
 // Local Imports
 import Logger from "../utils/logger";
-import { generateAccessToken, generateRefreshToken } from "../auth/jwt/token";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  JWTEXPIRESIN,
+  JWTREFRESHEXPIRESIN,
+} from "../auth/jwt/token";
 import SvlimeDatabase from "../db/mysql";
 import { RowDataPacket } from "mysql2";
 
@@ -39,7 +45,7 @@ export async function Login(req: Request, res: Response): Promise<void> {
       params = [username, password];
     } else {
       query =
-        "SELECT is, username, isAdmin FROM Users WHERE email = ? AND password_hash = ?";
+        "SELECT id, username, isAdmin FROM Users WHERE email = ? AND password_hash = ?";
       params = [email, password];
     }
 
@@ -72,6 +78,23 @@ export async function Login(req: Request, res: Response): Promise<void> {
 
         const accessToken = generateAccessToken(user);
         const refreshToken = generateRefreshToken(user);
+
+        // Session Data
+        const agent = req.headers["user-agent"] || "Unknown";
+        const ip = req.ip || req.socket.remoteAddress || "Unknown";
+        const createdAt = new Date().toISOString();
+        const expiresAt = new Date(
+          Date.now() + ms(JWTREFRESHEXPIRESIN) / 1000
+        ).toISOString();
+
+        await SaveSession(
+          user.id,
+          refreshToken,
+          agent,
+          ip,
+          createdAt,
+          expiresAt
+        );
 
         res.status(201).json({
           message: "User logged in successfully",
@@ -176,6 +199,23 @@ export async function Register(req: Request, res: Response): Promise<void> {
         const accessToken = generateAccessToken(user);
         const refreshToken = generateRefreshToken(user);
 
+        // Session Data
+        const agent = req.headers["user-agent"] || "Unknown";
+        const ip = req.ip || req.socket.remoteAddress || "Unknown";
+        const createdAt = new Date().toISOString();
+        const expiresAt = new Date(
+          Date.now() + ms(JWTREFRESHEXPIRESIN) / 1000
+        ).toISOString();
+
+        await SaveSession(
+          user.id,
+          refreshToken,
+          agent,
+          ip,
+          createdAt,
+          expiresAt
+        );
+
         res.status(201).json({
           message: "User registered successfully",
           access_token: accessToken,
@@ -232,4 +272,30 @@ export function IsValidPassword(password: string) {
     };
 
   return { check: true };
+}
+
+export async function SaveSession(
+  user_id: number,
+  refresh_token: string,
+  agent: string,
+  ip: string,
+  created_at: string,
+  expires_at: string
+) {
+  const db = SvlimeDatabase.getInstance().getConnection();
+
+  if (!db) {
+    logger.error("SaveSession: No DB connection");
+    return;
+  }
+
+  try {
+    await db.query(
+      "INSERT INTO UserSessions (user_id, refresh_token, user_agent, ip_address, created_at, expires_at) VALUES (?, ?, ?, ?, ?, ?)",
+      [user_id, refresh_token, agent, ip, created_at, expires_at]
+    );
+    logger.info(`Session saved for user ${user_id}`);
+  } catch (err: any) {
+    logger.error("SaveSession DB error: " + err.message);
+  }
 }
