@@ -1,12 +1,13 @@
 import jwt from "jsonwebtoken";
 import ms, { StringValue } from "ms";
-import logger from "../../utils/logger";
+import Logger from "../../utils/logger";
 import dotenv from "dotenv";
 
 // Load environment variables from .env file
 dotenv.config();
 
 // Logger setup
+const logger = Logger.getInstance();
 logger.setLevel("JWT");
 
 const JWTSECRET = process.env.JWT_SECRET;
@@ -62,7 +63,7 @@ export const generateAccessToken = (payload: object) => {
 /// This function generates a JWT refresh token using the specified payload and secret.
 /// The refresh token will expire based on the expiration time set in the environment variables.
 /// </remarks>
-export const generateRefreshToken = (payload: string) => {
+export const generateRefreshToken = (payload: object) => {
     const seconds = ms(JWTREFRESHEXPIRESIN) / 1000;
     return jwt.sign(payload, JWTREFRESHSECRET, {
         expiresIn: seconds,

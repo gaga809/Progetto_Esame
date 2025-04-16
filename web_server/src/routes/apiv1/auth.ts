@@ -8,13 +8,13 @@ const router = Router();
  * @swagger
  * /api/v1/auth:
  *   get:
- *     summary: Get the API v1 Auth Endpoint
- *     description: Returns a message indicating that the API v1 Auth endpoint is working.
+ *     summary: Root url for the Auth Endpoint
+ *     description: Returns a message indicating that the API Auth Endpoint is working.
  *     tags:
  *       - API v1
  *     responses:
  *       200:
- *         description: A message indicating that the API v1 Auth endpoint is working.
+ *         description: A message indicating that the API Auth Endpoint is working.
  *         content:
  *           application/json:
  *             schema:
@@ -25,39 +25,16 @@ const router = Router();
  *                   example: "Hello from the Svlime API v1 Auth Endpoint!"
  */
 router.get("/", (req, res) => {
-    res.json({ message: "Hello from the Svlime API v1 Auth Endpoint!" });
+    res.status(200).json({ message: "API v1 - Auth" });
 });
 
-/**
- * @swagger
- * /api/v1/auth/login:
- *   get:
- *     summary: Generate an access token
- *     description: Generates and returns an access token for authentication.
- *     tags:
- *       - API v1
- *     responses:
- *       200:
- *         description: A generated access token.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 token:
- *                   type: string
- *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
- */
-router.get("/login", Login);
-
 
 /**
-
  * @swagger
  * /api/v1/auth/register:
  *   post:
  *     summary: Register a new user
- *     description: Creates a new user account with the provided details.
+ *     description: Registers a new user by validating the input fields (username, email, password), checking for existing records, and storing the new user in the database. Returns access and refresh tokens upon success.
  *     tags:
  *       - API v1
  *     requestBody:
@@ -66,19 +43,23 @@ router.get("/login", Login);
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - username
+ *               - email
+ *               - password
  *             properties:
  *               username:
  *                 type: string
  *                 example: "john_doe"
- *               password:
- *                 type: string
- *                 example: "hashed_password"
  *               email:
  *                 type: string
  *                 example: "john.doe@example.com"
+ *               password:
+ *                 type: string
+ *                 example: "secure_password_123"
  *     responses:
  *       201:
- *         description: User successfully registered.
+ *         description: User registered successfully.
  *         content:
  *           application/json:
  *             schema:
@@ -86,17 +67,46 @@ router.get("/login", Login);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "User registered successfully."
+ *                   example: "User registered successfully"
+ *                 access_token:
+ *                   type: string
+ *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *                 refresh_token:
+ *                   type: string
+ *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *                 type:
+ *                   type: string
+ *                   example: "Bearer"
  *       400:
- *         description: Bad request. Invalid input data.
+ *         description: Bad request. Missing or invalid fields.
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 error:
+ *                 message:
  *                   type: string
- *                   example: "Invalid input data."
+ *                   example: "Missing required fields"
+ *       409:
+ *         description: Conflict. User already exists.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "User with this email/username already exists"
+ *       500:
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Internal server error"
  */
 router.post("/register", Register);
 

@@ -25,7 +25,7 @@ class SvlimeDatabase {
           process.env.DB_PORT != null ? parseInt(process.env.DB_PORT) : 3306;
         const DBUSER = process.env.DB_USER || "admin";
         const DBPASSWORD = process.env.DB_PASSWORD || "password";
-        const DBNAME = process.env.DB_NAME || "svlime";
+        const DBNAME = process.env.DB_SCHEMA || "svlime";
 
         this.connection = await mysql.createConnection({
           host: DBHOST,
