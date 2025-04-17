@@ -9,7 +9,7 @@ public class MobModel : NetworkBehaviour
 {
     [Header("Player Settings")]
     [SyncVar(hook = nameof(OnClosestPlayerChanged))]
-    private GameObject player;
+    protected GameObject player;
 
     [Header("Mob Settings")]
     public int health = 5;
@@ -25,15 +25,14 @@ public class MobModel : NetworkBehaviour
     public float jumpForwardForce = 5f;
     public float jumpCooldown = 2f;
 
-
-    private NavMeshAgent agent;
-    private Rigidbody rb;
-    private Transform trsPly;
-    private bool canAttack = true;
+    protected NavMeshAgent agent;
+    protected Rigidbody rb;
+    protected Transform trsPly;
+    protected bool canAttack = true;
     private Coroutine jumpRoutine;
-    private bool isGrounded = true;
+    protected bool isGrounded = true;
 
-    void Start()
+    protected virtual void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
@@ -48,11 +47,15 @@ public class MobModel : NetworkBehaviour
         if (isServer)
         {
             FindClosestPlayer();
-            jumpRoutine = StartCoroutine(JumpLoop());
+
+            if (jumpForce != 0f || jumpForwardForce != 0f || jumpCooldown != 0f)
+            {
+                jumpRoutine = StartCoroutine(JumpLoop());
+            }
         }
     }
 
-    void Update()
+    protected virtual void Update()
     {
         if (!isServer) return;
 
@@ -63,7 +66,7 @@ public class MobModel : NetworkBehaviour
         float distance = Vector3.Distance(transform.position, trsPly.position);
 
         Vector3 direction = (trsPly.position - transform.position).normalized;
-        direction.y = 0f; 
+        direction.y = 0f;
         if (direction != Vector3.zero)
         {
             Quaternion toRotation = Quaternion.LookRotation(direction);
@@ -94,7 +97,7 @@ public class MobModel : NetworkBehaviour
         isGrounded = Physics.Raycast(ray, 1.2f);
     }
 
-    IEnumerator JumpLoop()
+    protected IEnumerator JumpLoop()
     {
         WaitForSeconds cooldown = new WaitForSeconds(jumpCooldown);
 
@@ -124,7 +127,7 @@ public class MobModel : NetworkBehaviour
         }
     }
 
-    IEnumerator AttackPlayer()
+    protected IEnumerator AttackPlayer()
     {
         canAttack = false;
 
@@ -148,7 +151,7 @@ public class MobModel : NetworkBehaviour
         }
     }
 
-    private void FindClosestPlayer()
+    protected void FindClosestPlayer()
     {
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         GameObject closest = null;
