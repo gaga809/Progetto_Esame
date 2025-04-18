@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using UnityEditor.Overlays;
 using UnityEngine;
 
 public class WaveManager : NetworkBehaviour
@@ -48,7 +49,6 @@ public class WaveManager : NetworkBehaviour
     void LoadWaveData()
     {
         TextAsset jsonText = Resources.Load<TextAsset>(waveJSONPath);
-
         try
         {
             WaveData waveData = JsonUtility.FromJson<WaveData>(jsonText.text);
@@ -137,47 +137,42 @@ public class WaveManager : NetworkBehaviour
         isSpawning = true;
         Debug.Log("Inizia l'ondata: " + wave.WaveName);
 
-        players = new List<Transform>();
-        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Player"))
-        {
-            players.Add(obj.transform);
-        }
+        players = new List<Transform>(GameObject.FindGameObjectsWithTag("Player").Select(p => p.transform));
 
         int playerCount = players.Count;
-        int scaledMobCount = Mathf.RoundToInt(wave.MobsCount * Mathf.Max(playerCount, 1));
         float scaledHealthMultiplier = wave.HealthMultiplier * playerCount;
 
-        for (int i = 0; i < scaledMobCount; i++)
+        foreach (MobEntry entry in wave.Mobs)
         {
-            if (players.Count == 0) break;
+            int scaledCount = Mathf.RoundToInt(entry.Count * Mathf.Max(playerCount, 1));
 
-            Transform player = players[Random.Range(0, players.Count)];
-            Vector3 SpawnPosition = GetValidSpawnPoint(player);
-
-            GameObject enemyPrefab;
-
-            if (wave.MobsPrefab.Length == 0)
+            for (int i = 0; i < scaledCount; i++)
             {
-                enemyPrefab = enemyPrefabs.ElementAt(Random.Range(0, enemyPrefabs.Count)).Value;
+                if (players.Count == 0) break;
+
+                Transform player = players[Random.Range(0, players.Count)];
+                Vector3 spawnPosition = GetValidSpawnPoint(player);
+
+                if (!enemyPrefabs.TryGetValue(entry.Prefab, out GameObject enemyPrefab))
+                {
+                    Debug.LogWarning("Prefab non trovato: " + entry.Prefab);
+                    continue;
+                }
+
+                Vector3 direction = player.position - spawnPosition;
+                direction.y = 0;
+
+                GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.LookRotation(direction));
+                NetworkServer.Spawn(enemy);
+
+                if (enemy.TryGetComponent<MobModel>(out MobModel mobModel))
+                {
+                    mobModel.maxHealth = Mathf.RoundToInt(mobModel.maxHealth * scaledHealthMultiplier);
+                    mobModel.health = mobModel.maxHealth;
+                }
+
+                yield return new WaitForSeconds(wave.SpawnRate);
             }
-            else
-            {
-                enemyPrefab = enemyPrefabs[wave.MobsPrefab[Random.Range(0, wave.MobsPrefab.Length)]];
-            }
-
-            Vector3 direction = player.position - SpawnPosition;
-            direction.y = 0;
-
-            GameObject enemy = Instantiate(enemyPrefab, SpawnPosition, Quaternion.LookRotation(direction));
-            NetworkServer.Spawn(enemy);
-
-            if (enemy.TryGetComponent<MobModel>(out MobModel mobModel))
-            {
-                mobModel.maxHealth = Mathf.RoundToInt(mobModel.maxHealth * scaledHealthMultiplier);
-                mobModel.health = mobModel.maxHealth;
-            }
-
-            yield return new WaitForSeconds(wave.SpawnRate);
         }
 
         isSpawning = false;
@@ -185,20 +180,18 @@ public class WaveManager : NetworkBehaviour
 
     Wave CreateDynamicWave(int waveIndex)
     {
-        string[] prefabs = new string[0];
+        var dynamicMobs = new List<MobEntry>
+        {
+            new MobEntry { Prefab = "Slime", Count = 10 + waveIndex * 3 }
+        };
 
-        Wave newWave = new Wave
-        (
+        return new Wave(
             "Ondata " + (waveIndex + 1),
-            prefabs,
-            waves[waves.Length - 1].MobsCount + (waveIndex * 3),
+            dynamicMobs,
             Mathf.Max(0.5f, waves[0].SpawnRate - 0.05f * waveIndex),
             1f + (waveIndex * 0.1f),
             1f + (waveIndex * 0.05f)
         );
-
-        Debug.Log("Ondata dinamica creata: " + newWave.WaveName);
-        return newWave;
     }
 
     Vector3 GetValidSpawnPoint(Transform player)
@@ -234,20 +227,25 @@ public class WaveManager : NetworkBehaviour
 }
 
 [System.Serializable]
+public class MobEntry
+{
+    public string Prefab;
+    public int Count;
+}
+
+[System.Serializable]
 public class Wave
 {
     public string WaveName;
-    public string[] MobsPrefab;
-    public int MobsCount;
+    public List<MobEntry> Mobs;
     public float SpawnRate;
     public float SpawnRateMultiplier;
     public float HealthMultiplier;
 
-    public Wave(string waveName, string[] mobsPrefab, int mobsCount, float spawnRate, float spawnRateMultiplier, float healthMultiplier)
+    public Wave(string waveName, List<MobEntry> mobs, float spawnRate, float spawnRateMultiplier, float healthMultiplier)
     {
         WaveName = waveName;
-        MobsPrefab = mobsPrefab;
-        MobsCount = mobsCount;
+        Mobs = mobs;
         SpawnRate = spawnRate;
         SpawnRateMultiplier = spawnRateMultiplier;
         HealthMultiplier = healthMultiplier;

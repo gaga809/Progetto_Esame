@@ -191,9 +191,11 @@ MonoBehaviour:
   playerName: 
   nameText: {fileID: 462860410514498547}
   UI: {fileID: 5279064599987790407}
+  deathPanel: {fileID: 0}
   died: 0
-  health: 10
-  maxHealth: 10
+  health: 30
+  maxHealth: 50
+  canJump: 0
   speed: 5
   deceleration: 5
   minSpeed: 0.1
@@ -208,6 +210,7 @@ MonoBehaviour:
   particlesPrefab: {fileID: 2644111357298385652, guid: 568fe86bb7211694f804134ff1941436, type: 3}
   deadTag: Dead
   playerTag: Player
+  fallDeathY: -20
 --- !u!65 &677336435074476400
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -91,7 +91,7 @@ public class MobModel : NetworkBehaviour
         CheckIfGrounded();
     }
 
-    void CheckIfGrounded()
+    protected void CheckIfGrounded()
     {
         Ray ray = new Ray(transform.position + Vector3.up * 0.1f, Vector3.down);
         isGrounded = Physics.Raycast(ray, 1.2f);

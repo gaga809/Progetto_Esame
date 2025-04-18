@@ -1,36 +1,43 @@
 {
-  "waves" : [
-  {
-    "WaveName": "Ondata 1",
-    "MobsPrefab": ["Slime"],
-    "MobsCount": 5,
-    "SpawnRate": 1.0,
-    "SpawnRateMultiplier": 1.0,
-    "HealthMultiplier": 1.0
-  },
-  {
-    "WaveName": "Ondata 2",
-    "MobsPrefab": ["Slime"],
-    "MobsCount": 10,
-    "SpawnRate": 0.5,
-    "SpawnRateMultiplier": 1.0,
-    "HealthMultiplier": 1.0
-  },
-  {
-    "WaveName": "Ondata 3",
-    "MobsPrefab": ["Slime"],
-    "MobsCount": 100,
-    "SpawnRate": 0.5,
-    "SpawnRateMultiplier": 1.0,
-    "HealthMultiplier": 1.0
-  },
-  {
-    "WaveName": "Ondata 4",
-    "MobsPrefab": ["Slime"],
-    "MobsCount": 200,
-    "SpawnRate": 0.5,
-    "SpawnRateMultiplier": 1.0,
-    "HealthMultiplier": 1.0
-  }
-]
+  "waves": [
+    {
+      "WaveName": "Ondata 1",
+      "Mobs": [
+        { "Prefab": "Sniper", "Count": 5 }
+      ],
+      "SpawnRate": 1.0,
+      "SpawnRateMultiplier": 1.0,
+      "HealthMultiplier": 1.0
+    },
+    {
+      "WaveName": "Ondata 2",
+      "Mobs": [
+        { "Prefab": "Slime", "Count": 6 },
+        { "Prefab": "Bomber", "Count": 4 }
+      ],
+      "SpawnRate": 0.5,
+      "SpawnRateMultiplier": 1.0,
+      "HealthMultiplier": 1.0
+    },
+    {
+      "WaveName": "Ondata 3",
+      "Mobs": [
+        { "Prefab": "Slime", "Count": 100 },
+        { "Prefab": "Bomber", "Count": 10 }
+      ],
+      "SpawnRate": 0.5,
+      "SpawnRateMultiplier": 1.0,
+      "HealthMultiplier": 1.0
+    },
+    {
+      "WaveName": "Ondata 4",
+      "Mobs": [
+        { "Prefab": "Slime", "Count": 200 },
+        { "Prefab": "Bomber", "Count": 25 }
+      ],
+      "SpawnRate": 0.5,
+      "SpawnRateMultiplier": 1.0,
+      "HealthMultiplier": 1.0
+    }
+  ]
 }

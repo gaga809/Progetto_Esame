@@ -109,7 +109,7 @@ public class PlayerController : NetworkBehaviour
         Debug.Log("Interact");
     }
 
-    private bool IsGrounded() 
+    private bool IsGrounded()
     {
         return Physics.Raycast(_trs.transform.position, Vector3.down, 1.1f);
     }

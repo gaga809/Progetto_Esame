@@ -55,13 +55,13 @@ MonoBehaviour:
   syncInterval: 0
   health: 5
   maxHealth: 5
-  speed: 15
+  speed: 20
   acceleration: 8
   stoppingDistance: 1.3
   attackDamage: 1
   attackRate: 1
-  jumpForce: 15
-  jumpForwardForce: 15
+  jumpForce: 30
+  jumpForwardForce: 30
   jumpCooldown: 1
 --- !u!195 &9131867948784529055
 NavMeshAgent:

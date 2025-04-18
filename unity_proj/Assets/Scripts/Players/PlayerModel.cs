@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
 using Mirror;
@@ -80,7 +80,7 @@ public class PlayerModel : NetworkBehaviour
 
         if (transform.position.y < fallDeathY && !died)
         {
-            Debug.Log($"{playerName} � caduto fuori dalla mappa!");
+            Debug.Log($"{playerName} è caduto fuori dalla mappa!");
             if (isServer)
             {
                 died = true;

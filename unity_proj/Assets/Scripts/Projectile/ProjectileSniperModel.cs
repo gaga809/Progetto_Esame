@@ -2,17 +2,12 @@ using UnityEngine;
 using System.Collections;
 using Mirror;
 
-public class ProjectileModel : NetworkBehaviour
+public class ProjectileSniperModel : NetworkBehaviour
 {
-    [Header("Projectile Settings")]
+    [Header("Projectile Sniper Settings")]
     public int damage = 1;
     public float speed = 1f;
     public float lifeTime = 5f;
-
-    void Update()
-    {
-        transform.Translate(Vector3.forward * speed * Time.deltaTime);
-    }
 
     private void Start()
     {
@@ -21,6 +16,11 @@ public class ProjectileModel : NetworkBehaviour
             StartCoroutine(DestroyProjectile());
         }
         StartCoroutine(DestroyProjectile());
+    }
+
+    void Update()
+    {
+        transform.Translate(Vector3.forward * speed * Time.deltaTime);
     }
 
     private IEnumerator DestroyProjectile()
@@ -33,13 +33,12 @@ public class ProjectileModel : NetworkBehaviour
     {
         if (!isServer) return;
 
-        MobModel mob = other.gameObject.GetComponent<MobModel>();
+        PlayerModel player = other.gameObject.GetComponent<PlayerModel>();
 
-        if (mob != null)
+        if (player != null)
         {
-            mob.Hurt(damage);
+            player.Hurt(damage);
             NetworkServer.Destroy(gameObject);
         }
     }
-
 }
