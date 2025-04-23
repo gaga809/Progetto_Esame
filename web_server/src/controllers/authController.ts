@@ -156,7 +156,6 @@ export async function Register(req: Request, res: Response): Promise<void> {
 
     let db = SvlimeDatabase.getInstance().getConnection();
 
-    
     const hashed_password = crypto
       .createHash("sha256")
       .update(password)
@@ -253,6 +252,72 @@ export async function Register(req: Request, res: Response): Promise<void> {
     res.status(500).json({ message: "Internal server error" });
   }
 }
+
+export async function GetNewAccessToken(
+  req: Request,
+  res: Response
+): Promise<void> {
+  try {
+    const refreshToken = res.locals.token;
+    const userId = res.locals.userId;
+    let db = SvlimeDatabase.getInstance().getConnection();
+
+    if (!db) {
+      db = await SvlimeDatabase.getInstance().connect();
+      if (!db) {
+        res.status(500).json({ message: "Database connection failed" });
+        return;
+      }
+    }
+
+    // Get if is valid session
+    const sessionQuery = db
+      ? await db.query<RowDataPacket[]>(
+          "SELECT session_id FROM UserSessions WHERE user_id = ? AND refresh_token = ? AND ip_address = ?",
+          [userId, refreshToken, req.socket.remoteAddress]
+        )
+      : [[]];
+
+    const [sessionRows] = sessionQuery;
+    if (sessionRows.length == 0) {
+      res.status(401).json({ message: "Refresh token is not of a valid session." });
+      return;
+    }
+
+    const userQueryResult = db
+      ? await db.query<RowDataPacket[]>(
+          "SELECT id, username, isAdmin FROM Users WHERE id = ?",
+          [userId]
+        )
+      : [[]];
+
+    const [userRows] = userQueryResult;
+    if (userRows.length == 0) {
+      res.status(500).json({ message: "Couldn't fetch user" });
+      return;
+    }
+
+    const user = userRows[0] as {
+      id: number;
+      username: string;
+      isAdmin: number;
+    };
+
+    const access_token = generateAccessToken(user);
+
+    res.status(201).json({
+      message: "Session is still valid. Here is the new access token!",
+      access_token: access_token,
+      type: "Bearer ",
+    });
+
+  } catch (error) {
+    logger.error("Error during the retrieval of a new access token: " + error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+/* OTHER FUNCTIONS */
 
 // Check if the email given is in valid format
 export function IsValidEmail(email: string) {
