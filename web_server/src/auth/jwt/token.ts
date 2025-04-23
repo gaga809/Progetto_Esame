@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import ms, { StringValue } from "ms";
 import Logger from "../../utils/logger";
 import dotenv from "dotenv";
@@ -12,32 +12,33 @@ logger.setLevel("JWT");
 
 const JWTSECRET = process.env.JWT_SECRET;
 if (!JWTSECRET) {
-    logger.error("JWT_SECRET is not set in the environment variables.");
-    throw new Error("JWT_SECRET is not set in the environment variables.");
+  logger.error("JWT_SECRET is not set in the environment variables.");
+  throw new Error("JWT_SECRET is not set in the environment variables.");
 }
 
 export const JWTEXPIRESIN = process.env.JWT_EXPIRATION as StringValue;
 if (!JWTEXPIRESIN) {
-    logger.error("JWT_EXPIRATION is not set in the environment variables.");
-    throw new Error("JWT_EXPIRATION is not set in the environment variables.");
+  logger.error("JWT_EXPIRATION is not set in the environment variables.");
+  throw new Error("JWT_EXPIRATION is not set in the environment variables.");
 }
 
 const JWTREFRESHSECRET = process.env.JWT_REFRESH_SECRET;
 if (!JWTREFRESHSECRET) {
-    logger.error("JWT_REFRESH_SECRET is not set in the environment variables.");
-    throw new Error(
-        "JWT_REFRESH_SECRET is not set in the environment variables."
-    );
+  logger.error("JWT_REFRESH_SECRET is not set in the environment variables.");
+  throw new Error(
+    "JWT_REFRESH_SECRET is not set in the environment variables."
+  );
 }
 
-export const JWTREFRESHEXPIRESIN = process.env.JWT_REFRESH_EXPIRATION as StringValue;
+export const JWTREFRESHEXPIRESIN = process.env
+  .JWT_REFRESH_EXPIRATION as StringValue;
 if (!JWTREFRESHEXPIRESIN) {
-    logger.error(
-        "JWT_REFRESH_EXPIRATION is not set in the environment variables."
-    );
-    throw new Error(
-        "JWT_REFRESH_EXPIRATION is not set in the environment variables."
-    );
+  logger.error(
+    "JWT_REFRESH_EXPIRATION is not set in the environment variables."
+  );
+  throw new Error(
+    "JWT_REFRESH_EXPIRATION is not set in the environment variables."
+  );
 }
 
 /// <summary>
@@ -50,8 +51,8 @@ if (!JWTREFRESHEXPIRESIN) {
 /// The token will expire based on the expiration time set in the environment variables.
 /// </remarks>
 export const generateAccessToken = (payload: object) => {
-    const seconds = ms(JWTEXPIRESIN) / 1000;
-    return jwt.sign(payload, JWTSECRET, { expiresIn: seconds });
+  const seconds = ms(JWTEXPIRESIN) / 1000;
+  return jwt.sign(payload, JWTSECRET, { expiresIn: seconds });
 };
 
 /// <summary>
@@ -64,10 +65,10 @@ export const generateAccessToken = (payload: object) => {
 /// The refresh token will expire based on the expiration time set in the environment variables.
 /// </remarks>
 export const generateRefreshToken = (payload: object) => {
-    const seconds = ms(JWTREFRESHEXPIRESIN) / 1000;
-    return jwt.sign(payload, JWTREFRESHSECRET, {
-        expiresIn: seconds,
-    });
+  const seconds = ms(JWTREFRESHEXPIRESIN) / 1000;
+  return jwt.sign(payload, JWTREFRESHSECRET, {
+    expiresIn: seconds,
+  });
 };
 
 /// <summary>
@@ -81,12 +82,12 @@ export const generateRefreshToken = (payload: object) => {
 /// If the token is invalid or expired, it returns null.
 /// </remarks>
 export const verifyAccessToken = (token: string) => {
-    try {
-        return jwt.verify(token, JWTSECRET);
-    } catch (err) {
-        logger.error("JWT verification failed: " + err);
-        return null;
-    }
+  try {
+    return jwt.verify(token, JWTSECRET) as JwtPayload;
+  } catch (err) {
+    logger.error("JWT verification failed: " + err);
+    return null;
+  }
 };
 
 /// <summary>
@@ -100,10 +101,10 @@ export const verifyAccessToken = (token: string) => {
 /// If the refresh token is invalid or expired, it returns null.
 /// </remarks>
 export const verifyRefreshToken = (token: string) => {
-    try {
-        return jwt.verify(token, JWTREFRESHSECRET);
-    } catch (err) {
-        logger.error("JWT refresh token verification failed: " + err);
-        return null;
-    }
+  try {
+    return jwt.verify(token, JWTREFRESHSECRET) as JwtPayload;
+  } catch (err) {
+    logger.error("JWT refresh token verification failed: " + err);
+    return null;
+  }
 };
