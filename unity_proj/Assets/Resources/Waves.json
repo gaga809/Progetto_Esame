@@ -4,8 +4,8 @@
       "WaveName": "Ondata 1",
       "Mobs": [
         { "Prefab": "Slime", "Count": 20 },
-        { "Prefab": "Bomber", "Count": 0 },
-        { "Prefab": "Sniper", "Count": 10 }
+        { "Prefab": "Bomber", "Count": 2 },
+        { "Prefab": "Sniper", "Count": 5 }
       ],
       "SpawnRate": 1.1,
       "SpawnRateMultiplier": 1.0,

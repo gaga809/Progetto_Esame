@@ -35,14 +35,12 @@ public class SniperModel : MobModel
 
         if (distance < minDistanceFromPlayer)
         {
-            Debug.Log("a");
             Vector3 retreatDir = (transform.position - closestPlayer.position).normalized;
             retreatDir.y = 0f;
             transform.position += retreatDir * retreatSpeed * Time.deltaTime;
         }
         else if (distance >= minDistanceFromPlayer && distance <= shootRange && canShoot)
         {
-            Debug.Log("b");
             StartCoroutine(Shoot());
         }
 
