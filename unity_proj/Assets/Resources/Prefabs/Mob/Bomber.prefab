@@ -186,7 +186,7 @@ MonoBehaviour:
   jumpCooldown: 0
   explosionRadius: 2
   explosionDamage: 2
-  explosionEffect: {fileID: 0}
+  explosionEffect: {fileID: 919132149155446097, guid: 25f03344dfdd844f88e89487c558fe35, type: 3}
 --- !u!1001 &5320930406361436754
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -5,9 +5,11 @@ using System.Collections;
 public class SniperModel : MobModel
 {
     public GameObject projectilePrefab;
-    public float shootRange = 15f;
+    public float shootRange = 20f;
     public float shootCooldown = 3f;
     public float projectileSpeed = 10f;
+    public float minDistanceFromPlayer = 8f;
+    public float retreatSpeed = 3f;
 
     private bool canShoot = true;
     private Transform closestPlayer;
@@ -22,7 +24,6 @@ public class SniperModel : MobModel
 
         float distance = Vector3.Distance(transform.position, closestPlayer.position);
 
-        // Rotate toward the player
         Vector3 direction = (closestPlayer.position - transform.position).normalized;
         direction.y = 0f;
 
@@ -32,8 +33,16 @@ public class SniperModel : MobModel
             transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, Time.deltaTime * 5f);
         }
 
-        if (distance <= shootRange && canShoot)
+        if (distance < minDistanceFromPlayer)
         {
+            Debug.Log("a");
+            Vector3 retreatDir = (transform.position - closestPlayer.position).normalized;
+            retreatDir.y = 0f;
+            transform.position += retreatDir * retreatSpeed * Time.deltaTime;
+        }
+        else if (distance >= minDistanceFromPlayer && distance <= shootRange && canShoot)
+        {
+            Debug.Log("b");
             StartCoroutine(Shoot());
         }
 
@@ -63,17 +72,13 @@ public class SniperModel : MobModel
         canShoot = false;
 
         if (closestPlayer == null)
-        {
-            Debug.LogWarning("Sniper tried to shoot but no player found.");
             yield break;
-        }
 
         Vector3 spawnPos = transform.position + Vector3.up * 1.5f;
         Vector3 dir = (closestPlayer.position - spawnPos).normalized;
         Quaternion rotation = Quaternion.LookRotation(dir);
 
         GameObject proj = Instantiate(projectilePrefab, spawnPos, rotation);
-        Debug.Log("Projectile instantiated at " + spawnPos);
 
         if (NetworkServer.active)
         {
@@ -85,7 +90,6 @@ public class SniperModel : MobModel
             }
 
             NetworkServer.Spawn(proj);
-            Debug.Log("Projectile spawned on server.");
         }
 
         yield return new WaitForSeconds(shootCooldown);

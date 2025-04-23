@@ -184,10 +184,12 @@ MonoBehaviour:
   jumpForce: 30
   jumpForwardForce: 30
   jumpCooldown: 1
-  projectilePrefab: {fileID: 3697001666772565700, guid: b82f925f3a951b241a1ee51792e6c352, type: 3}
+  projectilePrefab: {fileID: 3697001666772565700, guid: 597fe6c0a02e7fe41b451eaaa68c3274, type: 3}
   shootRange: 10
   shootCooldown: 3
-  projectileSpeed: 3
+  projectileSpeed: 7
+  minDistanceFromPlayer: 5
+  retreatSpeed: 5
 --- !u!1001 &5953000382637322938
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -202,7 +204,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 405bcf226a4c3b1428875b90d5f71f94, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 405bcf226a4c3b1428875b90d5f71f94, type: 3}
       propertyPath: m_LocalPosition.z

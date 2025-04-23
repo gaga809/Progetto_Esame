@@ -25,6 +25,9 @@ public class MobModel : NetworkBehaviour
     public float jumpForwardForce = 5f;
     public float jumpCooldown = 2f;
 
+    [Header("Visual Rotation")]
+    public Transform visualTransform; // <-- parte visiva da ruotare (es: mesh del mob)
+
     protected NavMeshAgent agent;
     protected Rigidbody rb;
     protected Transform trsPly;
@@ -67,10 +70,19 @@ public class MobModel : NetworkBehaviour
 
         Vector3 direction = (trsPly.position - transform.position).normalized;
         direction.y = 0f;
+
         if (direction != Vector3.zero)
         {
             Quaternion toRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, Time.deltaTime * 5f);
+            if (visualTransform != null)
+            {
+                visualTransform.rotation = Quaternion.Slerp(visualTransform.rotation, toRotation, Time.deltaTime * 10f);
+            }
+            else
+            {
+                // fallback: ruota tutto il mob se visualTransform non è assegnato
+                transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, Time.deltaTime * 10f);
+            }
         }
 
         if (distance > stoppingDistance)

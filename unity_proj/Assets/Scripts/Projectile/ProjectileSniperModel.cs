@@ -15,7 +15,6 @@ public class ProjectileSniperModel : NetworkBehaviour
         {
             StartCoroutine(DestroyProjectile());
         }
-        StartCoroutine(DestroyProjectile());
     }
 
     void Update()
@@ -33,12 +32,15 @@ public class ProjectileSniperModel : NetworkBehaviour
     {
         if (!isServer) return;
 
-        PlayerModel player = other.gameObject.GetComponent<PlayerModel>();
-
-        if (player != null)
+        if (other.CompareTag("Player"))
         {
-            player.Hurt(damage);
-            NetworkServer.Destroy(gameObject);
+            PlayerModel player = other.GetComponent<PlayerModel>();
+
+            if (player != null)
+            {
+                player.Hurt(damage);
+                NetworkServer.Destroy(gameObject);
+            }
         }
     }
 }
