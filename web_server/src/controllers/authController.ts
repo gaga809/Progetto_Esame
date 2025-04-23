@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import ms from "ms";
+import dayjs from "dayjs";
+import crypto from "crypto";
 
 // Local Imports
 import Logger from "../utils/logger";
@@ -38,15 +40,20 @@ export async function Login(req: Request, res: Response): Promise<void> {
       }
     }
 
+    const hashed_password = crypto
+      .createHash("sha256")
+      .update(password)
+      .digest("hex");
+
     let query, params;
     if (!email) {
       query =
         "SELECT id, username, isAdmin FROM Users WHERE username = ? AND password_hash = ?";
-      params = [username, password];
+      params = [username, hashed_password];
     } else {
       query =
         "SELECT id, username, isAdmin FROM Users WHERE email = ? AND password_hash = ?";
-      params = [email, password];
+      params = [email, hashed_password];
     }
 
     const results = await db.query<RowDataPacket[]>(query, params);
@@ -82,10 +89,14 @@ export async function Login(req: Request, res: Response): Promise<void> {
         // Session Data
         const agent = req.headers["user-agent"] || "Unknown";
         const ip = req.ip || req.socket.remoteAddress || "Unknown";
-        const createdAt = new Date().toISOString();
-        const expiresAt = new Date(
-          Date.now() + ms(JWTREFRESHEXPIRESIN) / 1000
-        ).toISOString();
+        const createdAt = dayjs().format("YYYY-MM-DD HH:mm:ss");
+        logger.info("Created at: " + createdAt);
+        const expiresAt = dayjs()
+          .add(ms(JWTREFRESHEXPIRESIN), "ms")
+          .format("YYYY-MM-DD HH:mm:ss");
+        logger.info("Expires at: " + expiresAt);
+        logger.info("Agent: " + agent);
+        logger.info("IP: " + ip);
 
         await SaveSession(
           user.id,
@@ -145,6 +156,12 @@ export async function Register(req: Request, res: Response): Promise<void> {
 
     let db = SvlimeDatabase.getInstance().getConnection();
 
+    
+    const hashed_password = crypto
+      .createHash("sha256")
+      .update(password)
+      .digest("hex");
+
     if (!db) {
       db = await SvlimeDatabase.getInstance().connect();
       if (!db) {
@@ -169,7 +186,7 @@ export async function Register(req: Request, res: Response): Promise<void> {
       if (rows.length == 0) {
         await db.query(
           "INSERT INTO Users (username, email, password_hash) VALUES (?, ?, ?)",
-          [username, email, password]
+          [username, email, hashed_password]
         );
 
         const userQueryResult = db
@@ -202,10 +219,14 @@ export async function Register(req: Request, res: Response): Promise<void> {
         // Session Data
         const agent = req.headers["user-agent"] || "Unknown";
         const ip = req.ip || req.socket.remoteAddress || "Unknown";
-        const createdAt = new Date().toISOString();
-        const expiresAt = new Date(
-          Date.now() + ms(JWTREFRESHEXPIRESIN) / 1000
-        ).toISOString();
+        const createdAt = dayjs().format("YYYY-MM-DD HH:mm:ss");
+        logger.info("Created at: " + createdAt);
+        const expiresAt = dayjs()
+          .add(ms(JWTREFRESHEXPIRESIN), "ms")
+          .format("YYYY-MM-DD HH:mm:ss");
+        logger.info("Expires at: " + expiresAt);
+        logger.info("Agent: " + agent);
+        logger.info("IP: " + ip);
 
         await SaveSession(
           user.id,
