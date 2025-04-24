@@ -3,9 +3,10 @@
 }
 
 .bg {
-    background: url('/assets/img/main-bg.jpg') no-repeat center center;
+    background: url('/assets/img/main-bg.png') no-repeat center center;
     background-size: cover;
     width: 100%;
+    padding-top: 100dvh;
 }
 
 .border-wrapper {
@@ -28,7 +29,7 @@
     width: 50%;
     position: absolute;
     display: block;
-    background-color: #54ADFF;
+    background-color: #ffa82c;
     /* Colore originale */
     bottom: 0;
     z-index: 2;
@@ -59,7 +60,7 @@
     width: 50%;
     position: absolute;
     display: block;
-    background-color: #ffa82c;
+    background-color: #54ADFF;
     top: 0;
     z-index: 2;
 }
@@ -75,7 +76,9 @@
 }
 
 @media (max-width: 1024px) {
-    .border, .border-2 {
+
+    .border,
+    .border-2 {
         width: 135%;
     }
 
@@ -99,35 +102,16 @@
     .border-div-left-2 {
         height: 7dvh;
     }
-    
+
 }
 
 @media (max-width: 796px) {
-
-    .border, .border-2 {
-        width: 135%;
-    }
-
-    .border-div-right {
-        height: 5dvh;
-    }
-
-    .border-div-left {
-        height: 3dvh;
-    }
-
-    .border-div-right-2 {
-        height: 3dvh;
-    }
-
+    .border,
+    .border-2,
+    .border-div-right,
+    .border-div-left,
+    .border-div-right-2,
     .border-div-left-2 {
-        height: 4.5dvh;
-    }
-}
-
-
-@media (max-width: 500px) {
-    .border, .border-2 {
-        width: 160%;
+        display: none;
     }
 }

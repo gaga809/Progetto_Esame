@@ -5,22 +5,23 @@ main {
 
 h1 {
     text-align: center;
-    font-size: 8dvw;
+    font-size: 9dvw;
     margin-bottom: 50px;
-    -webkit-text-stroke: 3px black;
+    -webkit-text-stroke: 2.5px black;
+    margin-top: 50px;
 }
 
 .news-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 55dvw;
+    width: 65dvw;
     margin: 0 auto;
 }
 
 .small-news {
     color: white;
-    width: 25dvw;
+    width: 30dvw;
     height: 100%;
     border-radius: 0.5rem;
     border: 3px solid black;
@@ -29,7 +30,7 @@ h1 {
     flex-direction: column;
     justify-content: space-between;
     transition: transform 0.5s ease;
-    background-color: #3ca502;
+    background-color: #9449d9;
     max-height: 100dvh;
 }
 

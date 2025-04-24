@@ -6,14 +6,14 @@ main {
 }
 
 h1 {
-    font-size: 7.5dvw;
+    font-size: 9dvw;
     line-height: 1.1;
     text-align: center;
     margin: auto;
-    max-width: 50dvw;
+    max-width: 60dvw;
     word-wrap: break-word;
     padding: 70px 0;
-    -webkit-text-stroke: 3px black;
+    -webkit-text-stroke: 2.5px black;
 }
 
 .main-video {

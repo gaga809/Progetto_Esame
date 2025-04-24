@@ -1,12 +1,11 @@
 .scroll-container {
-  height: 299
-  vh;
+  height: 300vh;
   display: flex;
   flex-direction: column;
 }
 
 .section {
-  height: 101dvh;
+  height: 100dvh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -22,7 +21,7 @@
 
 h2 {
   text-align: center;
-  font-size: 10dvw;
+  font-size: 12dvw;
   text-transform: uppercase;
   margin: auto;
   width: 70dvw;
@@ -57,8 +56,8 @@ p {
 
 .square {
   position: absolute;
-  width: 115px;
-  height: 115px;
+  width: 150px;
+  height: 150px;
   transition: transform 0.1s ease;
   z-index: 1;
 }

@@ -1,7 +1,7 @@
 .footer {
   background-size: 100% auto;
   background-repeat: no-repeat;
-  background-position: center bottom; 
+  background-position: center bottom;
   background-color: #000;
   color: white;
   padding: 2rem 1.5rem;
@@ -12,9 +12,14 @@
 .footer a {
   color: white;
   text-decoration: none;
-  margin-right: 1.5rem;
   font-size: 0.9rem;
+  margin-left: 1rem;
 }
+
+.footer a:first-child {
+  margin-left: 0;
+}
+
 
 .footer-top,
 .footer-bottom {
@@ -64,27 +69,40 @@
 
 .social-icons {
   display: flex;
-  gap: 1rem;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.2rem; 
   font-size: 1.4rem;
+  margin-top: 1rem;
 }
 
 @media (max-width: 768px) {
   .footer-top,
-  .footer-bottom {
-    display: flex;
-    gap: 1rem;
+  .footer-bottom,
+  .brand,
+  .footer-links,
+  .store-buttons {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer a {
+    width: 100%;
+    margin: 0.4rem;
+    font-size: 0.85rem;
   }
 
   .store-buttons {
     margin-top: 1rem;
   }
-  
-  a {
-    width: 100%;
-    font-size: 10px;
-  }
 
   .logo {
     display: none;
+  }
+
+  .logo-svlime {
+    margin-bottom: 1rem;
   }
 }

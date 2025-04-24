@@ -5,6 +5,7 @@ html,
 body {
     overscroll-behavior: none;
     touch-action: pan-x pan-y;
+    background-color: black;
 }
 
 body {
