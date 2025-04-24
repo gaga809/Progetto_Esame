@@ -1,4 +1,6 @@
+using DG.Tweening;
 using Mirror;
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
@@ -12,6 +14,7 @@ public class MobModel : NetworkBehaviour
     protected GameObject player;
 
     [Header("Mob Settings")]
+    [SyncVar(hook = nameof(OnHealthChanged))]
     public int health = 5;
     public int maxHealth = 5;
     public float speed = 5f;
@@ -19,6 +22,10 @@ public class MobModel : NetworkBehaviour
     public float stoppingDistance = 2f;
     public int attackDamage = 1;
     public float attackRate = 2f;
+
+    [Header("UI Settings")]
+    public GameObject healthCanvas;
+    public RectTransform healthBar;
 
     [Header("Jump Settings")]
     public float jumpForce = 8f;
@@ -28,6 +35,8 @@ public class MobModel : NetworkBehaviour
     [Header("Visual Rotation")]
     public Transform visualTransform; // <-- parte visiva da ruotare (es: mesh del mob)
 
+    private float minRightOffset = 0.1f;
+    private float maxRightOffset;
     protected NavMeshAgent agent;
     protected Rigidbody rb;
     protected Transform trsPly;
@@ -37,6 +46,14 @@ public class MobModel : NetworkBehaviour
 
     protected virtual void Start()
     {
+        // Make the ui look at the camera
+        if (healthCanvas != null)
+        {
+            minRightOffset = -healthBar.offsetMax.x;
+            maxRightOffset = 1 - minRightOffset;
+            healthCanvas.SetActive(false);
+        }
+
         agent = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
 
@@ -60,7 +77,27 @@ public class MobModel : NetworkBehaviour
 
     protected virtual void Update()
     {
-        if (!isServer) return;
+        if(healthCanvas.activeSelf)
+        {
+            Transform cam = Camera.main.transform;
+
+            Vector3 toCameraFlat = cam.forward;
+            toCameraFlat.y = 0f;
+            toCameraFlat.Normalize();
+
+            Vector3 basePosition = transform.position;
+            healthCanvas.transform.position = basePosition + toCameraFlat * -1f;
+
+            healthCanvas.transform.LookAt(cam);
+            healthCanvas.transform.rotation = Quaternion.Euler(0f, healthCanvas.transform.rotation.eulerAngles.y + 180f, 0f);
+        }
+
+
+
+        if (!isServer)
+        {
+            return;
+        }
 
         FindClosestPlayer();
 
@@ -102,6 +139,27 @@ public class MobModel : NetworkBehaviour
 
         CheckIfGrounded();
     }
+    private void OnHealthChanged(int oldHealth, int newHealth)
+    {
+        if (!healthCanvas.activeSelf)
+            healthCanvas.SetActive(true);
+
+        float healthPercentage = Mathf.Clamp01((float)newHealth / maxHealth);
+
+        // Calcolo corretto: da piena (-minRightOffset) a vuota (-maxRightOffset)
+        float barRange = maxRightOffset - minRightOffset;
+        float targetRightOffset = minRightOffset + (1f - healthPercentage) * barRange;
+
+        Vector2 currentOffsetMax = healthBar.offsetMax;
+        Vector2 targetOffsetMax = new Vector2(-targetRightOffset, currentOffsetMax.y);
+
+        healthBar.DOComplete();
+        DOTween.To(() => healthBar.offsetMax,
+                   x => healthBar.offsetMax = x,
+                   targetOffsetMax,
+                   0.3f).SetEase(Ease.OutCubic);
+    }
+
 
     protected void CheckIfGrounded()
     {

@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using System.Collections;
 using Mirror;
 using TMPro;
+using DG.Tweening;
 
 public class PlayerModel : NetworkBehaviour
 {
@@ -18,9 +19,15 @@ public class PlayerModel : NetworkBehaviour
     [SyncVar(hook = nameof(OnDeathStatusChanged))]
     public bool died = false;
 
+    [Header("UI Settings")]
+    public GameObject healthCanvas;
+    public RectTransform healthBar;
+
     [Header("Player Settings")]
-    [SyncVar] public int health = 10;
-    [SyncVar] public int maxHealth = 10;
+    [SyncVar(hook = nameof(OnHealthChanged))]
+    public int health = 10;
+    [SyncVar(hook = nameof(OnMaxHealthChanged))]
+     public int maxHealth = 10;
     public bool canJump = false;
     public float speed = 5f;
     public float deceleration = 5f;
@@ -40,6 +47,8 @@ public class PlayerModel : NetworkBehaviour
     [Header("Fall Settings")]
     public float fallDeathY = -20f;
 
+    private float minRightOffset = 0.1f;
+    private float maxRightOffset;
     private PlayerController playerController;
     private bool canAttack = true;
 
@@ -64,6 +73,13 @@ public class PlayerModel : NetworkBehaviour
 
     private void Start()
     {
+        if (healthCanvas != null)
+        {
+            minRightOffset = -healthBar.offsetMax.x;
+            maxRightOffset = 1 - minRightOffset;
+            OnHealthChanged(maxHealth, maxHealth);
+        }
+
         if (isLocalPlayer)
         {
             StartCoroutine(AutoAttackLoop());
@@ -74,8 +90,65 @@ public class PlayerModel : NetworkBehaviour
                             gameObject.transform, gameObject.GetComponent<Rigidbody>(), model);
     }
 
+    private void OnHealthChanged(int oldHealth, int newHealth)
+    {
+
+        health = newHealth;
+
+        float healthPercentage = Mathf.Clamp01((float)health / maxHealth);
+        Debug.Log(healthPercentage);
+
+        float barRange = maxRightOffset - minRightOffset;
+        float targetRightOffset = minRightOffset + (1f - healthPercentage) * barRange;
+
+        Vector2 currentOffsetMax = healthBar.offsetMax;
+        Vector2 targetOffsetMax = new Vector2(-targetRightOffset, currentOffsetMax.y);
+
+        healthBar.DOComplete();
+        DOTween.To(() => healthBar.offsetMax,
+                   x => healthBar.offsetMax = x,
+                   targetOffsetMax,
+                   0.3f).SetEase(Ease.OutCubic);
+    }
+
+    private void OnMaxHealthChanged(int oldHealth, int newHealth)
+    {
+
+        maxHealth = newHealth;
+
+        float healthPercentage = Mathf.Clamp01((float)health / maxHealth);
+        Debug.Log(healthPercentage);
+
+        float barRange = maxRightOffset - minRightOffset;
+        float targetRightOffset = minRightOffset + (1f - healthPercentage) * barRange;
+
+        Vector2 currentOffsetMax = healthBar.offsetMax;
+        Vector2 targetOffsetMax = new Vector2(-targetRightOffset, currentOffsetMax.y);
+
+        healthBar.DOComplete();
+        DOTween.To(() => healthBar.offsetMax,
+                   x => healthBar.offsetMax = x,
+                   targetOffsetMax,
+                   0.3f).SetEase(Ease.OutCubic);
+    }
+
     private void FixedUpdate()
     {
+        if (healthCanvas.activeSelf)
+        {
+            Transform cam = Camera.main.transform;
+
+            Vector3 toCameraFlat = cam.forward;
+            toCameraFlat.y = 0f;
+            toCameraFlat.Normalize();
+
+            Vector3 basePosition = transform.position;
+            healthCanvas.transform.position = basePosition + toCameraFlat * -1f;
+
+            healthCanvas.transform.LookAt(cam);
+            healthCanvas.transform.rotation = Quaternion.Euler(0f, healthCanvas.transform.rotation.eulerAngles.y + 180f, 0f);
+        }
+
         if (!isLocalPlayer) return;
 
         if (transform.position.y < fallDeathY && !died)
@@ -162,6 +235,7 @@ public class PlayerModel : NetworkBehaviour
         gameObject.GetComponent<Rigidbody>().isKinematic = false;
         gameObject.GetComponent<Rigidbody>().useGravity = false;
         UI.SetActive(false);
+        healthCanvas.SetActive(false);
 
         if (isLocalPlayer)
         {
