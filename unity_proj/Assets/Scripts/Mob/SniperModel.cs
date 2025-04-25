@@ -1,9 +1,11 @@
 using UnityEngine;
 using Mirror;
 using System.Collections;
+using UnityEngine.AI;
 
 public class SniperModel : MobModel
 {
+    [Header("Sniper Settings")]
     public GameObject projectilePrefab;
     public float shootRange = 20f;
     public float shootCooldown = 3f;
@@ -13,6 +15,11 @@ public class SniperModel : MobModel
 
     private bool canShoot = true;
     private Transform closestPlayer;
+
+    protected override void Start()
+    {
+        base.Start();
+    }
 
     protected override void Update()
     {
@@ -38,10 +45,19 @@ public class SniperModel : MobModel
             Vector3 retreatDir = (transform.position - closestPlayer.position).normalized;
             retreatDir.y = 0f;
             transform.position += retreatDir * retreatSpeed * Time.deltaTime;
+            if (agent.enabled) agent.ResetPath();
         }
-        else if (distance >= minDistanceFromPlayer && distance <= shootRange && canShoot)
+        else if (distance > shootRange)
+        {
+            if (agent.enabled && agent.isOnNavMesh)
+            {
+                agent.SetDestination(closestPlayer.position);
+            }
+        }
+        else if (canShoot)
         {
             StartCoroutine(Shoot());
+            if (agent.enabled) agent.ResetPath();
         }
 
         CheckIfGrounded();

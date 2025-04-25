@@ -1,6 +1,5 @@
 using DG.Tweening;
 using Mirror;
-using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
@@ -27,13 +26,17 @@ public class MobModel : NetworkBehaviour
     public GameObject healthCanvas;
     public RectTransform healthBar;
 
-    [Header("Jump Settings")]
-    public float jumpForce = 8f;
-    public float jumpForwardForce = 5f;
-    public float jumpCooldown = 2f;
-
     [Header("Visual Rotation")]
-    public Transform visualTransform; // <-- parte visiva da ruotare (es: mesh del mob)
+    public Transform visualTransform;
+
+    [Header("Color transform")]
+    public Transform colorTransform;
+
+    [Header("Visual")]
+    public Transform modelTransform;
+    public float visualJumpHeight = 1.5f;
+    public float visualJumpDuration = 0.5f;
+    public float jumpCooldown = 1; 
 
     private float minRightOffset = 0.1f;
     private float maxRightOffset;
@@ -46,7 +49,6 @@ public class MobModel : NetworkBehaviour
 
     protected virtual void Start()
     {
-        // Make the ui look at the camera
         if (healthCanvas != null)
         {
             minRightOffset = -healthBar.offsetMax.x;
@@ -68,31 +70,28 @@ public class MobModel : NetworkBehaviour
         {
             FindClosestPlayer();
 
-            if (jumpForce != 0f || jumpForwardForce != 0f || jumpCooldown != 0f)
+            if (visualJumpHeight != 0f && visualJumpDuration != 0)
             {
                 jumpRoutine = StartCoroutine(JumpLoop());
             }
         }
+
+        ApplyRandomColor();
     }
 
     protected virtual void Update()
     {
-        if(healthCanvas.activeSelf)
+        if (healthCanvas.activeSelf)
         {
             Transform cam = Camera.main.transform;
-
             Vector3 toCameraFlat = cam.forward;
             toCameraFlat.y = 0f;
             toCameraFlat.Normalize();
-
             Vector3 basePosition = transform.position;
             healthCanvas.transform.position = basePosition + toCameraFlat * -1f;
-
             healthCanvas.transform.LookAt(cam);
             healthCanvas.transform.rotation = Quaternion.Euler(0f, healthCanvas.transform.rotation.eulerAngles.y + 180f, 0f);
         }
-
-
 
         if (!isServer)
         {
@@ -104,7 +103,6 @@ public class MobModel : NetworkBehaviour
         if (player == null || trsPly == null) return;
 
         float distance = Vector3.Distance(transform.position, trsPly.position);
-
         Vector3 direction = (trsPly.position - transform.position).normalized;
         direction.y = 0f;
 
@@ -117,7 +115,6 @@ public class MobModel : NetworkBehaviour
             }
             else
             {
-                // fallback: ruota tutto il mob se visualTransform non è assegnato
                 transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, Time.deltaTime * 10f);
             }
         }
@@ -139,17 +136,15 @@ public class MobModel : NetworkBehaviour
 
         CheckIfGrounded();
     }
+
     private void OnHealthChanged(int oldHealth, int newHealth)
     {
         if (!healthCanvas.activeSelf)
             healthCanvas.SetActive(true);
 
         float healthPercentage = Mathf.Clamp01((float)newHealth / maxHealth);
-
-        // Calcolo corretto: da piena (-minRightOffset) a vuota (-maxRightOffset)
         float barRange = maxRightOffset - minRightOffset;
         float targetRightOffset = minRightOffset + (1f - healthPercentage) * barRange;
-
         Vector2 currentOffsetMax = healthBar.offsetMax;
         Vector2 targetOffsetMax = new Vector2(-targetRightOffset, currentOffsetMax.y);
 
@@ -159,7 +154,6 @@ public class MobModel : NetworkBehaviour
                    targetOffsetMax,
                    0.3f).SetEase(Ease.OutCubic);
     }
-
 
     protected void CheckIfGrounded()
     {
@@ -173,22 +167,10 @@ public class MobModel : NetworkBehaviour
 
         while (true)
         {
-            if (trsPly != null && agent.isOnNavMesh && isGrounded)
+            if (trsPly != null && isGrounded)
             {
-                agent.enabled = false;
-
-                yield return new WaitForFixedUpdate();
-
-                Vector3 direction = (trsPly.position - transform.position).normalized;
-                direction.y = 0f;
-
-                Vector3 jumpVector = direction * jumpForwardForce + Vector3.up * jumpForce;
-                rb.AddForce(jumpVector, ForceMode.Impulse);
-
+                VisualJump();
                 yield return cooldown;
-
-                if (agent != null && !agent.enabled)
-                    agent.enabled = true;
             }
             else
             {
@@ -196,6 +178,36 @@ public class MobModel : NetworkBehaviour
             }
         }
     }
+
+    private void VisualJump()
+    {
+        if (modelTransform == null) return;
+
+        float halfDuration = visualJumpDuration / 2f;
+
+        Sequence jumpSeq = DOTween.Sequence();
+
+        jumpSeq.Append(modelTransform.DOLocalMoveY(visualJumpHeight, halfDuration)
+            .SetEase(Ease.OutQuad));
+
+        jumpSeq.Join(modelTransform.DOScaleY(0.7f, halfDuration)
+            .SetEase(Ease.OutQuad));
+        jumpSeq.Join(modelTransform.DOScaleX(1.2f, halfDuration)
+            .SetEase(Ease.OutQuad));
+        jumpSeq.Join(modelTransform.DOScaleZ(1.2f, halfDuration)
+            .SetEase(Ease.OutQuad));
+
+        jumpSeq.Append(modelTransform.DOLocalMoveY(0f, halfDuration)
+            .SetEase(Ease.InQuad));
+
+        jumpSeq.Join(modelTransform.DOScaleY(1f, halfDuration)
+            .SetEase(Ease.InQuad));
+        jumpSeq.Join(modelTransform.DOScaleX(1f, halfDuration)
+            .SetEase(Ease.InQuad));
+        jumpSeq.Join(modelTransform.DOScaleZ(1f, halfDuration)
+            .SetEase(Ease.InQuad));
+    }
+
 
     protected IEnumerator AttackPlayer()
     {
@@ -205,7 +217,6 @@ public class MobModel : NetworkBehaviour
         if (playerModel != null)
         {
             playerModel.Hurt(attackDamage);
-            Debug.Log("Player hit!");
         }
 
         yield return new WaitForSeconds(attackRate);
@@ -252,5 +263,24 @@ public class MobModel : NetworkBehaviour
     {
         player = newPlayer;
         trsPly = player?.transform;
+    }
+
+    private void ApplyRandomColor()
+    {
+        string[] materialNames = { "Red", "Green", "Blue", "Yellow", "Purple" };
+        string selectedMaterialName = materialNames[UnityEngine.Random.Range(0, materialNames.Length)];
+        Material randomMat = Resources.Load<Material>("Materials/" + selectedMaterialName);
+
+        if (randomMat == null) return;
+
+        Transform sphereTransform = colorTransform.Find("Sphere");
+        if (sphereTransform != null)
+        {
+            Renderer renderer = sphereTransform.GetComponent<Renderer>();
+            if (renderer != null)
+            {
+                renderer.material = randomMat;
+            }
+        }
     }
 }
