@@ -4,6 +4,8 @@ using System.Collections;
 using Mirror;
 using TMPro;
 using DG.Tweening;
+using UnityEngine.UI;
+using Edgegap;
 
 public class PlayerModel : NetworkBehaviour
 {
@@ -109,6 +111,8 @@ public class PlayerModel : NetworkBehaviour
                    x => healthBar.offsetMax = x,
                    targetOffsetMax,
                    0.3f).SetEase(Ease.OutCubic);
+
+        ChangeHealthColor(healthPercentage);
     }
 
     private void OnMaxHealthChanged(int oldHealth, int newHealth)
@@ -130,6 +134,19 @@ public class PlayerModel : NetworkBehaviour
                    x => healthBar.offsetMax = x,
                    targetOffsetMax,
                    0.3f).SetEase(Ease.OutCubic);
+
+        ChangeHealthColor(healthPercentage);
+    }
+
+    private void ChangeHealthColor(float healthPerc) {
+        Image healtBarImage = healthBar.GetComponent<Image>();
+
+        if (healthPerc < 0.2f)
+            healtBarImage.color = Color.red;
+        else if (healthPerc < 0.5f)
+            healtBarImage.color = Color.yellow;
+        else
+            healtBarImage.color = Color.green;
     }
 
     private void FixedUpdate()
@@ -231,8 +248,7 @@ public class PlayerModel : NetworkBehaviour
 
         model.gameObject.SetActive(false);
         gameObject.tag = deadTag;
-        //gameObject.GetComponent<BoxCollider>().enabled = false;
-        gameObject.GetComponent<CapsuleCollider>().enabled = false;
+        gameObject.GetComponent<BoxCollider>().enabled = false;
         gameObject.GetComponent<Rigidbody>().isKinematic = false;
         gameObject.GetComponent<Rigidbody>().useGravity = false;
         UI.SetActive(false);

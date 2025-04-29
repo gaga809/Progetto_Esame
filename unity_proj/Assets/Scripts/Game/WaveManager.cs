@@ -27,6 +27,7 @@ public class WaveManager : NetworkBehaviour
     private int currentWave = -1;
     private bool isSpawning = false;
     private List<Transform> players;
+    private bool isRedirecting = false;
 
     private Dictionary<string, GameObject> enemyPrefabs = new Dictionary<string, GameObject>();
     public Wave[] waves;
@@ -106,8 +107,12 @@ public class WaveManager : NetworkBehaviour
             GameObject[] playerObjs = GameObject.FindGameObjectsWithTag("Player");
             if (playerObjs.Length == 0)
             {
-                Debug.Log("No players left - Changing scene");
-                StartCoroutine(ChangeSceneWithDelay());
+                if (!isRedirecting)
+                {
+                    isRedirecting = true;
+                    Debug.Log("No players left - Changing scene");
+                    StartCoroutine(ChangeSceneWithDelay());
+                }
             }
             else if (!isSpawning)
             {

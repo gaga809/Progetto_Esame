@@ -142,11 +142,15 @@ public class MobModel : NetworkBehaviour
         if (!healthCanvas.activeSelf)
             healthCanvas.SetActive(true);
 
+        if (!healthBar) return;
+
         float healthPercentage = Mathf.Clamp01((float)newHealth / maxHealth);
         float barRange = maxRightOffset - minRightOffset;
         float targetRightOffset = minRightOffset + (1f - healthPercentage) * barRange;
         Vector2 currentOffsetMax = healthBar.offsetMax;
         Vector2 targetOffsetMax = new Vector2(-targetRightOffset, currentOffsetMax.y);
+
+        if (!healthBar) return;
 
         healthBar.DOComplete();
         DOTween.To(() => healthBar.offsetMax,
@@ -228,6 +232,7 @@ public class MobModel : NetworkBehaviour
         health -= damage;
         if (health <= 0)
         {
+            healthBar.DOComplete();
             Destroy(gameObject);
         }
     }
