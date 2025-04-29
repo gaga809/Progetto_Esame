@@ -34,19 +34,26 @@ public class SvlimeRoomPlayerBehaviour : NetworkRoomPlayer
     {
         base.ReadyStateChanged(oldReadyState, newReadyState);
 
+        if (roomUI == null)
+        {
+            Debug.LogWarning("roomUI is null in ReadyStateChanged!");
+            return; 
+        }
+
         if (isLocalPlayer)
         {
             if (newReadyState)
             {
-                roomUI.btnReady.GetComponentInChildren<TextMeshProUGUI>().text = "Annulla";
+                roomUI.btnReady.GetComponentInChildren<TextMeshProUGUI>().text = "CANCEL";
             }
             else
-                roomUI.btnReady.GetComponentInChildren<TextMeshProUGUI>().text = "Pronto!";
-
-
+            {
+                roomUI.btnReady.GetComponentInChildren<TextMeshProUGUI>().text = "READY!";
+            }
         }
         ShowReadyStatusOnClients(newReadyState);
     }
+
 
     public override void Start()
     {

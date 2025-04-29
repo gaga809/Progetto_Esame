@@ -231,7 +231,8 @@ public class PlayerModel : NetworkBehaviour
 
         model.gameObject.SetActive(false);
         gameObject.tag = deadTag;
-        gameObject.GetComponent<BoxCollider>().enabled = false;
+        //gameObject.GetComponent<BoxCollider>().enabled = false;
+        gameObject.GetComponent<CapsuleCollider>().enabled = false;
         gameObject.GetComponent<Rigidbody>().isKinematic = false;
         gameObject.GetComponent<Rigidbody>().useGravity = false;
         UI.SetActive(false);
