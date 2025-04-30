@@ -88,7 +88,7 @@ public class MobModel : NetworkBehaviour
             toCameraFlat.y = 0f;
             toCameraFlat.Normalize();
             Vector3 basePosition = transform.position;
-            healthCanvas.transform.position = basePosition + toCameraFlat * -1f;
+            healthCanvas.transform.position = basePosition + toCameraFlat * -1f + Vector3.up * 2f;
             healthCanvas.transform.LookAt(cam);
             healthCanvas.transform.rotation = Quaternion.Euler(0f, healthCanvas.transform.rotation.eulerAngles.y + 180f, 0f);
         }

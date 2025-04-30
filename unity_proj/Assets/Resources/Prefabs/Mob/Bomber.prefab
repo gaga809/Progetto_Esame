@@ -38,7 +38,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0.2, y: 0}
+  m_AnchoredPosition: {x: 0.2, y: 2}
   m_SizeDelta: {x: 1, y: 0.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &3317504970622167790
@@ -157,6 +157,7 @@ GameObject:
   - component: {fileID: 1354221084583567492}
   - component: {fileID: 3016104040935754654}
   - component: {fileID: 8875583002468779901}
+  - component: {fileID: 7069255491994447463}
   m_Layer: 0
   m_Name: Bomber
   m_TagString: Mob
@@ -335,6 +336,19 @@ MonoBehaviour:
   explosionRadius: 2
   explosionDamage: 2
   explosionEffect: {fileID: 919132149155446097, guid: 25f03344dfdd844f88e89487c558fe35, type: 3}
+--- !u!114 &7069255491994447463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1762748786206545366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7c0bbc802f16b64bb1929b3be3f6f31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 1.6
 --- !u!1 &7437132970415607859
 GameObject:
   m_ObjectHideFlags: 0
