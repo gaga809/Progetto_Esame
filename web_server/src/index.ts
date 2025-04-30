@@ -1,4 +1,4 @@
-import express from "express";
+import express, {Response, Request, NextFunction} from "express";
 import dotenv from "dotenv";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
@@ -9,6 +9,7 @@ import { execSync } from "child_process";
 
 // Local Imports
 import apiV1Router from "./routes/apiv1/apiv1";
+import { middlewareCheckAdmin } from "./auth/jwt/middleware";
 import Logger from "./utils/logger";
 import SvlimeDatabase from "./db/mysql";
 
@@ -59,6 +60,7 @@ const HTTPPORT = process.env.HTTPPORT ? parseInt(process.env.HTTPPORT) : 80;
 const HTTPSPORT = process.env.HTTPSPORT ? parseInt(process.env.HTTPSPORT) : 4433;
 const CERT_FILE = process.env.CERT_FILE || "./cert.pem";
 const KEY_FILE = process.env.KEY_FILE || "./key.pem";
+const DEVELOPMENT = parseInt(process.env.DEVELOPMENT || '0');
 
 // Check for certificate (HTTPS)
 
@@ -108,8 +110,18 @@ async function setup() {
     // public folder for static files
     app.use(express.static("public"));
 
-    // Swagger UI setup
-    app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+    if(DEVELOPMENT==1) {
+      logger.info("Development mode enabled. CORS is enabled.");
+      // CORS setup
+      app.use((req: Request, res: Response, next: NextFunction) => {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        next();
+      });
+
+      // Swagger UI setup
+      app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+    }
 
     // Show Main Route
     app.use("/api/v1", apiV1Router);
