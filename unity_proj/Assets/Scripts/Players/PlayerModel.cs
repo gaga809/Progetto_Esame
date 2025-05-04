@@ -29,7 +29,7 @@ public class PlayerModel : NetworkBehaviour
     [SyncVar(hook = nameof(OnHealthChanged))]
     public int health = 10;
     [SyncVar(hook = nameof(OnMaxHealthChanged))]
-     public int maxHealth = 10;
+    public int maxHealth = 10;
     public bool canJump = false;
     public float speed = 5f;
     public float deceleration = 5f;
@@ -138,7 +138,8 @@ public class PlayerModel : NetworkBehaviour
         ChangeHealthColor(healthPercentage);
     }
 
-    private void ChangeHealthColor(float healthPerc) {
+    private void ChangeHealthColor(float healthPerc)
+    {
         Image healtBarImage = healthBar.GetComponent<Image>();
 
         if (healthPerc < 0.2f)
@@ -146,7 +147,7 @@ public class PlayerModel : NetworkBehaviour
         else if (healthPerc < 0.5f)
             healtBarImage.color = Color.yellow;
         else
-            healtBarImage.color = Color.green;
+            healtBarImage.color = new Color(0.462f, 0.816f, 0.373f);
     }
 
     private void FixedUpdate()

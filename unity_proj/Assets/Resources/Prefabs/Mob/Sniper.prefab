@@ -178,7 +178,7 @@ MonoBehaviour:
   syncInterval: 0
   health: 5
   maxHealth: 5
-  speed: 15
+  speed: 10
   acceleration: 8
   stoppingDistance: 5
   attackDamage: 1
@@ -461,7 +461,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4e263fb45c5a67443a072dd90d00db65, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.67559016
+      value: 0.64278764
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4e263fb45c5a67443a072dd90d00db65, type: 3}
       propertyPath: m_LocalRotation.x
@@ -469,7 +469,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4e263fb45c5a67443a072dd90d00db65, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.7372774
+      value: 0.76604444
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4e263fb45c5a67443a072dd90d00db65, type: 3}
       propertyPath: m_LocalRotation.z
@@ -481,7 +481,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4e263fb45c5a67443a072dd90d00db65, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 95
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4e263fb45c5a67443a072dd90d00db65, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
