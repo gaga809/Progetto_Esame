@@ -31,6 +31,6 @@ router.get("/", (req, res) => {
 
 // Other endpoints
 router.use("/auth", auth);
-router.use("/users", auth);
+router.use("/users", users);
 
 export default router;

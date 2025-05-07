@@ -26,7 +26,7 @@ export async function GetMe(req: Request, res: Response): Promise<void> {
       }
     }
     const results = await db.query<RowDataPacket[]>(
-      "SELECT * FROM Users WHERE id = ?",
+      "SELECT id, username, isAdmin, email, creation_date, last_login, pfp FROM Users WHERE id = ?;",
       [userId]
     );
 

@@ -367,7 +367,7 @@ export async function SaveSession(
   ip: string,
   created_at: string,
   expires_at: string
-) {
+) { 
   const db = SvlimeDatabase.getInstance().getConnection();
 
   if (!db) {
