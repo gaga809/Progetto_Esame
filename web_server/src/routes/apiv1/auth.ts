@@ -2,8 +2,6 @@
 import { Router } from "express";
 import { middlewareRefreshToken } from "../../auth/jwt/middleware";
 import { Login, Register, GetNewAccessToken} from "../../controllers/authController"
-import Logger from "../../utils/logger";
-const logger = Logger.getInstance();
 
 const router = Router();
 
@@ -243,8 +241,6 @@ router.post("/login", Login);
  *                   type: string
  *                   example: "Internal server error"
  */
-router.get("/refresh", middlewareRefreshToken, GetNewAccessToken);
-
 router.get("/refresh", middlewareRefreshToken, GetNewAccessToken);
 
 export default router;

@@ -1,6 +1,7 @@
 // src/routes/api/v1
 import { Router } from "express";
 import auth from "./auth";
+import users from "./users";
 
 const router = Router();
 
@@ -30,5 +31,6 @@ router.get("/", (req, res) => {
 
 // Other endpoints
 router.use("/auth", auth);
+router.use("/users", auth);
 
 export default router;
