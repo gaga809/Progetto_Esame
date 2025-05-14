@@ -56,67 +56,79 @@ export async function Login(req: Request, res: Response): Promise<void> {
       params = [email, hashed_password];
     }
 
-    const results = await db.query<RowDataPacket[]>(query, params);
+    try {
+      await db.beginTransaction();
 
-    const [rows] = results;
+      const results = await db.query<RowDataPacket[]>(query, params);
 
-    if (rows.length == 0) {
-      res.status(404).json({ message: "User not found" });
-      return;
-    } else {
-      if (rows.length > 0) {
-        const [userRows] = results;
+      const [rows] = results;
 
-        const user = userRows[0] as {
-          id: number;
-          username: string;
-          isAdmin: number;
-        };
-        logger.info(
-          `User '${user.username}' logged in with id '${user.id}'. Admin = ${
-            user.isAdmin == 1
-          }`
-        );
-
-        // Update last login in the db
-        await db.query("UPDATE Users SET last_login = NOW() WHERE id = ?", [
-          user.id,
-        ]);
-
-        const accessToken = generateAccessToken(user);
-        const refreshToken = generateRefreshToken(user);
-
-        // Session Data
-        const agent = req.headers["user-agent"] || "Unknown";
-        const ip = req.ip || req.socket.remoteAddress || "Unknown";
-        const createdAt = dayjs().format("YYYY-MM-DD HH:mm:ss");
-        logger.info("Created at: " + createdAt);
-        const expiresAt = dayjs()
-          .add(ms(JWTREFRESHEXPIRESIN), "ms")
-          .format("YYYY-MM-DD HH:mm:ss");
-        logger.info("Expires at: " + expiresAt);
-        logger.info("Agent: " + agent);
-        logger.info("IP: " + ip);
-
-        await SaveSession(
-          user.id,
-          refreshToken,
-          agent,
-          ip,
-          createdAt,
-          expiresAt
-        );
-
-        res.status(201).json({
-          message: "User logged in successfully",
-          access_token: accessToken,
-          refresh_token: refreshToken,
-          type: "Bearer ",
-        });
-      } else {
-        res.status(500).json({ message: "Database query failed" });
+      if (rows.length == 0) {
+        res.status(404).json({ message: "User not found" });
         return;
+      } else {
+        if (rows.length > 0) {
+          const [userRows] = results;
+
+          const user = userRows[0] as {
+            id: number;
+            username: string;
+            isAdmin: number;
+          };
+          logger.info(
+            `User '${user.username}' logged in with id '${user.id}'. Admin = ${
+              user.isAdmin == 1
+            }`
+          );
+
+          // Update last login in the db
+          await db.query("UPDATE Users SET last_login = NOW() WHERE id = ?", [
+            user.id,
+          ]);
+
+          const accessToken = generateAccessToken(user);
+          const refreshToken = generateRefreshToken(user);
+
+          // Session Data
+          const agent = req.headers["user-agent"] || "Unknown";
+          const ip = req.ip || req.socket.remoteAddress || "Unknown";
+          const createdAt = dayjs().format("YYYY-MM-DD HH:mm:ss");
+          logger.info("Created at: " + createdAt);
+          const expiresAt = dayjs()
+            .add(ms(JWTREFRESHEXPIRESIN), "ms")
+            .format("YYYY-MM-DD HH:mm:ss");
+          logger.info("Expires at: " + expiresAt);
+          logger.info("Agent: " + agent);
+          logger.info("IP: " + ip);
+
+          await db.commit();
+
+          await SaveSession(
+            user.id,
+            refreshToken,
+            agent,
+            ip,
+            createdAt,
+            expiresAt
+          );
+
+          res.status(201).json({
+            message: "User logged in successfully",
+            access_token: accessToken,
+            refresh_token: refreshToken,
+            type: "Bearer ",
+          });
+        } else {
+          await db.rollback();
+          res.status(500).json({ message: "Database query failed" });
+          return;
+        }
       }
+    } catch (error) {
+      logger.error("Error during login: " + error);
+      res.status(500).json({ message: "Internal server error" });
+
+      await db.rollback();
     }
   } catch (error) {
     logger.error("Error during login: " + error);
@@ -169,83 +181,97 @@ export async function Register(req: Request, res: Response): Promise<void> {
       }
     }
 
-    const results = await db.query<RowDataPacket[]>(
-      "SELECT * FROM Users WHERE email = ? OR username = ?",
-      [email, username]
-    );
+    try {
+      await db.beginTransaction();
 
-    const [rows] = results;
+      const results = await db.query<RowDataPacket[]>(
+        "SELECT * FROM Users WHERE email = ? OR username = ?",
+        [email, username]
+      );
 
-    if (rows.length > 0) {
-      res
-        .status(409)
-        .json({ message: "User with this email/username already exists" });
-      return;
-    } else {
-      if (rows.length == 0) {
-        await db.query(
-          "INSERT INTO Users (username, email, password_hash) VALUES (?, ?, ?)",
-          [username, email, hashed_password]
-        );
+      const [rows] = results;
 
-        const userQueryResult = db
-          ? await db.query<RowDataPacket[]>(
-              "SELECT id, username, isAdmin FROM Users WHERE email = ?",
-              [email]
-            )
-          : [[]];
+      if (rows.length > 0) {
+        await db.rollback();
+        res
+          .status(409)
+          .json({ message: "User with this email/username already exists" });
+        return;
+      } else {
+        if (rows.length == 0) {
+          await db.query(
+            "INSERT INTO Users (username, email, password_hash) VALUES (?, ?, ?)",
+            [username, email, hashed_password]
+          );
 
-        const [userRows] = userQueryResult;
-        if (userRows.length == 0) {
-          res.status(500).json({ message: "Couldn't create user" });
+          const userQueryResult = db
+            ? await db.query<RowDataPacket[]>(
+                "SELECT id, username, isAdmin FROM Users WHERE email = ?",
+                [email]
+              )
+            : [[]];
+
+          const [userRows] = userQueryResult;
+          if (userRows.length == 0) {
+            await db.rollback();
+
+            logger.info("Couldn't create user.");
+            res.status(500).json({ message: "Internal server error" });
+            return;
+          }
+
+          const user = userRows[0] as {
+            id: number;
+            username: string;
+            isAdmin: number;
+          };
+          logger.info(
+            `Created new user '${user.username}' with id '${
+              user.id
+            }'. Admin = ${user.isAdmin == 1}`
+          );
+
+          const accessToken = generateAccessToken(user);
+          const refreshToken = generateRefreshToken(user);
+
+          // Session Data
+          const agent = req.headers["user-agent"] || "Unknown";
+          const ip = req.ip || req.socket.remoteAddress || "Unknown";
+          const createdAt = dayjs().format("YYYY-MM-DD HH:mm:ss");
+          logger.info("Created at: " + createdAt);
+          const expiresAt = dayjs()
+            .add(ms(JWTREFRESHEXPIRESIN), "ms")
+            .format("YYYY-MM-DD HH:mm:ss");
+          logger.info("Expires at: " + expiresAt);
+          logger.info("Agent: " + agent);
+          logger.info("IP: " + ip);
+          await db.commit();
+
+          await SaveSession(
+            user.id,
+            refreshToken,
+            agent,
+            ip,
+            createdAt,
+            expiresAt
+          );
+
+          res.status(201).json({
+            message: "User registered successfully",
+            access_token: accessToken,
+            refresh_token: refreshToken,
+            type: "Bearer ",
+          });
+        } else {
+          await db.rollback();
+          res.status(500).json({ message: "Database query failed" });
           return;
         }
-
-        const user = userRows[0] as {
-          id: number;
-          username: string;
-          isAdmin: number;
-        };
-        logger.info(
-          `Created new user '${user.username}' with id '${user.id}'. Admin = ${
-            user.isAdmin == 1
-          }`
-        );
-
-        const accessToken = generateAccessToken(user);
-        const refreshToken = generateRefreshToken(user);
-
-        // Session Data
-        const agent = req.headers["user-agent"] || "Unknown";
-        const ip = req.ip || req.socket.remoteAddress || "Unknown";
-        const createdAt = dayjs().format("YYYY-MM-DD HH:mm:ss");
-        logger.info("Created at: " + createdAt);
-        const expiresAt = dayjs()
-          .add(ms(JWTREFRESHEXPIRESIN), "ms")
-          .format("YYYY-MM-DD HH:mm:ss");
-        logger.info("Expires at: " + expiresAt);
-        logger.info("Agent: " + agent);
-        logger.info("IP: " + ip);
-
-        await SaveSession(
-          user.id,
-          refreshToken,
-          agent,
-          ip,
-          createdAt,
-          expiresAt
-        );
-
-        res.status(201).json({
-          message: "User registered successfully",
-          access_token: accessToken,
-          refresh_token: refreshToken,
-          type: "Bearer ",
-        });
-      } else {
-        res.status(500).json({ message: "Database query failed" });
-        return;
       }
+    } catch (error) {
+      await db.rollback();
+      logger.error("Error during registration: " + error);
+      res.status(500).json({ message: "Internal server error" });
     }
   } catch (error) {
     logger.error("Error during registration: " + error);
@@ -271,46 +297,62 @@ export async function GetNewAccessToken(
     }
 
     // Get if is valid session
-    const sessionQuery = db
-      ? await db.query<RowDataPacket[]>(
-          "SELECT session_id FROM UserSessions WHERE user_id = ? AND refresh_token = ? AND ip_address = ?",
-          [userId, refreshToken, req.socket.remoteAddress]
-        )
-      : [[]];
 
-    const [sessionRows] = sessionQuery;
-    if (sessionRows.length == 0) {
-      res.status(401).json({ message: "Refresh token is not of a valid session." });
-      return;
+    try {
+      await db.beginTransaction();
+
+      const sessionQuery = db
+        ? await db.query<RowDataPacket[]>(
+            "SELECT session_id FROM UserSessions WHERE user_id = ? AND refresh_token = ? AND ip_address = ?",
+            [userId, refreshToken, req.socket.remoteAddress]
+          )
+        : [[]];
+
+      const [sessionRows] = sessionQuery;
+      if (sessionRows.length == 0) {
+        db.rollback();
+        res
+          .status(401)
+          .json({ message: "Refresh token is not of a valid session." });
+        return;
+      }
+
+      const userQueryResult = db
+        ? await db.query<RowDataPacket[]>(
+            "SELECT id, username, isAdmin FROM Users WHERE id = ?",
+            [userId]
+          )
+        : [[]];
+
+      const [userRows] = userQueryResult;
+      if (userRows.length == 0) {
+        await db.rollback();
+        res.status(500).json({ message: "Couldn't fetch user" });
+        return;
+      }
+
+      const user = userRows[0] as {
+        id: number;
+        username: string;
+        isAdmin: number;
+      };
+
+      const access_token = generateAccessToken(user);
+
+      res.status(201).json({
+        message: "Session is still valid. Here is the new access token!",
+        access_token: access_token,
+        type: "Bearer ",
+      });
+
+      await db.commit();
+    } catch (error) {
+      await db.rollback();
+      logger.error(
+        "Error during the retrieval of a new access token: " + error
+      );
+      res.status(500).json({ message: "Internal server error" });
     }
-
-    const userQueryResult = db
-      ? await db.query<RowDataPacket[]>(
-          "SELECT id, username, isAdmin FROM Users WHERE id = ?",
-          [userId]
-        )
-      : [[]];
-
-    const [userRows] = userQueryResult;
-    if (userRows.length == 0) {
-      res.status(500).json({ message: "Couldn't fetch user" });
-      return;
-    }
-
-    const user = userRows[0] as {
-      id: number;
-      username: string;
-      isAdmin: number;
-    };
-
-    const access_token = generateAccessToken(user);
-
-    res.status(201).json({
-      message: "Session is still valid. Here is the new access token!",
-      access_token: access_token,
-      type: "Bearer ",
-    });
-
   } catch (error) {
     logger.error("Error during the retrieval of a new access token: " + error);
     res.status(500).json({ message: "Internal server error" });
@@ -367,7 +409,7 @@ export async function SaveSession(
   ip: string,
   created_at: string,
   expires_at: string
-) { 
+) {
   const db = SvlimeDatabase.getInstance().getConnection();
 
   if (!db) {
@@ -376,12 +418,15 @@ export async function SaveSession(
   }
 
   try {
+    await db.beginTransaction();
     await db.query(
       "INSERT INTO UserSessions (user_id, refresh_token, user_agent, ip_address, created_at, expires_at) VALUES (?, ?, ?, ?, ?, ?)",
       [user_id, refresh_token, agent, ip, created_at, expires_at]
     );
     logger.info(`Session saved for user ${user_id}`);
+    await db.commit();
   } catch (err: any) {
+    await db.rollback();
     logger.error("SaveSession DB error: " + err.message);
   }
 }
