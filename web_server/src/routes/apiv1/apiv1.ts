@@ -2,6 +2,7 @@
 import { Router } from "express";
 import auth from "./auth";
 import users from "./users";
+import game from "./game";
 
 const router = Router();
 
@@ -32,5 +33,6 @@ router.get("/", (req, res) => {
 // Other endpoints
 router.use("/auth", auth);
 router.use("/users", users);
+router.use("/game", game);
 
 export default router;
