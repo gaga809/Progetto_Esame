@@ -8,6 +8,7 @@ public class ProjectileModel : NetworkBehaviour
     public int damage = 1;
     public float speed = 1f;
     public float lifeTime = 5f;
+    public PlayerModel playerModel;
 
     void Update()
     {
@@ -20,7 +21,7 @@ public class ProjectileModel : NetworkBehaviour
         {
             StartCoroutine(DestroyProjectile());
         }
-        StartCoroutine(DestroyProjectile());
+        //StartCoroutine(DestroyProjectile());
     }
 
     private IEnumerator DestroyProjectile()
@@ -37,7 +38,7 @@ public class ProjectileModel : NetworkBehaviour
 
         if (mob != null)
         {
-            mob.Hurt(damage);
+            mob.Hurt(damage, playerModel);
             NetworkServer.Destroy(gameObject);
         }
     }

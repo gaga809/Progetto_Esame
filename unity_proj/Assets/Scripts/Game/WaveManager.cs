@@ -23,6 +23,10 @@ public class WaveManager : NetworkBehaviour
     public float playerCircleRadius = 5f;
     public LayerMask platformLayer;
 
+    [Header("Step Settings")]
+    public float stepHeight = 0.5f;
+    public float stepSmooth = 0.1f;
+
     [SyncVar(hook = nameof(OnNextWave))]
     private int currentWave = -1;
     private bool isSpawning = false;
@@ -226,7 +230,7 @@ public class WaveManager : NetworkBehaviour
 
     private void OnNextWave(int oldValue, int newValue)
     {
-        waveCounter.text = "WAVE: " + (newValue + 1);
+        waveCounter.text = "ONDATA: " + (newValue + 1);
     }
 }
 

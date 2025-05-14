@@ -227,15 +227,21 @@ public class MobModel : NetworkBehaviour
         canAttack = true;
     }
 
-    public void Hurt(int damage)
+    public void Hurt(int damage, PlayerModel pm)
     {
         health -= damage;
         if (health <= 0)
         {
+            if (isServer)
+            {
+                pm.kills++;
+            }
+
             healthBar.DOComplete();
             Destroy(gameObject);
         }
     }
+
 
     protected void FindClosestPlayer()
     {

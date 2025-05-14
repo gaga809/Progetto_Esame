@@ -20,10 +20,13 @@ public class PlayerModel : NetworkBehaviour
     [Header("Player Statuses")]
     [SyncVar(hook = nameof(OnDeathStatusChanged))]
     public bool died = false;
+    [SyncVar(hook = nameof(OnKillsStatusChanged))]
+    public int kills = 0;
 
     [Header("UI Settings")]
     public GameObject healthCanvas;
     public RectTransform healthBar;
+    public TextMeshProUGUI killsPanel;
 
     [Header("Player Settings")]
     [SyncVar(hook = nameof(OnHealthChanged))]
@@ -67,6 +70,16 @@ public class PlayerModel : NetworkBehaviour
         }
     }
 
+    void OnKillsStatusChanged(int oldValue, int newValue)
+    {
+        kills = newValue;
+
+        if (isLocalPlayer)
+        {
+            killsPanel.text = "Kills: "+kills;
+        }
+    }
+
     [Command]
     public void CmdSetPlayerName(string name)
     {
@@ -75,6 +88,7 @@ public class PlayerModel : NetworkBehaviour
 
     private void Start()
     {
+
         if (healthCanvas != null)
         {
             minRightOffset = -healthBar.offsetMax.x;
@@ -84,12 +98,20 @@ public class PlayerModel : NetworkBehaviour
 
         if (isLocalPlayer)
         {
+            try
+            {
+                killsPanel = GameObject.Find("KillsPanel").GetComponent<TextMeshProUGUI>();
+            }
+            catch
+            {
+                Debug.Log("Errore nella presaa del killspanel");
+            }
             StartCoroutine(AutoAttackLoop());
             Camera.main.GetComponent<CameraController>().playerT = transform;
         }
 
         playerController = new PlayerController(speed, deceleration, minSpeed, jumpForce,
-                            gameObject.transform, gameObject.GetComponent<Rigidbody>(), model);
+                            gameObject.transform, gameObject.GetComponent<Rigidbody>(), model, this);
     }
 
     private void OnHealthChanged(int oldHealth, int newHealth)
@@ -331,8 +353,7 @@ public class PlayerModel : NetworkBehaviour
     {
         playerControls.actions["Move"].performed -= ctx => playerController.OnMove(ctx.ReadValue<Vector2>());
         playerControls.actions["Move"].canceled -= ctx => playerController.OnFinishMove();
-        if (canJump)
-            playerControls.actions["Jump"].performed -= ctx => playerController.OnJump();
+        playerControls.actions["Jump"].performed -= ctx => playerController.OnJump();
         playerControls.actions["Interact"].performed -= ctx => playerController.OnInteract();
     }
 }
