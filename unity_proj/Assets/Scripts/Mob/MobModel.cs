@@ -8,35 +8,30 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class MobModel : NetworkBehaviour
 {
-    [Header("Player Settings")]
     [SyncVar(hook = nameof(OnClosestPlayerChanged))]
     protected GameObject player;
 
-    [Header("Mob Settings")]
     [SyncVar(hook = nameof(OnHealthChanged))]
     public int health = 5;
     public int maxHealth = 5;
     public float speed = 5f;
     public float acceleration = 8f;
-    public float stoppingDistance = 2f;
+    public float stoppingDistance = 1f;
+    public float attackRange = 2.5f;
+    public float detectionRange = 30f;
     public int attackDamage = 1;
     public float attackRate = 2f;
 
-    [Header("UI Settings")]
     public GameObject healthCanvas;
     public RectTransform healthBar;
 
-    [Header("Visual Rotation")]
     public Transform visualTransform;
-
-    [Header("Color transform")]
     public Transform colorTransform;
 
-    [Header("Visual")]
     public Transform modelTransform;
     public float visualJumpHeight = 1.5f;
     public float visualJumpDuration = 0.5f;
-    public float jumpCooldown = 1; 
+    public float jumpCooldown = 1;
 
     private float minRightOffset = 0.1f;
     private float maxRightOffset;
@@ -49,7 +44,7 @@ public class MobModel : NetworkBehaviour
 
     protected virtual void Start()
     {
-        if (healthCanvas != null)
+        if (healthCanvas != null && healthBar != null)
         {
             minRightOffset = -healthBar.offsetMax.x;
             maxRightOffset = 1 - minRightOffset;
@@ -81,7 +76,7 @@ public class MobModel : NetworkBehaviour
 
     protected virtual void Update()
     {
-        if (healthCanvas.activeSelf)
+        if (healthCanvas != null && healthCanvas.activeSelf)
         {
             Transform cam = Camera.main.transform;
             Vector3 toCameraFlat = cam.forward;
@@ -93,10 +88,7 @@ public class MobModel : NetworkBehaviour
             healthCanvas.transform.rotation = Quaternion.Euler(0f, healthCanvas.transform.rotation.eulerAngles.y + 180f, 0f);
         }
 
-        if (!isServer)
-        {
-            return;
-        }
+        if (!isServer) return;
 
         FindClosestPlayer();
 
@@ -119,18 +111,23 @@ public class MobModel : NetworkBehaviour
             }
         }
 
-        if (distance > stoppingDistance)
-        {
-            if (agent.enabled && agent.isOnNavMesh)
-            {
-                agent.SetDestination(trsPly.position);
-            }
-        }
-        else
+        if (distance <= attackRange)
         {
             if (canAttack)
             {
                 StartCoroutine(AttackPlayer());
+            }
+
+            if (agent.enabled && agent.isOnNavMesh)
+            {
+                agent.ResetPath();
+            }
+        }
+        else if (distance <= detectionRange)
+        {
+            if (agent.enabled && agent.isOnNavMesh)
+            {
+                agent.SetDestination(trsPly.position);
             }
         }
 
@@ -139,18 +136,16 @@ public class MobModel : NetworkBehaviour
 
     private void OnHealthChanged(int oldHealth, int newHealth)
     {
-        if (!healthCanvas.activeSelf)
+        if (healthCanvas != null && !healthCanvas.activeSelf)
             healthCanvas.SetActive(true);
 
-        if (!healthBar) return;
+        if (healthBar == null) return;
 
         float healthPercentage = Mathf.Clamp01((float)newHealth / maxHealth);
         float barRange = maxRightOffset - minRightOffset;
         float targetRightOffset = minRightOffset + (1f - healthPercentage) * barRange;
         Vector2 currentOffsetMax = healthBar.offsetMax;
         Vector2 targetOffsetMax = new Vector2(-targetRightOffset, currentOffsetMax.y);
-
-        if (!healthBar) return;
 
         healthBar.DOComplete();
         DOTween.To(() => healthBar.offsetMax,
@@ -194,24 +189,17 @@ public class MobModel : NetworkBehaviour
         jumpSeq.Append(modelTransform.DOLocalMoveY(visualJumpHeight, halfDuration)
             .SetEase(Ease.OutQuad));
 
-        jumpSeq.Join(modelTransform.DOScaleY(0.7f, halfDuration)
-            .SetEase(Ease.OutQuad));
-        jumpSeq.Join(modelTransform.DOScaleX(1.2f, halfDuration)
-            .SetEase(Ease.OutQuad));
-        jumpSeq.Join(modelTransform.DOScaleZ(1.2f, halfDuration)
-            .SetEase(Ease.OutQuad));
+        jumpSeq.Join(modelTransform.DOScaleY(0.7f, halfDuration).SetEase(Ease.OutQuad));
+        jumpSeq.Join(modelTransform.DOScaleX(1.2f, halfDuration).SetEase(Ease.OutQuad));
+        jumpSeq.Join(modelTransform.DOScaleZ(1.2f, halfDuration).SetEase(Ease.OutQuad));
 
         jumpSeq.Append(modelTransform.DOLocalMoveY(0f, halfDuration)
             .SetEase(Ease.InQuad));
 
-        jumpSeq.Join(modelTransform.DOScaleY(1f, halfDuration)
-            .SetEase(Ease.InQuad));
-        jumpSeq.Join(modelTransform.DOScaleX(1f, halfDuration)
-            .SetEase(Ease.InQuad));
-        jumpSeq.Join(modelTransform.DOScaleZ(1f, halfDuration)
-            .SetEase(Ease.InQuad));
+        jumpSeq.Join(modelTransform.DOScaleY(1f, halfDuration).SetEase(Ease.InQuad));
+        jumpSeq.Join(modelTransform.DOScaleX(1f, halfDuration).SetEase(Ease.InQuad));
+        jumpSeq.Join(modelTransform.DOScaleZ(1f, halfDuration).SetEase(Ease.InQuad));
     }
-
 
     protected IEnumerator AttackPlayer()
     {
@@ -237,17 +225,20 @@ public class MobModel : NetworkBehaviour
                 pm.kills++;
             }
 
-            healthBar.DOComplete();
+            if (healthBar != null)
+            {
+                healthBar.DOComplete();
+            }
+
             Destroy(gameObject);
         }
     }
-
 
     protected void FindClosestPlayer()
     {
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         GameObject closest = null;
-        float closestDistance = Mathf.Infinity;
+        float closestDistance = detectionRange;
 
         foreach (GameObject p in players)
         {
@@ -284,7 +275,7 @@ public class MobModel : NetworkBehaviour
 
         if (randomMat == null) return;
 
-        Transform sphereTransform = colorTransform.Find("Sphere");
+        Transform sphereTransform = colorTransform != null ? colorTransform.Find("Sphere") : null;
         if (sphereTransform != null)
         {
             Renderer renderer = sphereTransform.GetComponent<Renderer>();

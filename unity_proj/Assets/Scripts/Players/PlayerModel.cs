@@ -52,10 +52,17 @@ public class PlayerModel : NetworkBehaviour
     [Header("Fall Settings")]
     public float fallDeathY = -20f;
 
+    [Header("Damage UI")]
+    [SerializeField] private TextMeshProUGUI damageText;
+    [SerializeField] private float damageDisplayTime = 2f;
+
     private float minRightOffset = 0.1f;
     private float maxRightOffset;
     private PlayerController playerController;
     private bool canAttack = true;
+
+    private Coroutine damageCoroutine;
+    private int cumulativeDamage = 0;
 
     void OnNameChanged(string _, string newName)
     {
@@ -76,7 +83,7 @@ public class PlayerModel : NetworkBehaviour
 
         if (isLocalPlayer)
         {
-            killsPanel.text = "Kills: "+kills;
+            killsPanel.text = "Kills: " + kills;
         }
     }
 
@@ -88,7 +95,6 @@ public class PlayerModel : NetworkBehaviour
 
     private void Start()
     {
-
         if (healthCanvas != null)
         {
             minRightOffset = -healthBar.offsetMax.x;
@@ -104,7 +110,7 @@ public class PlayerModel : NetworkBehaviour
             }
             catch
             {
-                Debug.Log("Errore nella presaa del killspanel");
+                Debug.Log("Errore nella presa del killspanel");
             }
             StartCoroutine(AutoAttackLoop());
             Camera.main.GetComponent<CameraController>().playerT = transform;
@@ -112,15 +118,16 @@ public class PlayerModel : NetworkBehaviour
 
         playerController = new PlayerController(speed, deceleration, minSpeed, jumpForce,
                             gameObject.transform, gameObject.GetComponent<Rigidbody>(), model, this);
+
+        if (damageText != null)
+            damageText.gameObject.SetActive(false);
     }
 
     private void OnHealthChanged(int oldHealth, int newHealth)
     {
-
         health = newHealth;
 
         float healthPercentage = Mathf.Clamp01((float)health / maxHealth);
-        Debug.Log(healthPercentage);
 
         float barRange = maxRightOffset - minRightOffset;
         float targetRightOffset = minRightOffset + (1f - healthPercentage) * barRange;
@@ -139,11 +146,9 @@ public class PlayerModel : NetworkBehaviour
 
     private void OnMaxHealthChanged(int oldHealth, int newHealth)
     {
-
         maxHealth = newHealth;
 
         float healthPercentage = Mathf.Clamp01((float)health / maxHealth);
-        Debug.Log(healthPercentage);
 
         float barRange = maxRightOffset - minRightOffset;
         float targetRightOffset = minRightOffset + (1f - healthPercentage) * barRange;
@@ -190,7 +195,6 @@ public class PlayerModel : NetworkBehaviour
 
         if (transform.position.y < fallDeathY && !died)
         {
-            Debug.Log($"{playerName} è caduto fuori dalla mappa!");
             if (isServer)
             {
                 died = true;
@@ -251,7 +255,8 @@ public class PlayerModel : NetworkBehaviour
         if (!isServer) return;
 
         health -= damage;
-        Debug.Log($"\"{playerName}\" took {damage} damage. Current health: {health}");
+
+        RpcShowDamage(damage);
 
         if (health <= 0)
         {
@@ -261,10 +266,38 @@ public class PlayerModel : NetworkBehaviour
     }
 
     [ClientRpc]
+    void RpcShowDamage(int damage)
+    {
+        if (damageText == null) return;
+
+        cumulativeDamage += damage;
+
+        damageText.text = "-" + cumulativeDamage.ToString();
+        damageText.gameObject.SetActive(true);
+
+        damageText.transform.DOKill();
+        damageText.transform.localScale = Vector3.zero;
+
+        damageText.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
+
+        if (damageCoroutine != null)
+        {
+            StopCoroutine(damageCoroutine);
+        }
+        damageCoroutine = StartCoroutine(HideDamageTextAfterDelay());
+    }
+
+    IEnumerator HideDamageTextAfterDelay()
+    {
+        yield return new WaitForSeconds(damageDisplayTime);
+        damageText.gameObject.SetActive(false);
+        cumulativeDamage = 0;
+    }
+
+    [ClientRpc]
     void RpcDie()
     {
         died = true;
-        Debug.Log($"\"{playerName}\" has died.");
 
         model.gameObject.SetActive(false);
         gameObject.tag = deadTag;
@@ -294,7 +327,6 @@ public class PlayerModel : NetworkBehaviour
         {
             health = maxHealth;
         }
-        Debug.Log($"\"{playerName}\" recovered {amount} health points. Current health: {health}");
     }
 
     void Die()

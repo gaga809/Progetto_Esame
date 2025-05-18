@@ -1,9 +1,24 @@
 fileFormatVersion: 2
-guid: 4e263fb45c5a67443a072dd90d00db65
+guid: e1ed19cf7fd8e6f47ab134b228af1500
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Helmet_Outside
+    second: {fileID: 2100000, guid: 7821752afaf7943488fd296c5029bd57, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.001
+    second: {fileID: 2100000, guid: bfeb4b37a8f1de44f8a87dc6283305dc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.003
+    second: {fileID: 2100000, guid: 7821752afaf7943488fd296c5029bd57, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
