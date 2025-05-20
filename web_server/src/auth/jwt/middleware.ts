@@ -69,3 +69,27 @@ export async function middlewareCheckAdmin(req: Request, res:Response, next:Next
         return;
     }
 }
+
+export async function middlewareGameToken(req: Request, res:Response, next:NextFunction) {
+    try {
+        const { gameToken } = req.body;
+        if (!gameToken) {
+            res.status(401).json({ message: "Game token is missing" });
+            return;
+        }
+        const tokenPayload = verifyAccessToken(gameToken);
+        if(tokenPayload == null)
+        {
+            res.status(401).json({ message: "Invalid game token" });
+            return;
+        }
+
+        res.locals.gameId = tokenPayload.id;
+        res.locals.owner = tokenPayload.owner;
+        res.locals.users = tokenPayload.users;
+        res.locals.gameToken = gameToken;
+        next();
+    } catch (error) {
+        return;
+    }
+}
