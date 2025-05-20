@@ -41,6 +41,18 @@ if (!JWTREFRESHEXPIRESIN) {
   );
 }
 
+const JWTGAMESECRET = process.env.JWT_GAME_SECRET;
+if (!JWTGAMESECRET) {
+  logger.error("JWT_GAME_SECRET is not set in the environment variables.");
+  throw new Error("JWT_GAME_SECRET is not set in the environment variables.");
+}
+
+export const JWTGAMEEXPIRESIN = process.env.JWT_GAME_EXPIRATION as StringValue;
+if (!JWTGAMEEXPIRESIN) {
+  logger.error("JWT_GAME_EXPIRATION is not set in the environment variables.");
+  throw new Error("JWT_GAME_EXPIRATION is not set in the environment variables.");
+}
+
 /// <summary>
 /// JWT Token Generation
 /// </summary>
@@ -69,6 +81,20 @@ export const generateRefreshToken = (payload: object) => {
   return jwt.sign(payload, JWTREFRESHSECRET, {
     expiresIn: seconds,
   });
+};
+
+/// <summary>
+/// JWT Game Token Generation
+/// </summary>
+/// <param name="payload">The payload to include in the token</param>
+/// <returns>The generated JWT Game Token</returns>
+/// <remarks>
+/// This function generates a JWT token using the specified payload and secret.
+/// The token will expire based on the expiration time set in the environment variables.
+/// </remarks>
+export const generateGameToken = (payload: object) => {
+  const seconds = ms(JWTGAMEEXPIRESIN) / 1000;
+  return jwt.sign(payload, JWTGAMESECRET, { expiresIn: seconds });
 };
 
 /// <summary>
@@ -105,6 +131,26 @@ export const verifyRefreshToken = (token: string) => {
     return jwt.verify(token, JWTREFRESHSECRET) as JwtPayload;
   } catch (err) {
     logger.error("JWT refresh token verification failed: " + err);
+    return null;
+  }
+};
+
+
+/// <summary>
+/// JWT Game Token Verification
+/// </summary>
+/// <param name="token">The JWT Game Token to verify</param>
+/// <returns>The decoded token if verification is successful, null otherwise</returns>
+/// <remarks>
+/// This function verifies the provided JWT token using the secret.
+/// If the token is valid, it returns the decoded token.
+/// If the token is invalid or expired, it returns null.
+/// </remarks>
+export const verifyGameToken = (token: string) => {
+  try {
+    return jwt.verify(token, JWTGAMESECRET) as JwtPayload;
+  } catch (err) {
+    logger.error("JWT Game Token verification failed: " + err);
     return null;
   }
 };
