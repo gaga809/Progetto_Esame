@@ -20,14 +20,13 @@ public class MobModel : NetworkBehaviour
     public float attackRange = 2.5f;
     public float detectionRange = 30f;
     public int attackDamage = 1;
-    public float attackRate = 2f;
+    public float attackRate = 2f;   
 
     public GameObject healthCanvas;
     public RectTransform healthBar;
 
     public Transform visualTransform;
     public Transform colorTransform;
-
     public Transform modelTransform;
     public float visualJumpHeight = 1.5f;
     public float visualJumpDuration = 0.5f;
@@ -72,6 +71,7 @@ public class MobModel : NetworkBehaviour
         }
 
         ApplyRandomColor();
+
     }
 
     protected virtual void Update()
@@ -218,6 +218,7 @@ public class MobModel : NetworkBehaviour
     public void Hurt(int damage, PlayerModel pm)
     {
         health -= damage;
+
         if (health <= 0)
         {
             if (isServer)
