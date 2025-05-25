@@ -20,7 +20,7 @@ public class MobModel : NetworkBehaviour
     public float attackRange = 2.5f;
     public float detectionRange = 30f;
     public int attackDamage = 1;
-    public float attackRate = 2f;   
+    public float attackRate = 2f;
 
     public GameObject healthCanvas;
     public RectTransform healthBar;
@@ -41,6 +41,10 @@ public class MobModel : NetworkBehaviour
     private Coroutine jumpRoutine;
     protected bool isGrounded = true;
 
+    // Nuove variabili per il colore
+    private Material originalMaterial;
+    private Renderer modelRenderer;
+
     protected virtual void Start()
     {
         if (healthCanvas != null && healthBar != null)
@@ -60,6 +64,22 @@ public class MobModel : NetworkBehaviour
         rb.linearDamping = 2f;
         rb.angularDamping = 2f;
 
+        ApplyRandomColor();
+
+        // Setup renderer e materiale originale
+        if (colorTransform != null)
+        {
+            Transform sphereTransform = colorTransform.Find("Sphere");
+            if (sphereTransform != null)
+            {
+                modelRenderer = sphereTransform.GetComponent<Renderer>();
+                if (modelRenderer != null)
+                {
+                    originalMaterial = modelRenderer.material;
+                }
+            }
+        }
+
         if (isServer)
         {
             FindClosestPlayer();
@@ -69,9 +89,6 @@ public class MobModel : NetworkBehaviour
                 jumpRoutine = StartCoroutine(JumpLoop());
             }
         }
-
-        ApplyRandomColor();
-
     }
 
     protected virtual void Update()
@@ -219,6 +236,11 @@ public class MobModel : NetworkBehaviour
     {
         health -= damage;
 
+        if (modelRenderer != null)
+        {
+            StartCoroutine(HitFlash());
+        }
+
         if (health <= 0)
         {
             if (isServer)
@@ -232,6 +254,17 @@ public class MobModel : NetworkBehaviour
             }
 
             Destroy(gameObject);
+        }
+    }
+
+    private IEnumerator HitFlash()
+    {
+        Material redMat = Resources.Load<Material>("Materials/Red");
+        if (redMat != null && modelRenderer != null)
+        {
+            modelRenderer.material = redMat;
+            yield return new WaitForSeconds(0.2f);
+            modelRenderer.material = originalMaterial;
         }
     }
 
@@ -270,7 +303,7 @@ public class MobModel : NetworkBehaviour
 
     private void ApplyRandomColor()
     {
-        string[] materialNames = { "Red", "Green", "Blue", "Yellow", "Purple" };
+        string[] materialNames = { "Grass", "Stone", "Green","LightBlue","Orange", "Blue", "Yellow", "Purple" };
         string selectedMaterialName = materialNames[UnityEngine.Random.Range(0, materialNames.Length)];
         Material randomMat = Resources.Load<Material>("Materials/" + selectedMaterialName);
 

@@ -188,8 +188,8 @@ MonoBehaviour:
   visualTransform: {fileID: 0}
   colorTransform: {fileID: 4801147906169724132}
   modelTransform: {fileID: 4801147906169724132}
-  visualJumpHeight: 1.5
-  visualJumpDuration: 1.5
+  visualJumpHeight: 1
+  visualJumpDuration: 1
   jumpCooldown: 1
   explosionRadius: 3
   explosionDamage: 3
