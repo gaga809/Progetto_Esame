@@ -118,6 +118,7 @@ public class CustomNetworkRoomManager : NetworkRoomManager
         {
             //base.OnRoomServerPlayersReady()
             anotherLobby = true;
+
             ServerChangeScene(GameplayScene);
 
         }
