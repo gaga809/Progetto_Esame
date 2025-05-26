@@ -6,6 +6,7 @@ using TMPro;
 using DG.Tweening;
 using UnityEngine.UI;
 using Edgegap;
+using System.Collections.Generic;
 
 public class PlayerModel : NetworkBehaviour
 {
@@ -15,7 +16,6 @@ public class PlayerModel : NetworkBehaviour
     public string playerName;
     [SerializeField] private TextMeshProUGUI nameText;
     public GameObject UI;
-    public GameObject deathPanel;
 
     [Header("Player Statuses")]
     [SyncVar(hook = nameof(OnDeathStatusChanged))]
@@ -27,6 +27,10 @@ public class PlayerModel : NetworkBehaviour
     public GameObject healthCanvas;
     public RectTransform healthBar;
     public TextMeshProUGUI killsPanel;
+    public GameObject DeathPanel;
+    public GameObject WaitForHostText;
+    public GameObject BtnReturnToLobby;
+    public SpectateScript spectateScript;
 
     [Header("Player Settings")]
     [SyncVar(hook = nameof(OnHealthChanged))]
@@ -63,6 +67,7 @@ public class PlayerModel : NetworkBehaviour
 
     private Coroutine damageCoroutine;
     private int cumulativeDamage = 0;
+    private List<GameObject> playersStillAlive = new List<GameObject>();
 
     void OnNameChanged(string _, string newName)
     {
@@ -104,14 +109,20 @@ public class PlayerModel : NetworkBehaviour
 
         if (isLocalPlayer)
         {
-            try
-            {
+            //try
+            //{
                 killsPanel = GameObject.Find("KillsPanel").GetComponent<TextMeshProUGUI>();
-            }
-            catch
-            {
-                Debug.Log("Errore nella presa del killspanel");
-            }
+                DeathPanel = GameObject.Find("DeathPanel"); // PROBABILE NULL
+            WaitForHostText = GameObject.Find("WaitingForHost"); // PROBABILE NULL
+            BtnReturnToLobby = GameObject.Find("BtnReturn"); // PROBABILE NULL
+                GameObject go = GameObject.Find("SpectatorPanel"); // NULL
+            Debug.Log(go);
+                spectateScript = go.GetComponent<SpectateScript>(); // GO è NULL    
+            //}
+            //catch
+            //{
+            //Debug.Log("Errore nella presa della robba");
+            //}
             StartCoroutine(AutoAttackLoop());
             Camera.main.GetComponent<CameraController>().playerT = transform;
         }
@@ -307,14 +318,34 @@ public class PlayerModel : NetworkBehaviour
         UI.SetActive(false);
         healthCanvas.SetActive(false);
 
+
+        if (spectateScript.LastPlayer())
+        {
+            DeathPanel.SetActive(true);
+            if (isServer)
+            {
+                BtnReturnToLobby.SetActive(true);
+
+                // TODO: Stop the waves from continuing
+                // TODO: Get info on the players
+                // TODO: Send results to the server
+            }
+            else
+            {
+                WaitForHostText.SetActive(true);
+            }
+            return;
+        }
+
         if (isLocalPlayer)
         {
-            deathPanel = GameObject.Find("DeathPanel");
-            if (deathPanel != null)
-                deathPanel.SetActive(true);
 
             playerControls.actions.Disable();
             SetupSpectatorMode();
+        }
+        else
+        {
+            spectateScript.GetPlayersAlive();
         }
     }
 
@@ -335,12 +366,8 @@ public class PlayerModel : NetworkBehaviour
 
     void SetupSpectatorMode()
     {
-        GameObject[] players = GameObject.FindGameObjectsWithTag(playerTag);
-        if (players.Length > 0)
-        {
-            GameObject randomPlayer = players[Random.Range(0, players.Length)];
-            Camera.main.GetComponent<CameraController>().playerT = randomPlayer.transform;
-        }
+        
+        spectateScript.StartSpectating();
     }
 
     Vector3 FindClosestMob()
