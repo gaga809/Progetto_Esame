@@ -1,7 +1,5 @@
 // src/routes/api/v1/game
 import { Router } from "express";
-
-import { middlewareAccessToken, middlewareGameToken } from "../../auth/jwt/middleware";
 import { GetLeaderboard } from "../../controllers/leaderboardController";
 
 const router = Router();
