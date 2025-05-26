@@ -11,12 +11,21 @@
   "escapeDescription": "史莱姆正在逼近。没有安全的地方。准备逃命，否则就会变成其中之一。",
   "updateTitle": "进化已经开始",
   "updateDescription": "新版本上线：更多挑战、更多史莱姆、更多混乱。看看有什么新内容，准备再次生存吧！",
-
   "news1Title": "《史莱姆攻击》：这款新游戏正在霸榜",
   "news1Date": "2025年4月9日",
   "news1Text": "新发布的《史莱姆攻击》是一款充满动作感的游戏，玩家将操控拥有独特能力的彩色史莱姆。从粘粘跳跃到奇怪变形，该游戏仅在几天内就突破了百万下载量。准备好迎接这场粘液大战吧！",
-
   "news2Title": "炸弹蘑菇登场：最新更新引爆混乱",
   "news2Date": "2025年4月8日",
-  "news2Text": "《蘑菇狂奔》的最新更新中，新增了爆炸性的“炸弹蘑菇”——这是一个强力的新敌人，彻底改变了玩法。小心靠太近……BOOM！粉丝们已经爱上了这个新挑战。"
+  "news2Text": "《蘑菇狂奔》的最新更新中，新增了爆炸性的“炸弹蘑菇”——这是一个强力的新敌人，彻底改变了玩法。小心靠太近……BOOM！粉丝们已经爱上了这个新挑战。",
+  "mainVideoTitle": "主视频标题",
+  "mainVideoDate": "2025年4月9日",
+  "smallVideo1Title": "子视频标题 1",
+  "smallVideo1Date": "2025年4月9日",
+  "smallVideo2Title": "子视频标题 2",
+  "smallVideo2Date": "2025年4月9日",
+  "parentsGuide": "家长指南",
+  "termsOfService": "服务条款",
+  "privacyPolicy": "隐私政策",
+  "manageCookies": "管理 Cookie",
+  "fanContentPolicy": "粉丝内容政策"
 }

@@ -11,12 +11,21 @@
   "escapeDescription": "Les slimes arrivent. Aucun abri n'est sûr. Prépare-toi à fuir ou deviens l’un d’eux.",
   "updateTitle": "L’évolution a commencé !",
   "updateDescription": "La nouvelle version est là : plus de défis, plus de slimes, plus de chaos. Découvre les nouveautés et prépare-toi à survivre encore une fois.",
-
   "news1Title": "Slime Attack : le nouveau jeu qui explose les classements",
   "news1Date": "9 avril 2025",
   "news1Text": "Le tout nouveau *Slime Attack* est un jeu d'action dans lequel les joueurs contrôlent des slimes colorés dotés de pouvoirs uniques. Entre sauts gluants et transformations étranges, le jeu a déjà dépassé le million de téléchargements en quelques jours. Prépare-toi pour une bataille bien visqueuse !",
-
   "news2Title": "Nouveau champignon-bombe : le chaos dans la dernière mise à jour",
   "news2Date": "8 avril 2025",
-  "news2Text": "La dernière mise à jour de *ShroomRush* introduit le \"champignon-bombe\", un nouvel ennemi explosif qui bouleverse totalement le gameplay. Attention — trop près et… BOUM ! Les fans adorent déjà ce nouveau défi."
+  "news2Text": "La dernière mise à jour de *ShroomRush* introduit le \"champignon-bombe\", un nouvel ennemi explosif qui bouleverse totalement le gameplay. Attention — trop près et… BOUM ! Les fans adorent déjà ce nouveau défi.",
+  "mainVideoTitle": "Titre de la Vidéo",
+  "mainVideoDate": "9 avril 2025",
+  "smallVideo1Title": "Petit Titre Vidéo 1",
+  "smallVideo1Date": "9 avril 2025",
+  "smallVideo2Title": "Petit Titre Vidéo 2",
+  "smallVideo2Date": "9 avril 2025",
+  "parentsGuide": "Guide parental",
+  "termsOfService": "Conditions d'utilisation",
+  "privacyPolicy": "Politique de confidentialité",
+  "manageCookies": "Gérer les cookies",
+  "fanContentPolicy": "Politique de contenu des fans"
 }

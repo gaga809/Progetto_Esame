@@ -11,12 +11,21 @@
   "escapeDescription": "Gli slime stanno arrivando. Nessun rifugio è sicuro. Preparati a scappare, o diventa uno di loro.",
   "updateTitle": "L’evoluzione è iniziata!",
   "updateDescription": "La nuova versione è qui: più sfide, più slime, più caos. Scopri cosa c’è di nuovo e preparati a sopravvivere ancora una volta.",
-
   "news1Title": "Slime Attack: il nuovo gioco che domina le classifiche",
   "news1Date": "9 aprile 2025",
   "news1Text": "*Slime Attack* è un gioco d’azione appena uscito, in cui i giocatori controllano slime colorati con poteri unici. Dai salti appiccicosi alle trasformazioni strane, ha già superato il milione di download in pochi giorni. Preparati a una battaglia viscida!",
-
   "news2Title": "Il nuovo Fungo Bomba scatena il caos nell’ultimo aggiornamento",
   "news2Date": "8 aprile 2025",
-  "news2Text": "L’ultimo aggiornamento di *ShroomRush* introduce il potente “Fungo Bomba”, un nuovo nemico esplosivo che cambia completamente il gameplay. Attento — se ti avvicini troppo… BOOM! I fan stanno già adorando questa nuova sfida."
+  "news2Text": "L’ultimo aggiornamento di *ShroomRush* introduce il potente “Fungo Bomba”, un nuovo nemico esplosivo che cambia completamente il gameplay. Attento — se ti avvicini troppo… BOOM! I fan stanno già adorando questa nuova sfida.",
+  "mainVideoTitle": "Titolo del Video",
+  "mainVideoDate": "9 aprile 2025",
+  "smallVideo1Title": "Titolo Video Piccolo 1",
+  "smallVideo1Date": "9 aprile 2025",
+  "smallVideo2Title": "Titolo Video Piccolo 2",
+  "smallVideo2Date": "9 aprile 2025",
+    "parentsGuide": "Guida per i genitori",
+  "termsOfService": "Termini di servizio",
+  "privacyPolicy": "Informativa sulla privacy",
+  "manageCookies": "Gestisci i cookie",
+  "fanContentPolicy": "Politica sui contenuti dei fan"
 }

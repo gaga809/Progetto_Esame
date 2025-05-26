@@ -1,45 +1,46 @@
 <main>
-    <h1 class="ultra-regular">
-        {{'watchNow'|translate|uppercase}}
-    </h1>
+  <h1 class="ultra-regular">
+    {{ 'watchNow' | translate | uppercase }}
+  </h1>
 
-    <div class="main-video">
-        <div class="video-content">
-            <video src="" autoplay muted></video>
-            <div class="video-info">
-                <div class="video-text">
-                    <h2 class="video-title ultra-regular">Video Title</h2>
-                    <p class="video-date">April 9, 2025</p>
-                </div>
-                <i class="fab fa-youtube yt-logo" aria-label="YouTube"></i>
-            </div>
+  <div class="main-video">
+    <div class="video-content">
+      <video src="" autoplay muted></video>
+      <div class="video-info">
+        <div class="video-text">
+          <h2 class="video-title ultra-regular">{{ 'mainVideoTitle' | translate }}</h2>
+          <p class="video-date">{{ 'mainVideoDate' | translate }}</p>
         </div>
+        <i class="fab fa-youtube yt-logo" aria-label="YouTube"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="small-container">
+    <div class="small-video">
+      <div class="video-content">
+        <video src="" autoplay muted></video>
+        <div class="video-info">
+          <div class="video-text">
+            <h2 class="video-title ultra-regular">{{ 'smallVideo1Title' | translate }}</h2>
+            <p class="video-date">{{ 'smallVideo1Date' | translate }}</p>
+          </div>
+          <i class="fab fa-youtube yt-logo" aria-label="YouTube"></i>
+        </div>
+      </div>
     </div>
 
-    <div class="small-container">
-        <div class="small-video">
-            <div class="video-content">
-                <video src="" autoplay muted></video>
-                <div class="video-info">
-                    <div class="video-text">
-                        <h2 class="video-title ultra-regular">Small Video Title 1</h2>
-                        <p class="video-date">April 9, 2025</p>
-                    </div>
-                    <i class="fab fa-youtube yt-logo" aria-label="YouTube"></i>
-                </div>
-            </div>
+    <div class="small-video">
+      <div class="video-content">
+        <video src="" autoplay muted></video>
+        <div class="video-info">
+          <div class="video-text">
+            <h2 class="video-title ultra-regular">{{ 'smallVideo2Title' | translate }}</h2>
+            <p class="video-date">{{ 'smallVideo2Date' | translate }}</p>
+          </div>
+          <i class="fab fa-youtube yt-logo" aria-label="YouTube"></i>
         </div>
-        <div class="small-video">
-            <div class="video-content">
-                <video src="" autoplay muted></video>
-                <div class="video-info">
-                    <div class="video-text">
-                        <h2 class="video-title ultra-regular">Small Video Title 2</h2>
-                        <p class="video-date">April 9, 2025</p>
-                    </div>
-                    <i class="fab fa-youtube yt-logo" aria-label="YouTube"></i>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+  </div>
 </main>

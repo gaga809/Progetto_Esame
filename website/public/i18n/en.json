@@ -11,12 +11,21 @@
   "escapeDescription": "The slimes are coming. No shelter is safe. Get ready to escape—or become one of them.",
   "updateTitle": "The change has begun!",
   "updateDescription": "The new version is here: more challenges, more slimes, more chaos. Discover what’s new and prepare to survive again.",
-
   "news1Title": "Slime Attack: the new game taking over the charts",
   "news1Date": "April 9, 2025",
   "news1Text": "The newly released *Slime Attack* is an action-packed game where players control colorful slimes with unique powers. From sticky jumps to weird transformations, the game has already hit over a million downloads in just a few days. Get ready for a gooey battle!",
-
   "news2Title": "New Bomb Mushroom stirs chaos in latest update",
   "news2Date": "April 8, 2025",
-  "news2Text": "The latest *ShroomRush* update introduces the explosive \"Bomb Mushroom,\" a powerful new enemy that totally changes gameplay. Watch out—get too close and... BOOM! Fans are loving the added challenge already."
+  "news2Text": "The latest *ShroomRush* update introduces the explosive \"Bomb Mushroom,\" a powerful new enemy that totally changes gameplay. Watch out—get too close and... BOOM! Fans are loving the added challenge already.",
+  "mainVideoTitle": "Video Title",
+  "mainVideoDate": "April 9, 2025",
+  "smallVideo1Title": "Small Video Title 1",
+  "smallVideo1Date": "April 9, 2025",
+  "smallVideo2Title": "Small Video Title 2",
+  "smallVideo2Date": "April 9, 2025",
+  "parentsGuide": "Parent's Guide",
+  "termsOfService": "Terms of Service",
+  "privacyPolicy": "Privacy Policy",
+  "manageCookies": "Manage Cookies",
+  "fanContentPolicy": "Fan Content Policy"
 }
