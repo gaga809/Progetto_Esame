@@ -1,14 +1,22 @@
 {
-  "escapeNow": "Fuis!",
+  "escapeNow": "Fuis !",
   "dontGetCaught": "Évite les slimes !",
   "playNow": "Jouer",
-  "watchNow": "Regarde!",
+  "watchNow": "Regarde !",
   "updates": "Renouveler",
   "rankingTitle": "Au sommet ou rien !",
   "rankingDescription": "Le classement récompense ceux qui ont des réflexes rapides, un esprit calme et beaucoup de courage. Et toi, où es-tu sur la liste ?",
   "ranking": "Classement",
   "escapeTitle": "Cours… tant que tu peux.",
   "escapeDescription": "Les slimes arrivent. Aucun abri n'est sûr. Prépare-toi à fuir ou deviens l’un d’eux.",
-  "updateTitle": "L’évolution a commencé!",
-  "updateDescription": "La nouvelle version est là : plus de défis, plus de slimes, plus de chaos. Découvre les nouveautés et prépare-toi à survivre encore une fois."
+  "updateTitle": "L’évolution a commencé !",
+  "updateDescription": "La nouvelle version est là : plus de défis, plus de slimes, plus de chaos. Découvre les nouveautés et prépare-toi à survivre encore une fois.",
+
+  "news1Title": "Slime Attack : le nouveau jeu qui explose les classements",
+  "news1Date": "9 avril 2025",
+  "news1Text": "Le tout nouveau *Slime Attack* est un jeu d'action dans lequel les joueurs contrôlent des slimes colorés dotés de pouvoirs uniques. Entre sauts gluants et transformations étranges, le jeu a déjà dépassé le million de téléchargements en quelques jours. Prépare-toi pour une bataille bien visqueuse !",
+
+  "news2Title": "Nouveau champignon-bombe : le chaos dans la dernière mise à jour",
+  "news2Date": "8 avril 2025",
+  "news2Text": "La dernière mise à jour de *ShroomRush* introduit le \"champignon-bombe\", un nouvel ennemi explosif qui bouleverse totalement le gameplay. Attention — trop près et… BOUM ! Les fans adorent déjà ce nouveau défi."
 }

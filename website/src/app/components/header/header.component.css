@@ -5,11 +5,13 @@
     background: url('/assets/img/header-bg.svg') no-repeat center center;
     background-size: cover;
     background-color: #fff;
+    margin: 0;
+
 }
 
 h1 {
     -webkit-text-stroke: 3px black;
-    font-size: 11.5vw;
+    font-size: 12.5vw;
     display: inline-block;
     text-align: center;
 }
@@ -18,7 +20,7 @@ h1,
 p {
     text-align: center;
     margin: 0;
-    transform: rotate(-3deg);
+    transform: rotate(-2deg);
     z-index: 1;
     margin-top: -20px;
 }
@@ -214,7 +216,7 @@ main div {
     font-weight: bold;
     font-size: 22px;
     border-radius: 12px;
-    width: 170px;
+    width: 200px;
     height: 75px;
     background: linear-gradient(to bottom, #54ca12, #63bf24);
     border: 3.5px solid #1d3704;
