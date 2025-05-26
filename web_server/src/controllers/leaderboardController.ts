@@ -41,26 +41,33 @@ export async function GetLeaderboard(
     const results = await db.query<RowDataPacket[]>(
       `
     SELECT 
-      l.id AS leaderboard_id,
-      l.waves_count,
-      l.game_date,
-      lp.user_id,
-      lp.kills,
-      COALESCE(u.username, au.username) AS username,
-      COALESCE(u.email, au.email) AS email
-    FROM Leaderboard l
-    JOIN LeaderboardParticipants lp ON l.id = lp.leaderboard_id
-    LEFT JOIN Users u ON lp.user_id = u.id
-    LEFT JOIN ArchivedUsers au ON lp.user_id = au.id
-    WHERE l.id IN (
-      SELECT l2.id
-      FROM Leaderboard l2
-      JOIN LeaderboardParticipants lp2 ON l2.id = lp2.leaderboard_id
-      GROUP BY l2.id
-      HAVING COUNT(lp2.user_id) = ?
-    )
-    ORDER BY l.game_date DESC
-    LIMIT ? OFFSET ?;
+  l.id AS leaderboard_id,
+  l.waves_count,
+  l.game_date,
+  lp.user_id,
+  lp.kills,
+  COALESCE(u.username, au.username) AS username,
+  COALESCE(u.email, au.email) AS email,
+  totals.total_kills
+FROM Leaderboard l
+JOIN LeaderboardParticipants lp ON l.id = lp.leaderboard_id
+LEFT JOIN Users u ON lp.user_id = u.id
+LEFT JOIN ArchivedUsers au ON lp.user_id = au.id
+JOIN (
+  SELECT leaderboard_id, SUM(kills) AS total_kills
+  FROM LeaderboardParticipants
+  GROUP BY leaderboard_id
+) totals ON l.id = totals.leaderboard_id
+WHERE l.id IN (
+  SELECT l2.id
+  FROM Leaderboard l2
+  JOIN LeaderboardParticipants lp2 ON l2.id = lp2.leaderboard_id
+  GROUP BY l2.id
+  HAVING COUNT(lp2.user_id) = ?
+)
+ORDER BY l.waves_count DESC, totals.total_kills DESC
+LIMIT ? OFFSET ?;
+
   `,
       [numPlayers, limit, offset]
     );
