@@ -1,0 +1,76 @@
+import { Request, Response } from "express";
+import { RowDataPacket } from "mysql2";
+import dotenv from "dotenv";
+
+// Local Imports
+import Logger from "../utils/logger";
+import SvlimeDatabase from "../db/mysql";
+
+// Logger Setup
+const logger = Logger.getInstance();
+logger.setLevel("LEADERBOARD_CON");
+
+dotenv.config();
+
+export async function GetLeaderboard(
+  req: Request,
+  res: Response
+): Promise<void> {
+  try {
+    let { limit, page, numPlayers } = req.body;
+
+    if (!limit || isNaN(limit) || limit <= 0) {
+      limit = 10;
+    }
+
+    if (!page || isNaN(page) || page <= 0) {
+      page = 1;
+    }
+
+    if (!numPlayers || isNaN(numPlayers) || numPlayers <= 0) {
+      numPlayers = 1;
+    }
+
+    const db = SvlimeDatabase.getInstance().getConnection();
+    if (!db) {
+      res.status(500).json({ message: "Internal Server Error" });
+      return;
+    }
+
+    const offset = (page - 1) * limit;
+    const results = await db.query<RowDataPacket[]>(
+      `
+    SELECT 
+      l.id AS leaderboard_id,
+      l.waves_count,
+      l.game_date,
+      lp.user_id,
+      lp.kills,
+      COALESCE(u.username, au.username) AS username,
+      COALESCE(u.email, au.email) AS email
+    FROM Leaderboard l
+    JOIN LeaderboardParticipants lp ON l.id = lp.leaderboard_id
+    LEFT JOIN Users u ON lp.user_id = u.id
+    LEFT JOIN ArchivedUsers au ON lp.user_id = au.id
+    WHERE l.id IN (
+      SELECT l2.id
+      FROM Leaderboard l2
+      JOIN LeaderboardParticipants lp2 ON l2.id = lp2.leaderboard_id
+      GROUP BY l2.id
+      HAVING COUNT(lp2.user_id) = ?
+    )
+    ORDER BY l.game_date DESC
+    LIMIT ? OFFSET ?;
+  `,
+      [numPlayers, limit, offset]
+    );
+
+    res.status(201).json({
+      message: "ok",
+      leaderboard: results,
+    });
+  } catch (error) {
+    logger.error("Error during Leadeboard retrieving: " + error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}

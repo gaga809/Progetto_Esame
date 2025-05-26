@@ -189,7 +189,7 @@ export async function SaveGameToDB(req: Request, res: Response): Promise<void> {
 
     // Remove duplicates from the kills array
     const uniqueKills = Array.from(new Set(kills));
-    
+
     // Check if the unique kills array has the same length as the kills array
     if (uniqueKills.length !== kills.length) {
       res.status(400).json({
@@ -212,7 +212,7 @@ export async function SaveGameToDB(req: Request, res: Response): Promise<void> {
 
     const db = SvlimeDatabase.getInstance().getConnection();
     if (!db) {
-      res.status(500).json({ message: "Database connection failed" });
+      res.status(500).json({ message: "Internal Server Error" });
       return;
     }
 

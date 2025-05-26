@@ -3,6 +3,7 @@ import { Router } from "express";
 import auth from "./auth";
 import users from "./users";
 import game from "./game";
+import leaderboard from "./leaderboard";
 
 const router = Router();
 
@@ -34,5 +35,6 @@ router.get("/", (req, res) => {
 router.use("/auth", auth);
 router.use("/users", users);
 router.use("/game", game);
+router.use("/leaderboard", leaderboard);
 
 export default router;
