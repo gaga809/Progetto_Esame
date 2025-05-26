@@ -187,6 +187,17 @@ export async function SaveGameToDB(req: Request, res: Response): Promise<void> {
       return;
     }
 
+    // Remove duplicates from the kills array
+    const uniqueKills = Array.from(new Set(kills));
+    
+    // Check if the unique kills array has the same length as the kills array
+    if (uniqueKills.length !== kills.length) {
+      res.status(400).json({
+        message: "Kills array must not contain duplicate values",
+      });
+      return;
+    }
+
     // CHeck if all users inside the users array are part of the kills users
     game.users.forEach((id: number) => {
       if (!kills.includes(id)) {
