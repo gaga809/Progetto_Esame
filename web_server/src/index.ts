@@ -29,7 +29,7 @@ const swaggerOptions = {
     openapi: "3.0.0",
     info: {
       title: "API Documentation",
-      version: "0.0.1",
+      version: "1.0.0",
       description:
         "The documentation for the Svlime API. Endpoints are listed below.",
     },
