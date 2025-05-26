@@ -1,8 +1,8 @@
 // src/routes/api/v1/game
 import { Router } from "express";
 
-import { middlewareAccessToken } from "../../auth/jwt/middleware";
-import { GetNewGameToken } from "../../controllers/gameController";
+import { middlewareAccessToken, middlewareGameToken } from "../../auth/jwt/middleware";
+import { GetNewGameToken, SaveGameToDB } from "../../controllers/gameController";
 
 const router = Router();
 
@@ -94,5 +94,84 @@ router.get("/", (req, res)=>{
  *                   example: "Internal server error"
  */
 router.post("/new", middlewareAccessToken, GetNewGameToken);
+
+/**
+ * @swagger
+ * /api/v1/game/save:
+ *   post:
+ *     summary: Save game results to the database
+ *     description: Saves the game session to the database if the game exists, the user is the owner, and the kills data is valid. Requires both a valid access token and game token.
+ *     tags:
+ *       - API v1
+ *     security:
+ *       - bearerAuth: []
+ *       - gameToken: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - kills
+ *               - wave
+ *             properties:
+ *               gameToken:
+ *                 type: string
+ *                 description: The game token for the current game session
+ *                 example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *               kills:
+ *                 type: array
+ *                 description: Array of integers representing the number of kills by each user
+ *                 items:
+ *                   type: integer
+ *                 example: [5, 10, 3]
+ *               wave:
+ *                 type: integer
+ *                 description: The wave number reached in the game
+ *                 example: 12
+ *     responses:
+ *       201:
+ *         description: Game saved successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Game saved successfully"
+ *       400:
+ *         description: Bad request. Missing or invalid fields, or authorization errors.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Kills are required"
+ *       403:
+ *         description: Forbidden. The user is not the owner of the game.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Not the owner of this game"
+ *       500:
+ *         description: Internal server error while saving the game.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Internal server error"
+ */
+router.post("/save", middlewareAccessToken, middlewareGameToken,  SaveGameToDB);
 
 export default router;
