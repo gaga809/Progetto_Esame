@@ -38,7 +38,9 @@ public class UIManager : MonoBehaviour
             yield return null;
         }
 
-        Login();
+        //Login();
+        titleScreenPanel.SetActive(false);
+        GoTo(mainMenuStartingPanel);
     }
 
 
