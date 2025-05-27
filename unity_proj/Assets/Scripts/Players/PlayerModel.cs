@@ -7,6 +7,9 @@ using DG.Tweening;
 using UnityEngine.UI;
 using Edgegap;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
+using UnityEngine.Events;
+using System;
 
 public class PlayerModel : NetworkBehaviour
 {
@@ -98,6 +101,23 @@ public class PlayerModel : NetworkBehaviour
         playerName = name;
     }
 
+    private void LoadPanels()
+    {
+        killsPanel = GameObject.Find("KillsPanel").GetComponent<TextMeshProUGUI>();
+        DeathPanel = GameObject.Find("DeathPanel");
+        WaitForHostText = GameObject.Find("WaitingForHost");
+        BtnReturnToLobby = GameObject.Find("BtnReturn");
+        GameObject go = GameObject.Find("SpectatorPanel");
+        spectateScript = go.GetComponent<SpectateScript>();
+        Debug.Log("Caricati i panel!");
+
+        DeathPanel.SetActive(false);
+        WaitForHostText.SetActive(false);
+        BtnReturnToLobby.SetActive(false);
+        go.SetActive(false);
+        Debug.Log("Nascosti i panel");
+    }
+
     private void Start()
     {
         if (healthCanvas != null)
@@ -109,20 +129,7 @@ public class PlayerModel : NetworkBehaviour
 
         if (isLocalPlayer)
         {
-            //try
-            //{
-                killsPanel = GameObject.Find("KillsPanel").GetComponent<TextMeshProUGUI>();
-                DeathPanel = GameObject.Find("DeathPanel"); // PROBABILE NULL
-            WaitForHostText = GameObject.Find("WaitingForHost"); // PROBABILE NULL
-            BtnReturnToLobby = GameObject.Find("BtnReturn"); // PROBABILE NULL
-                GameObject go = GameObject.Find("SpectatorPanel"); // NULL
-            Debug.Log(go);
-                spectateScript = go.GetComponent<SpectateScript>(); // GO è NULL    
-            //}
-            //catch
-            //{
-            //Debug.Log("Errore nella presa della robba");
-            //}
+            LoadPanels();
             StartCoroutine(AutoAttackLoop());
             Camera.main.GetComponent<CameraController>().playerT = transform;
         }
@@ -133,6 +140,8 @@ public class PlayerModel : NetworkBehaviour
         if (damageText != null)
             damageText.gameObject.SetActive(false);
     }
+
+
 
     private void OnHealthChanged(int oldHealth, int newHealth)
     {
@@ -236,6 +245,7 @@ public class PlayerModel : NetworkBehaviour
         }
     }
 
+    private bool debouncePanels = false;
     IEnumerator AutoAttackLoop()
     {
         while (!died)
@@ -244,6 +254,10 @@ public class PlayerModel : NetworkBehaviour
             Vector3 mobPosition = FindClosestMob();
             if (mobPosition != Vector3.zero)
             {
+                if (!debouncePanels)
+                {
+                    debouncePanels = true;
+                }
                 CmdAttack(mobPosition);
             }
         }
@@ -318,8 +332,7 @@ public class PlayerModel : NetworkBehaviour
         UI.SetActive(false);
         healthCanvas.SetActive(false);
 
-
-        if (spectateScript.LastPlayer())
+        if (spectateScript.gameObject.activeInHierarchy && spectateScript.LastPlayer())
         {
             DeathPanel.SetActive(true);
             if (isServer)
