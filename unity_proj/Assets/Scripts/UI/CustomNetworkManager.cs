@@ -72,12 +72,18 @@ public class CustomNetworkRoomManager : NetworkRoomManager
         }
 
         int playerIndex = FindNextIndex();
-
+        Debug.Log(playerIndex);
 
         Vector3 spawnPos = playerRoomPositions != null ? playerRoomPositions[playerIndex] : Vector3.zero;
         Quaternion spawnRot = playerRoomRotations != null ? playerRoomRotations[playerIndex] : Quaternion.identity;
+        Debug.Log($"Spawn position: {spawnPos}, Spawn rotation: {spawnRot}");
 
         GameObject roomPlayer = Instantiate(roomPlayerPrefab.gameObject, spawnPos, spawnRot);
+
+        roomPlayer.transform.position = spawnPos;
+        roomPlayer.transform.rotation = spawnRot;
+
+        NetworkServer.Spawn(roomPlayer, conn);
         roomPlayer.GetComponent<SvlimeRoomPlayerBehaviour>().playerName = "Player " + (playerIndex + 1);
 
         connections[playerIndex] = conn;

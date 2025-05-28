@@ -50,6 +50,7 @@ public class SpectateScript : MonoBehaviour
             else
             {
                 currentIndex = (currentIndex + adv) % playersStillAlive.Count;
+                Debug.Log("Current Index: " + currentIndex);
                 Camera.main.GetComponent<CameraController>().playerT = playersStillAlive[currentIndex].transform;
                 SpectatorPanelUser.text = playersStillAlive[currentIndex].name;
             }

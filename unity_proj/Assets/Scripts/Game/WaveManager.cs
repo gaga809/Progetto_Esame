@@ -163,24 +163,54 @@ public class WaveManager : NetworkBehaviour
                 if (players.Count == 0) break;
 
                 Transform player = players[Random.Range(0, players.Count)];
-                Vector3 spawnPosition = GetValidSpawnPoint(player);
+                Vector3 spawnPosition = Vector3.zero;
 
-                if (!enemyPrefabs.TryGetValue(entry.Prefab, out GameObject enemyPrefab))
+                const int maxAttempts = 20;
+
+                for (int attempt = 0; attempt < maxAttempts; attempt++)
                 {
-                    Debug.LogWarning("Prefab non trovato: " + entry.Prefab);
-                    continue;
+                    spawnPosition = GetValidSpawnPoint(player);
+
+                    if (spawnPosition == Vector3.zero)
+                    {
+                        Debug.LogWarning("Tentativo " + (attempt + 1) + " fallito per il calcolo del punto di spawn. Refresh dei player e nuovo tentativo...");
+                    }
+                    else
+                        break;
+
+                    players = new List<Transform>(GameObject.FindGameObjectsWithTag("Player").Select(p => p.transform));
+                    if (players.Count == 0)
+                    {
+                        Debug.LogWarning("Nessun giocatore trovato per il calcolo del punto di spawn.");
+                        spawnPosition = Vector3.zero;
+                    }
+                    player = players[Random.Range(0, players.Count)];
                 }
 
-                Vector3 direction = player.position - spawnPosition;
-                direction.y = 0;
-
-                GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.LookRotation(direction));
-                NetworkServer.Spawn(enemy);
-
-                if (enemy.TryGetComponent<MobModel>(out MobModel mobModel))
+                if (spawnPosition == Vector3.zero)
                 {
-                    mobModel.maxHealth = Mathf.RoundToInt(mobModel.maxHealth * scaledHealthMultiplier);
-                    mobModel.health = mobModel.maxHealth;
+                    Debug.LogWarning("Punto di spawn non valido, saltando la creazione del nemico.");
+                    continue;
+                }
+                else
+                {
+                    if (!enemyPrefabs.TryGetValue(entry.Prefab, out GameObject enemyPrefab))
+                    {
+                        Debug.LogWarning("Prefab non trovato: " + entry.Prefab);
+                        continue;
+                    }
+
+                    Vector3 direction = player.position - spawnPosition;
+                    direction.y = 0;
+
+                    GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.LookRotation(direction));
+                    NetworkServer.Spawn(enemy);
+
+                    if (enemy.TryGetComponent<MobModel>(out MobModel mobModel))
+                    {
+                        mobModel.maxHealth = Mathf.RoundToInt(mobModel.maxHealth * scaledHealthMultiplier);
+                        mobModel.health = mobModel.maxHealth;
+                    }
                 }
 
                 yield return new WaitForSeconds(wave.SpawnRate);
@@ -208,9 +238,8 @@ public class WaveManager : NetworkBehaviour
 
     Vector3 GetValidSpawnPoint(Transform player)
     {
-        const int maxAttempts = 20;
 
-        for (int attempt = 0; attempt < maxAttempts; attempt++)
+        try
         {
             int randomAngle = Random.Range(0, 360);
 
@@ -222,14 +251,20 @@ public class WaveManager : NetworkBehaviour
 
             bool hit = Physics.Raycast(randomPoint, Vector3.down, 5f, platformLayer);
 
+
             if (hit)
             {
                 return randomPoint;
             }
+            return Vector3.zero;
+        }
+        catch
+        {
+            Debug.LogError("Errore durante il calcolo del punto di spawn casuale. (Player non esistente o morto?)");
+            return Vector3.zero;
         }
 
-        Debug.LogWarning("Nessun punto di spawn valido trovato!");
-        return Vector3.zero;
+        
     }
 
     private void OnNextWave(int oldValue, int newValue)

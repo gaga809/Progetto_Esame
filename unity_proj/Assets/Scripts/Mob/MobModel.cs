@@ -44,6 +44,7 @@ public class MobModel : NetworkBehaviour
     // Nuove variabili per il colore
     private Material originalMaterial;
     private Renderer modelRenderer;
+    [SyncVar] private Color originalColor;
 
     protected virtual void Start()
     {
@@ -238,7 +239,8 @@ public class MobModel : NetworkBehaviour
 
         if (modelRenderer != null)
         {
-            StartCoroutine(HitFlash());
+            if(isServer)
+                StartCoroutine(HitFlash());
         }
 
         if (health <= 0)
@@ -262,9 +264,10 @@ public class MobModel : NetworkBehaviour
         Material redMat = Resources.Load<Material>("Materials/Red");
         if (redMat != null && modelRenderer != null)
         {
-            modelRenderer.material = redMat;
+            RpcSetColor(redMat.color);
             yield return new WaitForSeconds(0.2f);
-            modelRenderer.material = originalMaterial;
+            RpcSetColor(originalColor);
+
         }
     }
 
@@ -309,14 +312,23 @@ public class MobModel : NetworkBehaviour
 
         if (randomMat == null) return;
 
-        Transform sphereTransform = colorTransform != null ? colorTransform.Find("Sphere") : null;
-        if (sphereTransform != null)
+        if (isServer)
         {
-            Renderer renderer = sphereTransform.GetComponent<Renderer>();
-            if (renderer != null)
-            {
-                renderer.material = randomMat;
-            }
+            RpcSetColor(randomMat.color);
+            originalColor = randomMat.color;
+        }
+    }
+
+    [ClientRpc]
+    public void RpcSetColor(Color color)
+    {
+        Transform sphereTransform = colorTransform != null ? colorTransform.Find("Sphere") : null;
+        if (sphereTransform == null) return;
+
+        Renderer renderer = sphereTransform.GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            renderer.material.color = color;
         }
     }
 }

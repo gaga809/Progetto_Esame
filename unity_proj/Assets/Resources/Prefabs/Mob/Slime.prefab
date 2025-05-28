@@ -175,7 +175,7 @@ MonoBehaviour:
   target: {fileID: 6813532122885683220}
   syncPosition: 1
   syncRotation: 1
-  syncScale: 0
+  syncScale: 1
   onlySyncOnChange: 1
   compressRotation: 1
   interpolatePosition: 1
@@ -258,10 +258,52 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6842bed74ff15fd4b9cbb03438623ea0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4571705603611758255}
   m_SourcePrefab: {fileID: 100100000, guid: 6842bed74ff15fd4b9cbb03438623ea0, type: 3}
 --- !u!4 &8142350876054046539 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6842bed74ff15fd4b9cbb03438623ea0, type: 3}
   m_PrefabInstance: {fileID: 8608007840914186400}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8913925861375909361 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 6842bed74ff15fd4b9cbb03438623ea0, type: 3}
+  m_PrefabInstance: {fileID: 8608007840914186400}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4571705603611758255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8913925861375909361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ff3ba0becae47b8b9381191598957c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 1
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 8142350876054046539}
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 1
+  onlySyncOnChange: 1
+  compressRotation: 1
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 1
+  coordinateSpace: 0
+  timelineOffset: 1
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  onlySyncOnChangeCorrectionMultiplier: 2
+  useFixedUpdate: 0
+  rotationSensitivity: 0.01
+  positionPrecision: 0.01
+  scalePrecision: 0.01

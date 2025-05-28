@@ -161,12 +161,12 @@ MonoBehaviour:
   playerName: 
   nameText: {fileID: 462860410514498547}
   UI: {fileID: 5279064599987790407}
-  deathPanel: {fileID: 0}
   died: 0
   kills: 0
   healthCanvas: {fileID: 3978229028876335607}
   healthBar: {fileID: 8580286927256409614}
   killsPanel: {fileID: 0}
+  spectateScript: {fileID: 0}
   health: 30
   maxHealth: 30
   canJump: 0
@@ -944,10 +944,52 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3422ea800cb72ff488b8fc2b3062fc7a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8635567722779001294}
   m_SourcePrefab: {fileID: 100100000, guid: 3422ea800cb72ff488b8fc2b3062fc7a, type: 3}
 --- !u!4 &4886398230529164559 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 3422ea800cb72ff488b8fc2b3062fc7a, type: 3}
   m_PrefabInstance: {fileID: 4919408744342004452}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &5225347517012090805 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 3422ea800cb72ff488b8fc2b3062fc7a, type: 3}
+  m_PrefabInstance: {fileID: 4919408744342004452}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8635567722779001294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5225347517012090805}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a553cb17010b2403e8523b558bffbc14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 1
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 4886398230529164559}
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 1
+  onlySyncOnChange: 1
+  compressRotation: 1
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 1
+  coordinateSpace: 0
+  timelineOffset: 1
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  bufferResetMultiplier: 3
+  useFixedUpdate: 0
+  positionSensitivity: 0.01
+  rotationSensitivity: 0.01
+  scaleSensitivity: 0.01

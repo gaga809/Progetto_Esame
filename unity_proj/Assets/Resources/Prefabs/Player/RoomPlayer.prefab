@@ -224,6 +224,7 @@ GameObject:
   - component: {fileID: 5136372022877681944}
   - component: {fileID: 7378165718544025151}
   - component: {fileID: 4394984702385064435}
+  - component: {fileID: 3296612915496025722}
   m_Layer: 0
   m_Name: RoomPlayer
   m_TagString: Untagged
@@ -336,6 +337,40 @@ MonoBehaviour:
   roomUI: {fileID: 0}
   readyStatusImg: {fileID: 7412239862290702802}
   nameText: {fileID: 4722349202160677650}
+--- !u!114 &3296612915496025722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7535173522289497491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ff3ba0becae47b8b9381191598957c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 1
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 3485054688016537829}
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 1
+  onlySyncOnChange: 1
+  compressRotation: 1
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 1
+  coordinateSpace: 0
+  timelineOffset: 1
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  onlySyncOnChangeCorrectionMultiplier: 2
+  useFixedUpdate: 0
+  rotationSensitivity: 0.01
+  positionPrecision: 0.01
+  scalePrecision: 0.01
 --- !u!1 &9002870563445907859
 GameObject:
   m_ObjectHideFlags: 0
