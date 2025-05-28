@@ -91,10 +91,6 @@ public class PlayerController : NetworkBehaviour
             return;
         }
 
-
-
-
-
         //GameObject effect = Instantiate(particlesPrefab, startingPoint, quaternion);
         //Destroy(effect, 2f);
 

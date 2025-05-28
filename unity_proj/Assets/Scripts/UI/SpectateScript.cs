@@ -6,9 +6,13 @@ using UnityEngine.UI;
 public class SpectateScript : MonoBehaviour
 {
 
+    public GameObject DeathPanel;
+    public GameObject WaitForHostText;
+    public GameObject BtnReturnToLobby;
     public GameObject SpectatorPanel;
     public TextMeshProUGUI SpectatorPanelUser;
     public string playerTag;
+    public bool ded = false;
 
     private List<GameObject> playersStillAlive;
 
@@ -31,7 +35,7 @@ public class SpectateScript : MonoBehaviour
     public bool LastPlayer()
     {
         GetPlayersAlive();
-        return playersStillAlive.Count <= 1;
+        return playersStillAlive.Count <= 0;
     }
 
     public void NextPlayer(int adv)

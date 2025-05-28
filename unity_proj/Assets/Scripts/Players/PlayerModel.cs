@@ -30,9 +30,6 @@ public class PlayerModel : NetworkBehaviour
     public GameObject healthCanvas;
     public RectTransform healthBar;
     public TextMeshProUGUI killsPanel;
-    public GameObject DeathPanel;
-    public GameObject WaitForHostText;
-    public GameObject BtnReturnToLobby;
     public SpectateScript spectateScript;
 
     [Header("Player Settings")]
@@ -101,25 +98,9 @@ public class PlayerModel : NetworkBehaviour
         playerName = name;
     }
 
-    private void LoadPanels()
-    {
-        killsPanel = GameObject.Find("KillsPanel").GetComponent<TextMeshProUGUI>();
-        DeathPanel = GameObject.Find("DeathPanel");
-        WaitForHostText = GameObject.Find("WaitingForHost");
-        BtnReturnToLobby = GameObject.Find("BtnReturn");
-        GameObject go = GameObject.Find("SpectatorPanel");
-        spectateScript = go.GetComponent<SpectateScript>();
-        Debug.Log("Caricati i panel!");
-
-        DeathPanel.SetActive(false);
-        WaitForHostText.SetActive(false);
-        BtnReturnToLobby.SetActive(false);
-        go.SetActive(false);
-        Debug.Log("Nascosti i panel");
-    }
-
     private void Start()
     {
+
         if (healthCanvas != null)
         {
             minRightOffset = -healthBar.offsetMax.x;
@@ -129,7 +110,6 @@ public class PlayerModel : NetworkBehaviour
 
         if (isLocalPlayer)
         {
-            LoadPanels();
             StartCoroutine(AutoAttackLoop());
             Camera.main.GetComponent<CameraController>().playerT = transform;
         }
@@ -139,6 +119,8 @@ public class PlayerModel : NetworkBehaviour
 
         if (damageText != null)
             damageText.gameObject.SetActive(false);
+
+        
     }
 
 
@@ -160,6 +142,9 @@ public class PlayerModel : NetworkBehaviour
                    x => healthBar.offsetMax = x,
                    targetOffsetMax,
                    0.3f).SetEase(Ease.OutCubic);
+
+        Debug.Log($"Health: {health}, MaxHealth: {maxHealth}, HealthPercentage: {healthPercentage}, TargetRightOffset: {targetRightOffset}");
+
 
         ChangeHealthColor(healthPercentage);
     }
@@ -199,6 +184,12 @@ public class PlayerModel : NetworkBehaviour
 
     private void FixedUpdate()
     {
+        if (!killsPanel)
+        {
+            killsPanel = GameObject.Find("KillsPanel").GetComponent<TextMeshProUGUI>();
+            spectateScript = GameObject.Find("UI").GetComponent<SpectateScript>();
+        }
+
         if (healthCanvas.activeSelf)
         {
             Transform cam = Camera.main.transform;
@@ -332,33 +323,24 @@ public class PlayerModel : NetworkBehaviour
         UI.SetActive(false);
         healthCanvas.SetActive(false);
 
-        if (spectateScript.gameObject.activeInHierarchy && spectateScript.LastPlayer())
-        {
-            DeathPanel.SetActive(true);
-            if (isServer)
-            {
-                BtnReturnToLobby.SetActive(true);
-
-                // TODO: Stop the waves from continuing
-                // TODO: Get info on the players
-                // TODO: Send results to the server
-            }
-            else
-            {
-                WaitForHostText.SetActive(true);
-            }
-            return;
-        }
-
         if (isLocalPlayer)
         {
-
             playerControls.actions.Disable();
             SetupSpectatorMode();
         }
-        else
+
+        if (spectateScript.LastPlayer())
         {
-            spectateScript.GetPlayersAlive();
+            spectateScript.SpectatorPanel.SetActive(false);
+            spectateScript.DeathPanel.SetActive(true);
+            if (isServer)
+            {
+                spectateScript.BtnReturnToLobby.SetActive(true);
+            }
+            else
+            {
+                spectateScript.WaitForHostText.SetActive(true);
+            }
         }
     }
 
@@ -379,8 +361,9 @@ public class PlayerModel : NetworkBehaviour
 
     void SetupSpectatorMode()
     {
-        
+        spectateScript.SpectatorPanel.SetActive(true);
         spectateScript.StartSpectating();
+        spectateScript.ded = true;
     }
 
     Vector3 FindClosestMob()

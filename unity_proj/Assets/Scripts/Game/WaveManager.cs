@@ -37,6 +37,8 @@ public class WaveManager : NetworkBehaviour
     public Wave[] waves;
     public bool startSpawn = false;
 
+    [SyncVar] private bool stopAlTelevoto = false;
+
     void OnEnable()
     {
         StartCoroutine(startingWait());
@@ -48,6 +50,7 @@ public class WaveManager : NetworkBehaviour
     {
         yield return new WaitForSeconds(startWaittime);
         startSpawn = true;
+        players = new List<Transform>(GameObject.FindGameObjectsWithTag("Player").Select(p => p.transform));
     }
 
     void LoadWaveData()
@@ -106,38 +109,39 @@ public class WaveManager : NetworkBehaviour
     {
         if (!isServer) return;
 
-        if (startSpawn)
-        {
-            GameObject[] playerObjs = GameObject.FindGameObjectsWithTag("Player");
-            if (playerObjs.Length == 0)
+        if (!stopAlTelevoto) {
+            if(players != null && players.Count == 0)
             {
-                if (!isRedirecting)
-                {
-                    isRedirecting = true;
-                    Debug.Log("No players left - Changing scene");
-                    StartCoroutine(ChangeSceneWithDelay());
-                }
+                stopAlTelevoto = true;
             }
-            else if (!isSpawning)
+            else if (startSpawn)
             {
-                currentWave++;
-                if (currentWave < waves.Length)
+                if (!isSpawning)
                 {
-                    StartCoroutine(SpawnWave(waves[currentWave]));
-                }
-                else
-                {
-                    Debug.Log("Tutte le ondate finite! Looping o aumento infinito...");
-                    StartCoroutine(SpawnWave(CreateDynamicWave(currentWave)));
+                    currentWave++;
+                    if (currentWave < waves.Length)
+                    {
+                        StartCoroutine(SpawnWave(waves[currentWave]));
+                    }
+                    else
+                    {
+                        Debug.Log("Tutte le ondate finite! Looping o aumento infinito...");
+                        StartCoroutine(SpawnWave(CreateDynamicWave(currentWave)));
+                    }
                 }
             }
         }
     }
 
-    IEnumerator ChangeSceneWithDelay()
+    public void EndGame()
     {
-        yield return new WaitForSeconds(1f);
-        NetworkManager.singleton.ServerChangeScene("GameRoom");
+
+        if (!isRedirecting)
+        {
+            isRedirecting = true;
+            Debug.Log("No players left - Changing scene");
+            NetworkManager.singleton.ServerChangeScene("GameRoom");
+        }
     }
 
     IEnumerator SpawnWave(Wave wave)
@@ -265,3 +269,4 @@ public class WaveData
 {
     public Wave[] waves;
 }
+
