@@ -143,6 +143,7 @@ public class CustomNetworkRoomManager : NetworkRoomManager
         var game = gamePlayer.GetComponent<PlayerModel>();
 
         game.playerName = room.playerName;
+        game.playerId = room.playerId;
 
         playerModelsCreated++;
 

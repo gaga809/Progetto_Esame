@@ -5,8 +5,12 @@ using TMPro;
 public class SvlimeRoomPlayerBehaviour : NetworkRoomPlayer
 {
     public string playerNamePref = "playerName";
+    public string playerIdPref = "playerId";
+
     [SyncVar(hook = nameof(OnNameChanged))]
     public string playerName;
+    [SyncVar(hook = nameof(OnIdChanged))]
+    public int playerId;
 
     public RoomUI roomUI;
     public GameObject readyStatusImg;
@@ -18,6 +22,11 @@ public class SvlimeRoomPlayerBehaviour : NetworkRoomPlayer
         UpdateNameDisplay(newName);
     }
 
+    void OnIdChanged(int _, int newId)
+    {
+        playerId = newId;
+    }
+
     public void UpdateNameDisplay(string name)
     {
         if (nameText != null)
@@ -25,7 +34,7 @@ public class SvlimeRoomPlayerBehaviour : NetworkRoomPlayer
     }
 
     [Command]
-    public void CmdSetPlayerName(string name)
+    public void CmdSetPlayerInfo(string name, int id)
     {
         playerName = name;
     }
@@ -62,10 +71,15 @@ public class SvlimeRoomPlayerBehaviour : NetworkRoomPlayer
 
         if (isLocalPlayer)
         {
-            // TODO: Get Name from PlayerPrefs
-            string localPlayerName = playerName;
-            PlayerPrefs.SetString(playerNamePref, localPlayerName);
-            CmdSetPlayerName(localPlayerName);
+            string localPlayerName = PlayerPrefs.GetString(playerNamePref);
+            int localPlayerId = PlayerPrefs.GetInt(playerIdPref, 0);
+            if(localPlayerId == 0)
+            {
+                // Disconnect
+                Debug.LogError("Player ID is not set. Disconnecting local player.");
+                NetworkManager.singleton.StopClient();
+            }
+            CmdSetPlayerInfo(localPlayerName, localPlayerId);
             roomUI.btnReady.onClick.AddListener(HandlerReady);
         }
 

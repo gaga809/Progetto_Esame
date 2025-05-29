@@ -17,6 +17,9 @@ public class PlayerModel : NetworkBehaviour
     public string playerNamePref = "playerName";
     [SyncVar(hook = nameof(OnNameChanged))]
     public string playerName;
+    [SyncVar(hook = nameof(OnIdChanged))]
+    public int playerId;
+
     [SerializeField] private TextMeshProUGUI nameText;
     public GameObject UI;
 
@@ -69,6 +72,11 @@ public class PlayerModel : NetworkBehaviour
     private int cumulativeDamage = 0;
     private List<GameObject> playersStillAlive = new List<GameObject>();
 
+    private void OnIdChanged(int _, int newId)
+    {
+        playerId = newId;
+    }
+
     void OnNameChanged(string _, string newName)
     {
         UpdateNameDisplay(newName);
@@ -90,12 +98,6 @@ public class PlayerModel : NetworkBehaviour
         {
             killsPanel.text = "Kills: " + kills;
         }
-    }
-
-    [Command]
-    public void CmdSetPlayerName(string name)
-    {
-        playerName = name;
     }
 
     private void Start()
