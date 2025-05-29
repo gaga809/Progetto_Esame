@@ -1,8 +1,14 @@
 // src/routes/api/v1/game
 import { Router } from "express";
 
-import { middlewareAccessToken, middlewareGameToken } from "../../auth/jwt/middleware";
-import { GetNewGameToken, SaveGameToDB } from "../../controllers/gameController";
+import {
+    middlewareAccessToken,
+    middlewareGameToken,
+} from "../../auth/jwt/middleware";
+import {
+    GetNewGameToken,
+    SaveGameToDB,
+} from "../../controllers/gameController";
 
 const router = Router();
 
@@ -26,7 +32,7 @@ const router = Router();
  *                   type: string
  *                   example: "Hello from the Svlime API v1 Game Endpoint!"
  */
-router.get("/", (req, res)=>{
+router.get("/", (req, res) => {
     res.status(200).json({ message: "API v1 - Game" });
 });
 
@@ -124,8 +130,8 @@ router.post("/new", middlewareAccessToken, GetNewGameToken);
  *                 type: array
  *                 description: Array of integers representing the number of kills by each user
  *                 items:
- *                   type: integer
- *                 example: [5, 10, 3]
+ *                   type: object
+ *                 example: [{id:1, kills:20}, {id:2, kills:30}, {id:3, kills:10}]
  *               wave:
  *                 type: integer
  *                 description: The wave number reached in the game
@@ -172,6 +178,6 @@ router.post("/new", middlewareAccessToken, GetNewGameToken);
  *                   type: string
  *                   example: "Internal server error"
  */
-router.post("/save", middlewareAccessToken, middlewareGameToken,  SaveGameToDB);
+router.post("/save", middlewareAccessToken, middlewareGameToken, SaveGameToDB);
 
 export default router;
