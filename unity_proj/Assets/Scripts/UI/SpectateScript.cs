@@ -27,7 +27,7 @@ public class SpectateScript : MonoBehaviour
         if (playersStillAlive.Count > 0)
         {
             SpectatorPanel.SetActive(true);
-            SpectatorPanelUser.text = playersStillAlive[0].name;
+            SpectatorPanelUser.text = playersStillAlive[0].GetComponent<PlayerModel>().playerName;
             Camera.main.GetComponent<CameraController>().playerT = playersStillAlive[0].transform;
         }
     }
@@ -52,7 +52,7 @@ public class SpectateScript : MonoBehaviour
                 currentIndex = (currentIndex + adv) % playersStillAlive.Count;
                 Debug.Log("Current Index: " + currentIndex);
                 Camera.main.GetComponent<CameraController>().playerT = playersStillAlive[currentIndex].transform;
-                SpectatorPanelUser.text = playersStillAlive[currentIndex].name;
+                SpectatorPanelUser.text = playersStillAlive[currentIndex].GetComponent<PlayerModel>().playerName;
             }
         }
     }
