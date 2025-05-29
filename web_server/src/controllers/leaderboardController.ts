@@ -13,33 +13,33 @@ logger.setLevel("LEADERBOARD_CON");
 dotenv.config();
 
 export async function GetLeaderboard(
-  req: Request,
-  res: Response
+    req: Request,
+    res: Response
 ): Promise<void> {
-  try {
-    let { limit, page, numPlayers } = req.body;
+    try {
+        let { limit, page, numPlayers } = req.body;
 
-    if (!limit || isNaN(limit) || limit <= 0) {
-      limit = 10;
-    }
+        if (!limit || isNaN(limit) || limit <= 0) {
+            limit = 10;
+        }
 
-    if (!page || isNaN(page) || page <= 0) {
-      page = 1;
-    }
+        if (!page || isNaN(page) || page <= 0) {
+            page = 1;
+        }
 
-    if (!numPlayers || isNaN(numPlayers) || numPlayers <= 0) {
-      numPlayers = 1;
-    }
+        if (!numPlayers || isNaN(numPlayers) || numPlayers <= 0) {
+            numPlayers = 1;
+        }
 
-    const db = SvlimeDatabase.getInstance().getConnection();
-    if (!db) {
-      res.status(500).json({ message: "Internal Server Error" });
-      return;
-    }
+        const db = await SvlimeDatabase.getInstance().getConnection();
+        if (!db) {
+            res.status(500).json({ message: "Internal Server Error" });
+            return;
+        }
 
-    const offset = (page - 1) * limit;
-    const results = await db.query<RowDataPacket[]>(
-      `
+        const offset = (page - 1) * limit;
+        const results = await db.query<RowDataPacket[]>(
+            `
     SELECT 
   l.id AS leaderboard_id,
   l.waves_count,
@@ -69,15 +69,15 @@ ORDER BY l.waves_count DESC, totals.total_kills DESC
 LIMIT ? OFFSET ?;
 
   `,
-      [numPlayers, limit, offset]
-    );
+            [numPlayers, limit, offset]
+        );
 
-    res.status(201).json({
-      message: "ok",
-      leaderboard: results,
-    });
-  } catch (error) {
-    logger.error("Error during Leadeboard retrieving: " + error);
-    res.status(500).json({ message: "Internal server error" });
-  }
+        res.status(201).json({
+            message: "ok",
+            leaderboard: results,
+        });
+    } catch (error) {
+        logger.error("Error during Leadeboard retrieving: " + error);
+        res.status(500).json({ message: "Internal server error" });
+    }
 }

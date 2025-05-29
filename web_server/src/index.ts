@@ -115,7 +115,9 @@ async function setup() {
         if (DEVELOPMENT == 1) {
             logger.info("Development mode enabled. CORS is enabled.");
             logger.info(
-                "SWAGGER UI Enabled at https://localhost:3000/api-docs"
+                "SWAGGER UI Enabled at https://localhost:" +
+                    HTTPSPORT +
+                    "/api-docs"
             );
             // CORS setup
             app.use((req: Request, res: Response, next: NextFunction) => {

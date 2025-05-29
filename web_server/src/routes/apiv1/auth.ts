@@ -1,7 +1,11 @@
 // src/routes/api/v1/auth
 import { Router } from "express";
 import { middlewareRefreshToken } from "../../auth/jwt/middleware";
-import { Login, Register, GetNewAccessToken} from "../../controllers/authController"
+import {
+    Login,
+    Register,
+    GetNewAccessToken,
+} from "../../controllers/authController";
 
 const router = Router();
 
@@ -29,87 +33,86 @@ router.get("/", (req, res) => {
     res.status(200).json({ message: "API v1 - Auth" });
 });
 
-
 /**
-     * @swagger
-     * /api/v1/auth/register:
-     *   post:
-     *     summary: Register a new user
-     *     description: Registers a new user by validating the input fields (username, email, password), checking for existing records, and storing the new user in the database. Returns access and refresh tokens upon success.
-     *     tags:
-     *       - API v1
-     *     requestBody:
-     *       required: true
-     *       content:
-     *         application/json:
-     *           schema:
-     *             type: object
-     *             required:
-     *               - username
-     *               - email
-     *               - password
-     *             properties:
-     *               username:
-     *                 type: string
-     *                 example: "john_doe"
-     *               email:
-     *                 type: string
-     *                 example: "john.doe@example.com"
-     *               password:
-     *                 type: string
-     *                 example: "secure_password_123"
-     *     responses:
-     *       201:
-     *         description: User registered successfully.
-     *         content:
-     *           application/json:
-     *             schema:
-     *               type: object
-     *               properties:
-     *                 message:
-     *                   type: string
-     *                   example: "User registered successfully"
-     *                 access_token:
-     *                   type: string
-     *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-     *                 refresh_token:
-     *                   type: string
-     *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-     *                 type:
-     *                   type: string
-     *                   example: "Bearer"
-     *       400:
-     *         description: Bad request. Missing or invalid fields.
-     *         content:
-     *           application/json:
-     *             schema:
-     *               type: object
-     *               properties:
-     *                 message:
-     *                   type: string
-     *                   example: "Missing required fields"
-     *       409:
-     *         description: Conflict. User already exists.
-     *         content:
-     *           application/json:
-     *             schema:
-     *               type: object
-     *               properties:
-     *                 message:
-     *                   type: string
-     *                   example: "User with this email/username already exists"
-     *       500:
-     *         description: Internal server error.
-     *         content:
-     *           application/json:
-     *             schema:
-     *               type: object
-     *               properties:
-     *                 message:
-     *                   type: string
-     *                   example: "Internal server error"
-     */
-router.post("/register", Register)
+ * @swagger
+ * /api/v1/auth/register:
+ *   post:
+ *     summary: Register a new user
+ *     description: Registers a new user by validating the input fields (username, email, password), checking for existing records, and storing the new user in the database. Returns access and refresh tokens upon success.
+ *     tags:
+ *       - API v1
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - email
+ *               - password
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 example: "john_doe"
+ *               email:
+ *                 type: string
+ *                 example: "john.doe@example.com"
+ *               password:
+ *                 type: string
+ *                 example: "secure_password_123"
+ *     responses:
+ *       201:
+ *         description: User registered successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "User registered successfully"
+ *                 access_token:
+ *                   type: string
+ *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *                 refresh_token:
+ *                   type: string
+ *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *                 type:
+ *                   type: string
+ *                   example: "Bearer"
+ *       400:
+ *         description: Bad request. Missing or invalid fields.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Missing required fields"
+ *       409:
+ *         description: Conflict. User already exists.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "User with this email/username already exists"
+ *       500:
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Internal server error"
+ */
+router.post("/register", Register);
 
 /**
  * @swagger
@@ -160,6 +163,15 @@ router.post("/register", Register)
  *                 type:
  *                   type: string
  *                   example: "Bearer"
+ *                 username:
+ *                   type: string
+ *                   example: "John Doe"
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 isAdmin:
+ *                   type: boolean
+ *                   example: false
  *       400:
  *         description: Missing required fields.
  *         content:

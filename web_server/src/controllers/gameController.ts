@@ -91,7 +91,7 @@ export async function GetNewGameToken(
             } else if (id == userId) {
                 isThereOwner = true;
             } else {
-                const db = SvlimeDatabase.getInstance().getConnection();
+                const db = await SvlimeDatabase.getInstance().getConnection();
                 if (!db) {
                     res.status(500).json({
                         message: "Database connection failed",
@@ -216,7 +216,7 @@ export async function SaveGameToDB(req: Request, res: Response): Promise<void> {
 
         // save the game to the database
 
-        const db = SvlimeDatabase.getInstance().getConnection();
+        const db = await SvlimeDatabase.getInstance().getConnection();
         if (!db) {
             res.status(500).json({ message: "Internal Server Error" });
             return;
