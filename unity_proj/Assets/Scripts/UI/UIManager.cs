@@ -3,6 +3,7 @@ using UnityEngine;
 using TMPro;
 using System.Collections;
 using System.Collections.Generic;
+using static WebServerAPI;
 
 public class UIManager : MonoBehaviour
 {
@@ -13,9 +14,12 @@ public class UIManager : MonoBehaviour
     public TMP_InputField hostIpInput;
 
     [Header("Account Info")]
-    //public TMP_InputField nameInput;
-    //public TMP_InputField passwordInput;
+    public string ip;
+    public TMP_InputField nameInput;
+    public TMP_InputField passwordInput;
     public string jwtTokenPlayerPrefName = "jwt_token";
+    public string jwtRefreshPlayerPrefName = "jwt_refresh";
+    public string playerIdPrefName = "playerId";
     public string playerNamePrefName = "playerName";
 
 
@@ -38,25 +42,70 @@ public class UIManager : MonoBehaviour
             yield return null;
         }
 
-        //Login();
+        Login();
         titleScreenPanel.SetActive(false);
-        GoTo(mainMenuStartingPanel);
     }
 
 
     /* MAIN MENU NAVIGATION */
     public void Login()
     {
-        string jwtToken = PlayerPrefs.GetString(jwtTokenPlayerPrefName);
-        // Login Procedure with JWT TOKENS and Web Server
-        bool isJwtValid = true;
-        if (isJwtValid)
+        PlayerPrefs.DeleteKey(jwtTokenPlayerPrefName); // To remove when in production
+        string jwtToken = PlayerPrefs.GetString(jwtTokenPlayerPrefName, "");
+        Debug.Log("JWT Token: '" + jwtToken + "'");
+        if (jwtToken.Length > 0)
         {
+            // TODO: Try users/me
             isLoggedIn = true;
             OverwriteCurrentPanel(mainMenuStartingPanel);
         }
         else
+        {
+            //Prompt the login
             OverwriteCurrentPanel(loginPanel);
+        }
+
+    }
+
+    public void SendLogin()
+    {
+        WebServerAPI.EnsureInstance();
+
+        string name = nameInput.text;
+        string password = passwordInput.text;
+        if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(password))
+        {
+            Debug.LogError("Name or Password cannot be empty.");
+            return;
+        }
+
+        var data = new 
+        {
+            username = !System.Text.RegularExpressions.Regex.IsMatch(name, @"^[^@\s]+@[^@\s]+\.[^@\s]+$") ? name : null,
+            email = System.Text.RegularExpressions.Regex.IsMatch(name, @"^[^@\s]+@[^@\s]+\.[^@\s]+$") ? name : null,
+            password = password
+        };
+
+        WebServerAPI.Instance.PostRequest<WebServerAPI.LoginResponse>($"auth/login", data, (statusCode, response, error) =>
+        {
+            Debug.Log($"Login response status code: {statusCode}");
+            if (statusCode != 201 || response == null)
+            {
+                Debug.LogError("Login failed or response is null.");
+                return;
+            }
+            if (statusCode == 201 && response != null)
+            {
+                Debug.Log(response.message);
+                PlayerPrefs.SetString(jwtTokenPlayerPrefName, response.access_token);
+                PlayerPrefs.SetString(jwtRefreshPlayerPrefName, response.refresh_token);
+                PlayerPrefs.SetInt(playerIdPrefName, response.id);
+                PlayerPrefs.SetString(playerNamePrefName, response.username);
+
+                isLoggedIn = true;
+                OverwriteCurrentPanel(mainMenuStartingPanel);
+            }
+        });
 
     }
 
