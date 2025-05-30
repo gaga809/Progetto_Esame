@@ -44,3 +44,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7badc9b3b75654443958a04eca9776dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BaseUrl: https://playsvlime.duckdns.org:4433/api/v1/
