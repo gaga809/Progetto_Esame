@@ -38,43 +38,76 @@ export async function GetLeaderboard(
         }
 
         const offset = (page - 1) * limit;
-        const results = await db.query<RowDataPacket[]>(
+        const [rows] = await db.query<RowDataPacket[]>(
             `
-    SELECT 
-  l.id AS leaderboard_id,
-  l.waves_count,
-  l.game_date,
-  lp.user_id,
-  lp.kills,
-  COALESCE(u.username, au.username) AS username,
-  COALESCE(u.email, au.email) AS email,
-  totals.total_kills
-FROM Leaderboard l
-JOIN LeaderboardParticipants lp ON l.id = lp.leaderboard_id
-LEFT JOIN Users u ON lp.user_id = u.id
-LEFT JOIN ArchivedUsers au ON lp.user_id = au.id
-JOIN (
-  SELECT leaderboard_id, SUM(kills) AS total_kills
-  FROM LeaderboardParticipants
-  GROUP BY leaderboard_id
-) totals ON l.id = totals.leaderboard_id
-WHERE l.id IN (
-  SELECT l2.id
-  FROM Leaderboard l2
-  JOIN LeaderboardParticipants lp2 ON l2.id = lp2.leaderboard_id
-  GROUP BY l2.id
-  HAVING COUNT(lp2.user_id) = ?
-)
-ORDER BY l.waves_count DESC, totals.total_kills DESC
-LIMIT ? OFFSET ?;
-
-  `,
+            SELECT 
+              l.id AS leaderboard_id,
+              l.waves_count,
+              l.game_date,
+              lp.user_id,
+              lp.kills,
+              COALESCE(u.username, au.username) AS username,
+              COALESCE(u.email, au.email) AS email,
+              totals.total_kills
+            FROM Leaderboard l
+            JOIN LeaderboardParticipants lp ON l.id = lp.leaderboard_id
+            LEFT JOIN Users u ON lp.user_id = u.id
+            LEFT JOIN ArchivedUsers au ON lp.user_id = au.id
+            JOIN (
+              SELECT leaderboard_id, SUM(kills) AS total_kills
+              FROM LeaderboardParticipants
+              GROUP BY leaderboard_id
+            ) totals ON l.id = totals.leaderboard_id
+            WHERE l.id IN (
+              SELECT l2.id
+              FROM Leaderboard l2
+              JOIN LeaderboardParticipants lp2 ON l2.id = lp2.leaderboard_id
+              GROUP BY l2.id
+              HAVING COUNT(lp2.user_id) = ?
+            )
+            ORDER BY l.waves_count DESC, totals.total_kills DESC
+            LIMIT ? OFFSET ?;
+            `,
             [numPlayers, limit, offset]
         );
 
+        const leaderboardMap = new Map<number, any>();
+
+        rows.forEach((row) => {
+            const {
+                leaderboard_id,
+                waves_count,
+                game_date,
+                total_kills,
+                user_id,
+                kills,
+                username,
+                email,
+            } = row;
+
+            if (!leaderboardMap.has(leaderboard_id)) {
+                leaderboardMap.set(leaderboard_id, {
+                    leaderboard_id,
+                    waves_count,
+                    game_date,
+                    total_kills,
+                    participants: [],
+                });
+            }
+
+            leaderboardMap.get(leaderboard_id).participants.push({
+                user_id,
+                kills,
+                username,
+                email,
+            });
+        });
+
+        const leaderboard = Array.from(leaderboardMap.values());
+
         res.status(201).json({
             message: "ok",
-            leaderboard: results,
+            leaderboard: leaderboard,
         });
     } catch (error) {
         logger.error("Error during Leadeboard retrieving: " + error);
