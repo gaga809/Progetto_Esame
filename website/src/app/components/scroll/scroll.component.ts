@@ -3,6 +3,7 @@ import { UpperCasePipe } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
+import { Router } from '@angular/router';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,12 +18,12 @@ export class ScrollComponent implements AfterViewInit {
   @ViewChild('section2') section2!: ElementRef;
   @ViewChild('section3') section3!: ElementRef;
 
-  constructor(private renderer: Renderer2) {}
+  constructor(private renderer: Renderer2, private router: Router) { }
 
   ngAfterViewInit() {
     [this.section1, this.section2, this.section3].forEach((section) => {
       this.addScrollTrigger(section);
-      this.addRandomSquares(section); 
+      this.addRandomSquares(section);
     });
   }
 
@@ -32,10 +33,10 @@ export class ScrollComponent implements AfterViewInit {
         trigger: section.nativeElement,
         start: 'top top',
         end: 'bottom top',
-        pin: true, 
+        pin: true,
         scrub: 1,
         snap: 1,
-        toggleActions: 'play none none reverse', 
+        toggleActions: 'play none none reverse',
       },
     });
   }
@@ -44,7 +45,7 @@ export class ScrollComponent implements AfterViewInit {
     const container = section.nativeElement.querySelector('.random-boxes');
     if (!container) return;
 
-    const numSquares = Math.floor(Math.random() * 2) + 2; 
+    const numSquares = Math.floor(Math.random() * 2) + 2;
 
     const positions: { x: number; y: number }[] = [];
 
@@ -95,9 +96,13 @@ export class ScrollComponent implements AfterViewInit {
         y: `${Math.random() * 100}%`,
         duration: randomDuration,
         repeat: -1,
-        yoyo: true,  
+        yoyo: true,
         ease: "power1.inOut",
       });
     }
+  }
+
+  navigate(path: string) {
+    this.router.navigate([path]);
   }
 }

@@ -27,5 +27,24 @@
   "termsOfService": "Terms of Service",
   "privacyPolicy": "Privacy Policy",
   "manageCookies": "Manage Cookies",
-  "fanContentPolicy": "Fan Content Policy"
+  "fanContentPolicy": "Fan Content Policy",
+  "date": "Date",
+  "players": "Players",
+  "kills": "Kills",
+  "total_kills": "Total Kills",
+  "waves": "Waves",
+  "select_team_members": "Select number of team members",
+  "register": {
+    "title": "REGISTER",
+    "username": "USERNAME",
+    "username_required": "Username is required.",
+    "username_minlength": "Username must be at least 3 characters long.",
+    "email": "EMAIL",
+    "email_required": "Email is required.",
+    "email_invalid": "Email is not valid.",
+    "password": "PASSWORD",
+    "password_required": "Password is required.",
+    "password_minlength": "Password must be at least 6 characters long.",
+    "submit": "Register"
+  }
 }

@@ -23,9 +23,28 @@
   "smallVideo1Date": "9 aprile 2025",
   "smallVideo2Title": "Titolo Video Piccolo 2",
   "smallVideo2Date": "9 aprile 2025",
-    "parentsGuide": "Guida per i genitori",
+  "parentsGuide": "Guida per i genitori",
   "termsOfService": "Termini di servizio",
   "privacyPolicy": "Informativa sulla privacy",
   "manageCookies": "Gestisci i cookie",
-  "fanContentPolicy": "Politica sui contenuti dei fan"
+  "fanContentPolicy": "Politica sui contenuti dei fan",
+  "date": "Data",
+  "players": "Giocatori",
+  "kills": "Uccisioni",
+  "total_kills": "Totale Uccisioni",
+  "waves": "Ondate",
+  "select_team_members": "Seleziona numero membri per squadra",
+  "register": {
+    "title": "REGISTRAZIONE",
+    "username": "USERNAME",
+    "username_required": "Username è obbligatorio.",
+    "username_minlength": "Username deve contenere almeno 3 caratteri.",
+    "email": "EMAIL",
+    "email_required": "Email è obbligatoria.",
+    "email_invalid": "Email non è valida.",
+    "password": "PASSWORD",
+    "password_required": "Password è obbligatoria.",
+    "password_minlength": "Password deve contenere almeno 6 caratteri.",
+    "submit": "Registrati"
+  }
 }

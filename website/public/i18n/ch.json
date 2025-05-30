@@ -27,5 +27,24 @@
   "termsOfService": "服务条款",
   "privacyPolicy": "隐私政策",
   "manageCookies": "管理 Cookie",
-  "fanContentPolicy": "粉丝内容政策"
+  "fanContentPolicy": "粉丝内容政策",
+  "date": "日期",
+  "players": "玩家",
+  "kills": "击杀",
+  "total_kills": "总击杀",
+  "waves": "波数",
+  "select_team_members": "选择每队成员数",
+  "register": {
+    "title": "注册",
+    "username": "用户名",
+    "username_required": "用户名为必填项。",
+    "username_minlength": "用户名至少需要 3 个字符。",
+    "email": "电子邮箱",
+    "email_required": "电子邮箱为必填项。",
+    "email_invalid": "电子邮箱格式无效。",
+    "password": "密码",
+    "password_required": "密码为必填项。",
+    "password_minlength": "密码至少需要 6 个字符。",
+    "submit": "注册"
+  }
 }

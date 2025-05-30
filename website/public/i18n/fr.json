@@ -27,5 +27,24 @@
   "termsOfService": "Conditions d'utilisation",
   "privacyPolicy": "Politique de confidentialité",
   "manageCookies": "Gérer les cookies",
-  "fanContentPolicy": "Politique de contenu des fans"
+  "fanContentPolicy": "Politique de contenu des fans",
+  "date": "Date",
+  "players": "Joueurs",
+  "kills": "Frags",
+  "total_kills": "Frags Totaux",
+  "waves": "Vagues",
+  "select_team_members": "Sélectionnez le nombre de membres par équipe",
+  "register": {
+    "title": "INSCRIPTION",
+    "username": "NOM D'UTILISATEUR",
+    "username_required": "Le nom d'utilisateur est requis.",
+    "username_minlength": "Le nom d'utilisateur doit contenir au moins 3 caractères.",
+    "email": "EMAIL",
+    "email_required": "L'email est requis.",
+    "email_invalid": "L'email n'est pas valide.",
+    "password": "MOT DE PASSE",
+    "password_required": "Le mot de passe est requis.",
+    "password_minlength": "Le mot de passe doit contenir au moins 6 caractères.",
+    "submit": "S'inscrire"
+  }
 }

@@ -5,7 +5,7 @@ html,
 body {
     overscroll-behavior: none;
     touch-action: pan-x pan-y;
-    background-color: black;
+    height: auto;
 }
 
 body {
@@ -54,4 +54,44 @@ button {
     pointer-events: none;
     z-index: 100000;
     transition: transform 0.1s ease-out;
+}
+
+.random-boxes {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.square {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    transition: transform 0.1s ease;
+    z-index: 1;
+}
+
+.square.red {
+    background-image: url('/assets/img/blob/pink.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.square.green {
+    background-image: url('/assets/img/blob/mustache.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.square.blue {
+    background-image: url('/assets/img/blob/angel.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
