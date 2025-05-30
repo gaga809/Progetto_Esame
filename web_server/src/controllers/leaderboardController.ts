@@ -65,10 +65,9 @@ export async function GetLeaderboard(
               GROUP BY l2.id
               HAVING COUNT(lp2.user_id) = ?
             )
-            ORDER BY l.waves_count DESC, totals.total_kills DESC
-            LIMIT ? OFFSET ?;
+            ORDER BY l.waves_count DESC, totals.total_kills DESC;
             `,
-            [numPlayers, limit, offset]
+            [numPlayers]
         );
 
         const leaderboardMap = new Map<number, any>();
@@ -103,11 +102,18 @@ export async function GetLeaderboard(
             });
         });
 
-        const leaderboard = Array.from(leaderboardMap.values());
+        // Dopo aver popolato leaderboardMap
+        const allLeaderboards = Array.from(leaderboardMap.values());
+
+        // Calcola offset come numero di leaderboard da saltare
+        const paginatedLeaderboards = allLeaderboards.slice(
+            (page - 1) * limit,
+            page * limit
+        );
 
         res.status(201).json({
             message: "ok",
-            leaderboard: leaderboard,
+            leaderboard: paginatedLeaderboards,
         });
     } catch (error) {
         logger.error("Error during Leadeboard retrieving: " + error);
