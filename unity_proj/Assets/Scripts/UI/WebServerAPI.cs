@@ -52,7 +52,7 @@ public class WebServerAPI : MonoBehaviour
         string jsonData = JsonConvert.SerializeObject(data);
 
         UnityWebRequest request = new UnityWebRequest(BaseUrl + url, "POST");
-        request.certificateHandler = new AcceptAllCertificatesSignedWithASpecificKeyPublicKey(); // TO REMOVE WHEN IN PRODUCTION. ITS ONLY BECAUSE I DON'T HAVE TIME TO SET Let's Encrypt SSL CERTIFICATE
+        //request.certificateHandler = new AcceptAllCertificatesSignedWithASpecificKeyPublicKey(); // TO REMOVE WHEN IN PRODUCTION. ITS ONLY BECAUSE I DON'T HAVE TIME TO SET Let's Encrypt SSL CERTIFICATE
         byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
 
         request.uploadHandler = new UploadHandlerRaw(bodyRaw);
@@ -96,7 +96,7 @@ public class WebServerAPI : MonoBehaviour
         string jsonData = JsonConvert.SerializeObject(data);
 
         UnityWebRequest request = new UnityWebRequest(BaseUrl + url, "POST");
-        request.certificateHandler = new AcceptAllCertificatesSignedWithASpecificKeyPublicKey(); // TO REMOVE WHEN IN PRODUCTION. ITS ONLY BECAUSE I DON'T HAVE TIME TO SET Let's Encrypt SSL CERTIFICATE
+        //request.certificateHandler = new AcceptAllCertificatesSignedWithASpecificKeyPublicKey(); // TO REMOVE WHEN IN PRODUCTION. ITS ONLY BECAUSE I DON'T HAVE TIME TO SET Let's Encrypt SSL CERTIFICATE
         byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
 
         request.uploadHandler = new UploadHandlerRaw(bodyRaw);
