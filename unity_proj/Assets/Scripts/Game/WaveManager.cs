@@ -269,7 +269,7 @@ public class WaveManager : NetworkBehaviour
 
     private void OnNextWave(int oldValue, int newValue)
     {
-        waveCounter.text = "ONDATA: " + (newValue + 1);
+        waveCounter.text = "WAVE: " + (newValue + 1);
     }
 }
 
