@@ -4,6 +4,7 @@ using TMPro;
 using System.Collections;
 using System.Collections.Generic;
 using static WebServerAPI;
+using System;
 
 public class UIManager : MonoBehaviour
 {
@@ -50,20 +51,26 @@ public class UIManager : MonoBehaviour
     /* MAIN MENU NAVIGATION */
     public void Login()
     {
-        PlayerPrefs.DeleteKey(jwtTokenPlayerPrefName); // To remove when in production
+        //PlayerPrefs.DeleteKey(jwtTokenPlayerPrefName); // To remove when in production
         string jwtToken = PlayerPrefs.GetString(jwtTokenPlayerPrefName, "");
         Debug.Log("JWT Token: '" + jwtToken + "'");
         if (jwtToken.Length > 0)
         {
-            // TODO: Try users/me
-            isLoggedIn = true;
-            OverwriteCurrentPanel(mainMenuStartingPanel);
+            WebServerAPI.EnsureInstance();
+            WebServerAPI.Instance.CheckSession((isValid) =>
+            {
+                isLoggedIn = isValid;
+                if (isValid)
+                    OverwriteCurrentPanel(mainMenuStartingPanel);
+                else
+                    OverwriteCurrentPanel(loginPanel);
+            });
         }
         else
         {
-            //Prompt the login
             OverwriteCurrentPanel(loginPanel);
         }
+
 
     }
 
@@ -79,7 +86,7 @@ public class UIManager : MonoBehaviour
             return;
         }
 
-        var data = new 
+        var data = new
         {
             username = !System.Text.RegularExpressions.Regex.IsMatch(name, @"^[^@\s]+@[^@\s]+\.[^@\s]+$") ? name : null,
             email = System.Text.RegularExpressions.Regex.IsMatch(name, @"^[^@\s]+@[^@\s]+\.[^@\s]+$") ? name : null,
@@ -111,7 +118,7 @@ public class UIManager : MonoBehaviour
 
     public void BackOne()
     {
-        if(heirachyList.Count > 1)
+        if (heirachyList.Count > 1)
         {
             GameObject gObj = heirachyList.Pop();
             gObj.SetActive(false);
@@ -122,12 +129,13 @@ public class UIManager : MonoBehaviour
     public void GoTo(GameObject panel)
     {
         GameObject obj = heirachyList.Peek() as GameObject;
-        if (obj != null) {
+        if (obj != null)
+        {
             obj.SetActive(false);
         }
         panel.SetActive(true);
         heirachyList.Push(panel);
-        
+
     }
 
     public void OverwriteCurrentPanel(GameObject panel)
