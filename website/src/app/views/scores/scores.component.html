@@ -1,0 +1,60 @@
+<div class="container" #section>
+  <div class="random-boxes">
+  </div>
+
+  <h1 class="ultra-regular">
+    {{ 'ranking' | translate | uppercase }} !
+  </h1>
+  <div class="drp-container">
+    <label>{{ 'select_team_members' | translate }}</label>
+    <div class="score-dropdown">
+      <button class="dropdown-btn" (click)="toggleScoreDropdown()">
+        {{ selectedScoreLabel }}
+      </button>
+      <div class="dropdown-content" [class.show]="showScoreDropdown">
+        @for (score of [1, 2, 3, 4]; track $index) {
+        <div class="dropdown-item" (click)="selectScore(score)">
+          {{ score }}
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+
+
+
+  @if (leaderboardData.length > 0) {
+  <table class="table-wrapper">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>{{ 'date' | translate }}</th>
+        <th>{{ 'players' | translate }}</th>
+        <th>{{ 'kills' | translate }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (entry of leaderboardData; track entry.leaderboard_id; let i = $index) {
+      <tr>
+        <td>{{ i + 1 }}</td>
+        <td>
+          {{ entry.game_date | date: 'short' }}<br>
+          {{ 'total_kills' | translate }}: {{ entry.total_kills }}<br>
+          {{ 'waves' | translate }}: {{ entry.waves_count }}
+        </td>
+        <td>
+          @for (player of entry.participants; track player.user_id) {
+          {{ player.username }}<br>
+          }
+        </td>
+        <td>
+          @for (player of entry.participants; track player.user_id) {
+          {{ player.kills }}<br>
+          }
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+  }
+</div>

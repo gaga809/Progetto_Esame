@@ -1,0 +1,108 @@
+.footer {
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-color: #000;
+  color: white;
+  padding: 2rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.footer a {
+  color: white;
+  text-decoration: none;
+  font-size: 0.9rem;
+  margin-left: 1rem;
+}
+
+.footer a:first-child {
+  margin-left: 0;
+}
+
+
+.footer-top,
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.store-buttons img {
+  height: 40px;
+  margin-left: 0.5rem;
+}
+
+.divider {
+  border: 0;
+  height: 1px;
+  background: #000;
+  margin: 1.5rem 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.logo {
+  width: 150px;
+  height: 50px;
+  object-fit: cover;
+}
+
+.logo-svlime {
+  width: 150px;
+  height: 55px;
+  object-fit: cover;
+}
+
+.social-icons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.2rem; 
+  font-size: 1.4rem;
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .footer-top,
+  .footer-bottom,
+  .brand,
+  .footer-links,
+  .store-buttons {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer a {
+    width: 100%;
+    margin: 0.4rem;
+    font-size: 0.85rem;
+  }
+
+  .store-buttons {
+    margin-top: 1rem;
+  }
+
+  .logo {
+    display: none;
+  }
+
+  .logo-svlime {
+    margin-bottom: 1rem;
+  }
+}
