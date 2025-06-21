@@ -11,11 +11,12 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { gsap } from 'gsap';
 import { UserService } from '../../services/user.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'scores',
   standalone: true,
-  imports: [UpperCasePipe, TranslateModule, DatePipe],
+  imports: [UpperCasePipe, TranslateModule, DatePipe, RouterLink],
   templateUrl: './scores.component.html',
   styleUrls: ['./scores.component.css']
 })
@@ -43,7 +44,7 @@ export class ScoresComponent implements OnInit, AfterViewInit, OnDestroy {
     this.showScoreDropdown = false;
 
     this.userService.getLeaderboard(undefined, undefined, this.selectedScore).subscribe({
-       next: (res) => {
+      next: (res) => {
         this.leaderboardData = res.leaderboard;
 
         setTimeout(() => {
@@ -83,46 +84,82 @@ export class ScoresComponent implements OnInit, AfterViewInit, OnDestroy {
     this.squares = [];
   }
 
-  addRandomSquares(section: ElementRef) {
-    const container = section.nativeElement.querySelector('.random-boxes');
-    if (!container) return;
+addRandomSquares(section: ElementRef) {
+  const container = section.nativeElement.querySelector('.random-boxes');
+  if (!container) return;
 
-    const containerRect = container.getBoundingClientRect();
-    const numSquares = Math.floor(Math.random() * 2) + 3;
-    const colors = ['red', 'green', 'blue'];
+  const containerRect = container.getBoundingClientRect();
+  const numSquares = Math.floor(Math.random() * 2) + 3;
+  const colors = ['red', 'green', 'blue'];
 
-    for (let i = 0; i < numSquares; i++) {
-      const paddingX = 0.1 * containerRect.width;
-      const paddingY = 0.1 * containerRect.height;
-      const x = paddingX + Math.random() * (containerRect.width - 2 * paddingX);
-      const y = paddingY + Math.random() * (containerRect.height - 2 * paddingY);
+  for (let i = 0; i < numSquares; i++) {
+    const paddingX = 0.1 * containerRect.width;
+    const paddingY = 0.1 * containerRect.height;
+    const x = paddingX + Math.random() * (containerRect.width - 2 * paddingX);
+    const y = paddingY + Math.random() * (containerRect.height - 2 * paddingY);
 
-      const square = this.renderer.createElement('div');
-      this.renderer.addClass(square, 'square');
-      this.renderer.addClass(square, colors[Math.floor(Math.random() * colors.length)]);
+    const square = this.renderer.createElement('div');
+    this.renderer.addClass(square, 'square');
+    this.renderer.addClass(square, colors[Math.floor(Math.random() * colors.length)]);
 
-      Object.assign(square.style, {
-        position: 'absolute',
-        left: `${x}px`,
-        top: `${y}px`,
-        width: '70px',
-        height: '70px',
-        zIndex: '2',
-      });
+    Object.assign(square.style, {
+      position: 'absolute',
+      left: `${x}px`,
+      top: `${y}px`,
+      width: '70px',
+      height: '70px',
+      zIndex: '2',
+      pointerEvents: 'auto'
+    });
 
-      this.renderer.appendChild(container, square);
-      this.squares.push(square);
+    this.renderer.appendChild(container, square);
+    this.squares.push(square);
+
+    let floatAnim = gsap.to(square, {
+      x: (Math.random() * 100) - 50,
+      y: (Math.random() * 100) - 50,
+      duration: Math.floor(Math.random() * 10) + 6,
+      repeat: -1,
+      yoyo: true,
+      ease: "power1.inOut"
+    });
+
+    this.renderer.listen(square, 'mouseenter', (event: MouseEvent) => {
+      floatAnim.kill();
+
+      const rect = square.getBoundingClientRect();
+      const squareCenterX = rect.left + rect.width / 2;
+      const squareCenterY = rect.top + rect.height / 2;
+
+      const dx = squareCenterX - event.clientX;
+      const dy = squareCenterY - event.clientY;
+
+      const angle = Math.atan2(dy, dx);
+      const escapeDistance = 150;
+      const offsetX = Math.cos(angle) * escapeDistance;
+      const offsetY = Math.sin(angle) * escapeDistance;
 
       gsap.to(square, {
-        x: (Math.random() * 100) - 50,
-        y: (Math.random() * 100) - 50,
-        duration: Math.floor(Math.random() * 10) + 6,
-        repeat: -1,
-        yoyo: true,
-        ease: "power1.inOut",
+        x: `+=${offsetX}`,
+        y: `+=${offsetY}`,
+        duration: 0.3,
+        ease: 'power3.out',
+        onComplete: () => {
+          floatAnim = gsap.to(square, {
+            x: (Math.random() * 100) - 50,
+            y: (Math.random() * 100) - 50,
+            duration: Math.floor(Math.random() * 10) + 6,
+            repeat: -1,
+            yoyo: true,
+            ease: "power1.inOut"
+          });
+        }
       });
-    }
+    });
   }
+}
+
+
 
   addRandomBorderRadiusToTableCells(section: ElementRef) {
     const rows: HTMLElement[] = Array.from(

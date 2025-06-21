@@ -19,6 +19,7 @@ body {
     font-variation-settings:
         "wdth" 100;
     overflow-x: hidden;
+    position: relative;
 }
 
 .ultra-regular {
@@ -41,6 +42,10 @@ button {
 @media (max-width: 768px) {
     .ultra-regular {
         -webkit-text-stroke: 1px black;
+    }
+
+    .back img {
+        display: none;
     }
 }
 
@@ -94,4 +99,15 @@ button {
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+}
+
+.back {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    cursor: pointer;
+}
+
+.back img {
+    width: 75px;
 }

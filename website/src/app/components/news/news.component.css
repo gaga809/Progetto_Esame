@@ -45,7 +45,8 @@ h1 {
 
 .img-news {
     height: 30dvh;
-    object-fit: cover;
+    background-size: cover;
+    background-repeat: no-repeat;
     border-radius: 0.3rem 0.3rem 0 0;
 }
 

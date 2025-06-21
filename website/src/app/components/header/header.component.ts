@@ -21,7 +21,7 @@ export class HeaderComponent implements OnInit {
     { code: 'fr', label: 'Français' },
   ];
 
-  constructor(private languageService: LanguageService, private el: ElementRef) {}
+  constructor(private languageService: LanguageService, private el: ElementRef) { }
 
   ngOnInit(): void {
     this.languageService.language$.subscribe((lang) => {
@@ -49,5 +49,9 @@ export class HeaderComponent implements OnInit {
     if (!dropdownElement.contains(event.target as Node)) {
       this.showDropdown = false;
     }
+  }
+
+  play() {
+    window.open('https://github.com/gaga809/Progetto_Esame', '_blank');
   }
 }

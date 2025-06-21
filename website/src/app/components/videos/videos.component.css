@@ -45,13 +45,18 @@ h1 {
 }
 
 
-video {
+main img {
     width: 100%;
-    height: auto;
+    height: 40dvh;
     object-fit: cover;
-    border-radius: 0.5rem;
-    background-color: #000;
+    border-radius: 0.3rem 0.3rem 0 0;
+    border: none;
 }
+
+.main-video .video-content img {
+    height: 75dvh;
+}
+
 
 .video-info {
     display: flex;
