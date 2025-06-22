@@ -1,0 +1,53 @@
+<div class="container">
+    <a class="back" routerLink="/home">
+    <img src="/assets/img/back.png">
+  </a>
+  <h1 class="ultra-regular">
+    {{ 'register.title' | translate }}
+  </h1>
+
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div class="form-control">
+      <input id="username" type="text" formControlName="username" placeholder="{{ 'register.username' | translate }}" />
+      @if (registerForm.get('username')?.touched && registerForm.get('username')?.invalid) {
+      <div class="error">
+        @if (registerForm.get('username')?.errors?.['required']) {
+        <div>{{ 'register.username_required' | translate }}</div>
+        } @else if (registerForm.get('username')?.errors?.['minlength']) {
+        <div>{{ 'register.username_minlength' | translate }}</div>
+        }
+      </div>
+      }
+    </div>
+
+    <div class="form-control">
+      <input id="email" type="email" formControlName="email" placeholder="{{ 'register.email' | translate }}" />
+      @if (registerForm.get('email')?.touched && registerForm.get('email')?.invalid) {
+      <div class="error">
+        @if (registerForm.get('email')?.errors?.['required']) {
+        <div>{{ 'register.email_required' | translate }}</div>
+        } @else if (registerForm.get('email')?.errors?.['email']) {
+        <div>{{ 'register.email_invalid' | translate }}</div>
+        }
+      </div>
+      }
+    </div>
+
+    <div class="form-control">
+      <input id="password" type="password" formControlName="password" placeholder="{{ 'register.password' | translate }}" />
+      @if (registerForm.get('password')?.touched && registerForm.get('password')?.invalid) {
+      <div class="error">
+        @if (registerForm.get('password')?.errors?.['required']) {
+        <div>{{ 'register.password_required' | translate }}</div>
+        } @else if (registerForm.get('password')?.errors?.['minlength']) {
+        <div>{{ 'register.password_minlength' | translate }}</div>
+        }
+      </div>
+      }
+    </div>
+
+    <button class="register-button" type="submit" [disabled]="registerForm.invalid">
+      {{ 'register.submit' | translate }}
+    </button>
+  </form>
+</div>

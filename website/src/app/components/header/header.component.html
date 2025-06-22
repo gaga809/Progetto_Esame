@@ -1,0 +1,48 @@
+<div class="container">
+  <header>
+    <div class="header-container logo-container">
+      <img src="/assets/img/GAM.png" id="logo-company" alt="Logo Immagine">
+    </div>
+    <div class="header-container-2 links-container">
+      <div class="icons">
+      </div>
+
+      <div class="custom-dropdown">
+        <button class="dropdown-btn" (click)="toggleDropdown()">
+          <img class="flag-icon" [src]="'assets/flags/' + selectedLang + '.svg'" alt="flag" />
+          {{ selectedLanguageLabel | uppercase }}
+        </button>
+      
+        <div class="dropdown-content" [class.show]="showDropdown">
+          @for (lang of languages; track lang.code) {
+            <div class="dropdown-item" (click)="selectLanguage(lang.code)">
+              <img class="flag-icon" [src]="'assets/flags/' + lang.code + '.svg'" alt="flag" />
+              {{ lang.label }}
+            </div>
+          }
+        </div>
+      </div>      
+   </div>
+  </header>
+  <main>
+    <div class="main-logo">
+      <img src="/assets/img/logo-svlime.png " alt="Logo2 Immagine">
+    </div>
+    <div class="main-slogan">
+      <h1 class="ultra-regular">{{'escapeNow' | translate | uppercase}}</h1>
+      <p class="ultra-regular">{{'dontGetCaught' | translate | uppercase}}</p>      
+    </div>
+    <div class="main-button">
+      <button class="slime-button" (click)="play()">{{'playNow' | translate | uppercase}}</button>
+    </div>
+
+    <!--
+    <div class="bottom-left">
+      <img src="/assets/img/blob/green.svg" alt="">
+    </div>
+    <div class="bottom-right">
+      <img src="/assets/img/angel.svg" alt="">
+    </div>
+    -->
+  </main>
+</div>

@@ -1,0 +1,117 @@
+.container {
+    background: url('/assets/img/register.svg') no-repeat center center;
+    background-size: cover;
+    width: 100vw;
+    height: 95vh;
+    padding: 20px;
+    overflow: hidden; 
+}
+
+h1 {
+    font-size: 7vw;
+    line-height: 1.1;
+    text-align: center;
+    margin: auto;
+    max-width: 50vw;
+    word-wrap: break-word;
+    padding: 30px 0;
+    -webkit-text-stroke: 2px black;
+    z-index: 2000;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+form {
+    margin: 0 auto;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+label {
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-size: 20px;
+}
+
+input {
+    padding: 10px 20px;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: "Atkinson Hyperlegible", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings:
+        "wdth" 100;
+    overflow-x: hidden;
+    border: solid 4px #a64cea;
+    font-size: 18px;
+    border-radius: 10px 19px 8px 14px;
+    color: black;
+}
+
+input:focus {
+    outline: none;
+}
+
+.error {
+    font-size: 20px;
+    margin-top: 5px;
+    color: white;
+    font-weight: bold;
+}
+
+.form-control {
+    margin-bottom: 10px;
+}
+
+div {
+    text-transform: uppercase;
+}
+
+.register-button {
+    margin-top: 20px;
+    align-self: flex-end;
+    position: relative;
+    text-transform: uppercase;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    border-radius: 12px;
+    width: 180px;
+    height: 65px;
+    background: linear-gradient(to bottom, #ff7afd, #b91cf6);
+    border: 3.5px solid #8000c9;
+    z-index: 1;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    box-shadow:
+        inset 0 3px 0 #ff9efd,
+        inset 0 -4px 0 #8a0fd4;
+}
+
+.register-button:active {
+    transform: scale(0.96);
+}
+
+.register-button:disabled {
+    background: linear-gradient(to bottom, #da8ff7, #a64cea);
+    color: white;
+    border: 3.5px solid #a64cea;
+    box-shadow: inset 0 3px 0 #e6b0ff, inset 0 -4px 0 #8131c4;
+    cursor: not-allowed;
+    opacity: 0.8;
+}
