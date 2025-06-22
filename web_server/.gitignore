@@ -3,5 +3,5 @@ node_modules
 logs
 
 /* CERTIFICATES */
-./cert.perm
-./key.perm
+cert.perm
+key.perm
